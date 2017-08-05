@@ -1,5 +1,6 @@
-.App{ 
+.Application{ 
   background: yellow; 
+  text-align: left;
 }
 
 .ShowContainer{

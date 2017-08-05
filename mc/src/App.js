@@ -5,7 +5,7 @@ import ControlPanel from './Components/ControlPanel'
 export default class App extends React.Component {
   render() {
     return (
-      <div className="App" >
+      <div className="Application" >
         <div className="grid-container ShowContainer">
 
           <div className="grid-y grid-frame grid-padding-y grid-padding-x">
