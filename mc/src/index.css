@@ -1,0 +1,36 @@
+.App{ 
+  background: yellow; 
+}
+
+.ShowContainer{
+  background: black;  
+}
+
+.ShowGrid{
+  background: gray;
+  height:100%;
+}
+.ShowCell{
+  background: lightgray;    
+  border:2px solid black;
+}
+
+.ShowCellY{
+  background: gray
+}
+.CardStyle{
+height:95%;
+background: lightgray;
+border: 2px solid white;  
+border-radius:25px;
+margin: 10px
+}
+
+.card-divider{
+  text-shadow:2px 3px  whitesmoke;
+  color:black;
+  text-align: center;
+  font-size:2em;
+  font-family: 'Stardos Stencil', cursive;
+  padding: 0px 16px
+}
