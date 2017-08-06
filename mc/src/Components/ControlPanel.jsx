@@ -18,8 +18,7 @@ export default class ControlPanel extends React.Component {
     return (
       <div className="card CardStyle">
         <div className="card-divider"> {this.props.Name}</div>
-        <div className="card-section"> {RenderStation(this)}
-        </div>
+        <div className="card-section"> {RenderStation(this)} </div>
       </div>
     )
   }
