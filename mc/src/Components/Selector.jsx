@@ -5,7 +5,7 @@ export default class Selector extends React.Component {
   constructor(props) {
     super(props)
     this.cx = this.props.r + 2
-    this.cy = this.props.r * 2
+    this.cy = 75 //this.props.r + 2
   }
 
   componentWillMount() {
@@ -23,7 +23,7 @@ export default class Selector extends React.Component {
     const AngleSelectedNotch = 90.0 - (this.selectedNotch) * AngleNotch
     const RadialNotch = AngleSelectedNotch * Math.PI / 180.0
 
-    this.MidX = this.cx + this.props.r * Math.cos(RadialNotch)
+    this.MidX = this.cx + this.props.r * Math.cos(RadialNotch) - 15
     this.MidY = this.cy - this.props.r * Math.sin(RadialNotch)
 
   }
@@ -39,10 +39,10 @@ export default class Selector extends React.Component {
       <div onClick={this.SelectNextNotch.bind(this)}>
         <svg height="150" width={this.props.r * 2 + 20}>
           {/* Knob */}
-          <circle cx={this.cx} cy={this.cy} r={this.props.r} stroke="black" strokeWidth="1" fill="none" />
-          <circle cx={this.cx} cy={this.cy} r={this.props.r - 2} stroke="grey" strokeWidth="2" fill="lightGrey" />
+          <circle cx={this.cx} cy={this.cy} r={this.props.r} stroke="darkgrey" strokeWidth="1" fill="none" />
+          <circle cx={this.cx} cy={this.cy} r={this.props.r - 3} stroke="grey" strokeWidth="5" fill="grey" />
           {/* Marker */}
-          <circle cx={this.MidX} cy={this.MidY} r={5} stroke="red" fill="red" />
+          <circle cx={this.MidX} cy={this.MidY} r={10} stroke="white" fill="darkgrey" />
         </svg>
       </div>
     )

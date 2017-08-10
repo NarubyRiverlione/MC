@@ -29,7 +29,7 @@ export default class Button extends React.Component {
         <svg width="100%" height="60">
           <rect x="5" y="5" rx="20" ry="20" width="140" height="50"
             style={{ fill: this.Background, stroke: this.BorderColor, strokeWidth: 5 }} />
-          <text x="20" y="37" fontSize="1.5em" fontWeight="bold" fill={this.TextColor}>{this.props.Caption}</text>
+          <text x="80" y="37" fontSize="1.25em" textAnchor="middle" fontWeight="bold" fill={this.TextColor}>{this.props.Caption}</text>
         </svg>
       </div>
     )

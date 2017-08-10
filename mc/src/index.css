@@ -36,7 +36,7 @@ margin: 10px
   text-shadow:2px 3px  whitesmoke;
   color:black;
   text-align: center;
-  font-size:2em;
+  font-size:2rem;
   font-family: 'Stardos Stencil', cursive;
   padding: 0px 16px
 }
@@ -50,9 +50,19 @@ margin: 10px
   font-weight: normal;
   margin: 0;
 }
+.LedText{
+  font-family:'Passion One',cursivexs ;
+  color:CornflowerBlue ;
+  fill:CornflowerBlue ;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: normal;
+  margin: 0;
+}
 
 .display {
   font-family: Display;
   fill:red;
-  font-size: 1.25em;
+  font-size: 1.25rem;
+  text-shadow: 0 0
 }

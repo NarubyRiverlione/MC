@@ -13,14 +13,6 @@ export default class Radio extends React.Component {
     this.state = InitState
   }
 
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   NewMessage() {
     // start incoming timer led
     this.setState({ IncomingMessage: true, IncomingTimer: 20 })
@@ -65,9 +57,6 @@ export default class Radio extends React.Component {
   }
 
 
-
-
-
   render() {
     return (
       <div className='' id='RadioPanel' >
@@ -78,7 +67,7 @@ export default class Radio extends React.Component {
         <div className='grid-container'>
           <div className='grid-x'>
             {/* ACTION BUTTONS */}
-            <div className='cell medium-5' >
+            <div className='cell large-4' >
               <div className='grid-y'>
                 <div className='cell medium-4'>
                   <Button Color='slategrey' Caption='STORE' TextColor='yellow' cb={this.ExecuteAction.bind(this)} SetPressed={this.state.Buttons.store} />
@@ -96,17 +85,18 @@ export default class Radio extends React.Component {
             </div>
 
             {/* STORAGE SLOTS */}
-            <div className='cell medium-7' >
+            <div className='cell large-8' >
+
               <p className='text'>SLOTS</p>
 
               <div className='grid-x'>
                 {/* slot selector */}
-                <div className='cell medium-6' >
-                  <Selector Amount={3} r={40} cb={this.NewSelectedSlot.bind(this)} Selected={this.state.SelectedSlot} />
+                <div className='cell small-6' >
+                  <Selector Amount={3} r={60} cb={this.NewSelectedSlot.bind(this)} Selected={this.state.SelectedSlot} />
                 </div>
 
                 {/* slot displays */}
-                <div className='cell medium-6' >
+                <div className='cell small-6' >
                   <div className='grid-y'>
 
                     <div className='cell medium-4'>
@@ -128,6 +118,7 @@ export default class Radio extends React.Component {
 
           </div>
         </div>
+
       </div>
     )
   }
