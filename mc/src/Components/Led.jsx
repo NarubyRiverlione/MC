@@ -37,11 +37,6 @@ export default class Led extends React.Component {
     }, 500)
   }
 
-
-  componentDidMount() {
-
-  }
-
   render() {
     return (
       <div>
@@ -50,7 +45,7 @@ export default class Led extends React.Component {
           <circle cx="20" cy="20" r="10" stroke="grey" strokeWidth="1"
             // on = current color, off = background color
             fill={this.state.On ? this.props.Colors[this.state.CurrentColor] : this.props.BackgroundColor} />
-          <text x="43" y="26" fontSize="1.5em" fill='white' fontWeight='bold' >{this.props.Caption}</text>
+          <text x="43" y="26" className='text' >{this.props.Caption}</text>
         </svg>
       </div>
     )
@@ -61,8 +56,9 @@ Led.propTypes = {
   On: PropTypes.bool.isRequired,
   Colors: PropTypes.array.isRequired,
   BackgroundColor: PropTypes.string.isRequired,
-  ColorNumber: PropTypes.number, // index of current in Colors array
-  Caption: PropTypes.string,
+  Caption: PropTypes.string.isRequired,
   Blinking: PropTypes.bool,
   Timer: PropTypes.number // seconds
 }
+
+

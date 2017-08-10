@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css'
 import ControlPanel from './Components/ControlPanel'
 
 export default class App extends React.Component {
