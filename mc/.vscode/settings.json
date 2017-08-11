@@ -1,11 +1,12 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
   "editor.tabSize": 2,
   "files.autoSave": "onFocusChange",
   "editor.minimap.enabled": false,
   "editor.formatOnType": true,
   "debug.inlineValues": true,
   "debug.internalConsoleOptions": "openOnSessionStart",
-  "editor.autoIndent": true,
-  "editor.formatOnSave": true
+  "editor.autoIndent": true
 }

@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-//import Led from '../ControlElements/Led'
+import Cnst from '../../Constands'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
@@ -35,18 +35,24 @@ export default class FireComputer extends React.Component {
 
   Read() {
     console.log('Start reading msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
+    this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start inputting msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
     this.setState({ Reading: true })
+
     setTimeout(() => {
       this.setState({ Reading: false })
+      this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
       this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission recieved' }) : this.setState({ FCB_Text: 'Mission recieved' })
     }, 1000)
   }
 
   Send() {
     console.log('Start sending mission from FC ' + this.state.SelectedFC + ' to Launch Station')
-    this.setState({ Reading: true })
+    this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start sending mission from FC ' + this.state.SelectedFC)
+    this.setState({ Sending: true })
+
     setTimeout(() => {
-      this.setState({ Reading: false })
+      this.setState({ Sending: false })
+      this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
       this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission send' }) : this.setState({ FCB_Text: 'Mission send' })
     }, 1000)
   }
@@ -83,7 +89,7 @@ export default class FireComputer extends React.Component {
 
             {/* msg selector */}
             <div className='cell small-4'>
-              <p>Input Msg</p>
+              <p>Select Slot</p>
               <div className='grid-x'>
                 <div className='cell medium-1 '>
                   <p>1</p>
@@ -98,20 +104,19 @@ export default class FireComputer extends React.Component {
             </div>
             {/* action buttons*/}
             <div className='small-8 grid-y'>
-              <div className='small-5' />
-              <div className='small-4 grid-x'>
+              <div className='cell small-2' />          
 
-                <div className='cell small-6' >
-                  <Button Caption='Read' Width={80} TextColor='yellow' Color='slategrey'
-                    SetPressed={this.state.Reading} cb={this.Read.bind(this)} />
-                </div>
-
-                <div className='cell small-6'>
-                  <Button Caption='Send' Width={80} TextColor='yellow' Color='slategrey'
-                    SetPressed={this.state.Reading} cb={this.Send.bind(this)} />
-                </div>
-
+              <div className='cell small-4' >
+                <Button Caption={Cnst.FireComputers.Actions.read} Width={150} TextColor='yellow' Color='slategrey'
+                  SetPressed={this.state.Reading} cb={this.Read.bind(this)} />
               </div>
+
+              <div className='cell small-4'>
+                <Button Caption={Cnst.FireComputers.Actions.send}  Width={325} TextColor='yellow' Color='slategrey'
+                  SetPressed={this.state.Sending} cb={this.Send.bind(this)} />
+              </div>
+
+            
             </div>
 
           </div>
@@ -130,7 +135,7 @@ const InitState = {
 }
 
 FireComputer.propTypes = {
-
+  ChangeStatus: PropTypes.func.isRequired
 }
 
 FireComputer.defaultProps = {
