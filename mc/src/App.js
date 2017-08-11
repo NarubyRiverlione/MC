@@ -1,5 +1,5 @@
 import React from 'react'
-import ControlPanel from './Components/ControlPanel'
+import ControlPanel from './Components/Panels/ControlPanel'
 
 export default class App extends React.Component {
   constructor(props) {

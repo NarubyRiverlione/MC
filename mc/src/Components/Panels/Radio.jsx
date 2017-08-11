@@ -2,10 +2,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Led from './Led'
-import Button from './Button'
-import Display from './Display'
-import Selector from './Selector'
+import Led from '../ControlElements/Led'
+import Button from '../ControlElements/Button'
+import Display from '../ControlElements/Display'
+import Selector from '../ControlElements/Selector'
 
 export default class Radio extends React.Component {
   constructor(props) {
@@ -91,12 +91,12 @@ export default class Radio extends React.Component {
 
               <div className='grid-x'>
                 {/* slot selector */}
-                <div className='cell small-6' >
+                <div className='cell small-5 small-offset-1' >
                   <Selector Amount={3} r={60} cb={this.NewSelectedSlot.bind(this)} Selected={this.state.SelectedSlot} />
                 </div>
 
                 {/* slot displays */}
-                <div className='cell small-6' >
+                <div className='cell small-5' >
                   <div className='grid-y'>
 
                     <div className='cell medium-4'>
