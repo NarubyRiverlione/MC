@@ -4,7 +4,7 @@ import React from 'react'
 
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
-import Cnst from '../../Constands'
+import { Cnst } from '../../Constants'
 
 export default class Radio extends React.Component {
   constructor(props) {

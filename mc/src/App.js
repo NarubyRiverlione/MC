@@ -1,14 +1,17 @@
 /* eslint-disable no-console */
 import React from 'react'
 import ControlPanel from './Components/Panels/ControlPanel'
-import Cnst from './Constands'
+import { Cnst } from './Constants'
+
+import radioStore from './Stores/RadioStore'
+
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
 
     let Stations = {}
-    Stations[Cnst.Stations.Radio] = { Status: 'Idle', SelectedSlot:1 }
+    Stations[Cnst.Stations.Radio] = { Status: radioStore.Status }
     Stations[Cnst.Stations.FireComputers] = { Status: 'Idle' }
     Stations[Cnst.Stations.Armory] = { Status: 'Idle' }
     Stations[Cnst.Stations.LaunchStations] = { Status: 'Idle' }
@@ -23,12 +26,12 @@ export default class App extends React.Component {
     this.setState(Stations)
   }
 
-  RadioSelectedOtherSlot(newSlot) {
-    let Stations = this.state.Stations
-    Stations[Cnst.Stations.Radio].SelectedSlot = newSlot
-    this.setState(Stations)
+  componentWillMount() {
+    radioStore.on('ChangedRadioStatus', () => {
+      this.SetStationStatus(Cnst.Stations.Radio, radioStore.Status)
+    })
   }
-  
+
   render() {
     return (
       <div className="Application" >
@@ -42,7 +45,6 @@ export default class App extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.Radio}
                     StatusStatus={this.state.Stations[Cnst.Stations.Radio].Status}
-                    ChangeStatus={this.SetStationStatus.bind(this)}
                   />
                 </div>
 
@@ -50,7 +52,7 @@ export default class App extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.FireComputers}
                     StatusStatus={this.state.Stations[Cnst.Stations.FireComputers].Status}
-                    ChangeStatus={this.SetStationStatus.bind(this)} />
+                  />
                 </div>
 
               </div>
@@ -64,14 +66,14 @@ export default class App extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.Armory}
                     StatusStatus={this.state.Stations[Cnst.Stations.Armory].Status}
-                    ChangeStatus={this.SetStationStatus.bind(this)} />
+                  />
                 </div>
 
                 <div className="cell medium-6 ShowCell">
                   <ControlPanel
                     Name={Cnst.Stations.LaunchStations}
                     StatusStatus={this.state.Stations[Cnst.Stations.LaunchStations].Status}
-                    ChangeStatus={this.SetStationStatus.bind(this)} />
+                  />
                 </div>
 
               </div>
@@ -80,7 +82,7 @@ export default class App extends React.Component {
           </div>
 
         </div>
-      </div>
+      </div >
 
     )
   }

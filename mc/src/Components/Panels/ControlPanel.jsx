@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Display from '../ControlElements/Display'
-import Cnst from '../../Constands'
+import { Cnst } from '../../Constants'
 import Radio from './Radio'
 import FireComputer from './FireComputer'
 import Armory from './Armory'
@@ -13,13 +13,13 @@ export default class ControlPanel extends React.Component {
   RenderStation() {
     switch (this.props.Name) {
       case Cnst.Stations.Radio:
-        return <Radio ChangeStatus={this.props.ChangeStatus}/>
+        return <Radio />
       case Cnst.Stations.FireComputers:
-        return <FireComputer ChangeStatus={this.props.ChangeStatus} />
+        return <FireComputer />
       case Cnst.Stations.Armory:
-        return <Armory ChangeStatus={this.props.ChangeStatus} />
+        return <Armory />
       case Cnst.Stations.LaunchStations:
-        return <LaunchStations ChangeStatus={this.props.ChangeStatus} />
+        return <LaunchStations />
       default:
         return null
     }
@@ -43,6 +43,5 @@ export default class ControlPanel extends React.Component {
 
 ControlPanel.propTypes = {
   Name: PropTypes.string.isRequired,
-  StatusStatus: PropTypes.string.isRequired,
-  ChangeStatus: PropTypes.func.isRequired
+  StatusStatus: PropTypes.string.isRequired
 }

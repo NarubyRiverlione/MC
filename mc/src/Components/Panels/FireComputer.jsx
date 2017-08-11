@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Cnst from '../../Constands'
+import { Cnst } from '../../Constants'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
@@ -35,24 +35,24 @@ export default class FireComputer extends React.Component {
 
   Read() {
     console.log('Start reading msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
-    this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start inputting msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
+    // this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start inputting msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
     this.setState({ Reading: true })
 
     setTimeout(() => {
       this.setState({ Reading: false })
-      this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
+      // this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
       this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission recieved' }) : this.setState({ FCB_Text: 'Mission recieved' })
     }, 1000)
   }
 
   Send() {
     console.log('Start sending mission from FC ' + this.state.SelectedFC + ' to Launch Station')
-    this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start sending mission from FC ' + this.state.SelectedFC)
+    // this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start sending mission from FC ' + this.state.SelectedFC)
     this.setState({ Sending: true })
 
     setTimeout(() => {
       this.setState({ Sending: false })
-      this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
+      // this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
       this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission send' }) : this.setState({ FCB_Text: 'Mission send' })
     }, 1000)
   }
@@ -104,7 +104,7 @@ export default class FireComputer extends React.Component {
             </div>
             {/* action buttons*/}
             <div className='small-8 grid-y'>
-              <div className='cell small-2' />          
+              <div className='cell small-2' />
 
               <div className='cell small-4' >
                 <Button Caption={Cnst.FireComputers.Actions.read} Width={150} TextColor='yellow' Color='slategrey'
@@ -112,11 +112,11 @@ export default class FireComputer extends React.Component {
               </div>
 
               <div className='cell small-4'>
-                <Button Caption={Cnst.FireComputers.Actions.send}  Width={325} TextColor='yellow' Color='slategrey'
+                <Button Caption={Cnst.FireComputers.Actions.send} Width={325} TextColor='yellow' Color='slategrey'
                   SetPressed={this.state.Sending} cb={this.Send.bind(this)} />
               </div>
 
-            
+
             </div>
 
           </div>
@@ -135,7 +135,7 @@ const InitState = {
 }
 
 FireComputer.propTypes = {
-  ChangeStatus: PropTypes.func.isRequired
+
 }
 
 FireComputer.defaultProps = {
