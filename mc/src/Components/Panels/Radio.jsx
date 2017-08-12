@@ -6,7 +6,7 @@ import { Cnst } from '../../Constants'
 import radioStore from '../../Stores/RadioStore'
 import * as RadioActions from '../../Actions/RadioActions'
 
-import Led from '../ControlElements/Led'
+import TimerLed from '../ControlElements/TimerLed'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
@@ -19,7 +19,7 @@ export default class Radio extends React.Component {
       Slots: radioStore.SlotStatus,
       Buttons: {},
       SelectedSlot: radioStore.SelectedSlot
-    }   
+    }
   }
 
   ReleaseButtons() {
@@ -43,9 +43,13 @@ export default class Radio extends React.Component {
     RadioActions.ExecuteCmd(cmd)
   }
 
+  NewMessageTimedOut() {
+    RadioActions.NewMessageTimedOut()
+  }
 
-  componentWillMount() {    
+  componentWillMount() {
     radioStore.on('UpdateNewMessage', () => {
+      console.log('RADIO: UpdateNewMessage: '+radioStore.NewMessage)
       this.setState({ IncomingMessage: radioStore.NewMessage })
     })
 
@@ -71,9 +75,13 @@ export default class Radio extends React.Component {
     return (
       <div className='' id='RadioPanel' >
         {/* INCOMING MESSAGE */}
-        <Led Caption='Incoming message' On={this.state.IncomingMessage} Colors={['green', 'orange', 'red']} BackgroundColor={'Gainsboro'}
-          Blinking={true} Timer={this.state.IncomingTimer} />
-
+        <TimerLed
+          Caption='Incoming message'
+          Colors={['green', 'orange', 'red']} BackgroundColor={'Gainsboro'}
+          RunTimer={this.state.IncomingMessage} Time={Cnst.Radio.Time.NewMessageTimeOut}
+          TimerDoneCB={this.NewMessageTimedOut.bind(this)}
+        />
+      
         <div className='grid-container'>
           <div className='grid-x'>
             {/* ACTION BUTTONS */}

@@ -14,3 +14,10 @@ export function ExecuteCmd(cmd) {
     cmd
   })
 }
+
+export function NewMessageTimedOut(cmd) {
+  AppDispatcher.dispatch({
+    type: ActionCnst.Radio.NewMessageTimedOut,
+    cmd
+  })
+}

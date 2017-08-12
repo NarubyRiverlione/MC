@@ -6,7 +6,7 @@ import { EventEmitter } from 'events'
 class RadioStore extends EventEmitter {
   constructor(dispatcher) {
     super()
-    this.NewMessage = true
+    this.NewMessage = false
 
     this.SelectedSlot = 1
 
@@ -26,6 +26,7 @@ class RadioStore extends EventEmitter {
     switch (action.type) {
       case ActionCnst.Radio.SelectSlot: this.SelectSlot(action.slot); break
       case ActionCnst.Radio.ExecuteCmd: this.ExecuteCmd(action.cmd); break
+      case ActionCnst.Radio.NewMessageTimedOut: this.NewMessageTimedOut(); break
       default: break
     }
   }
@@ -61,20 +62,20 @@ class RadioStore extends EventEmitter {
     // console.log('Start Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
     this.Status = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + this.SelectedSlot
     this.emit('ChangedRadioStatus')
-  
+
 
     setTimeout(() => {
       // end cmd,  update Radio Status display 
       // console.log('End Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
       this.Status = Cnst.Status.idle
       this.emit('ChangedRadioStatus')
-  
+
       // show new status in selected slot display
       this.SlotStatus[this.SelectedSlot] = Cnst.Radio.Results[cmd.toLowerCase()]
       this.emit('ChangeSlot')
-      
+
       if (cmd === Cnst.Radio.Actions.store) {
-        // msg is store, clear new msg led, start timer next new msg
+        // msg is store, clear new msg status, start timer next new msg
         this.NewMessage = false
         this.emit('UpdateNewMessage')
         this.StartTimerNewMessage()
@@ -87,11 +88,27 @@ class RadioStore extends EventEmitter {
   }
 
   StartTimerNewMessage() {
+    // wait for new msg is random between NewIncomingMessageMin and NewIncomingMessageMax
     const nextIncoming = Math.floor(Math.random() * Cnst.Radio.Time.NewIncomingMessageMax) + Cnst.Radio.Time.NewIncomingMessageMin
+    console.log('New msg in ' + nextIncoming / 1000 + ' sec')
     setTimeout(() => {
+      console.log('New msg created')
       this.NewMessage = true
       this.emit('UpdateNewMessage')
     }, nextIncoming)
+  }
+
+  NewMessageTimedOut() {
+    // TODO: move to GameStore, reduce Rank, sound alert
+    this.Status = Cnst.Radio.Errors.NewMessageTimedOut
+    this.emit('ChangedRadioStatus')
+    this.NewMessage = false
+    
+    setTimeout(() => {
+      this.Status = Cnst.Status.idle
+      this.emit('ChangedRadioStatus')      
+      this.StartTimerNewMessage()
+    }, 2000)
   }
 
 }
