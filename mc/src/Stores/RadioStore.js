@@ -6,14 +6,14 @@ import { EventEmitter } from 'events'
 class RadioStore extends EventEmitter {
   constructor(dispatcher) {
     super()
-    this.NewMessage = false
+    this.NewMessage = true
 
     this.SelectedSlot = 1
 
-    this.CmdButtons = {}
-    this.CmdButtons[Cnst.Radio.Actions.store] = false
-    this.CmdButtons[Cnst.Radio.Actions.decode] = false
-    this.CmdButtons[Cnst.Radio.Actions.erase] = false
+    // this.CmdButtons = {}
+    // this.CmdButtons[Cnst.Radio.Actions.store] = false
+    // this.CmdButtons[Cnst.Radio.Actions.decode] = false
+    // this.CmdButtons[Cnst.Radio.Actions.erase] = false
 
     this.SlotStatus = ['', Cnst.Radio.Results.erase, Cnst.Radio.Results.erase, Cnst.Radio.Results.erase]
 
@@ -42,6 +42,7 @@ class RadioStore extends EventEmitter {
       if (this.SlotStatus[this.SelectedSlot] !== Cnst.Radio.Results.store) {
         this.Status = Cnst.Radio.Errors.NoDecodeNothingStored
         this.emit('ChangedRadioStatus')
+        this.emit('DoneCmd')
         return
       }
     }
@@ -51,35 +52,36 @@ class RadioStore extends EventEmitter {
       if (!this.NewMessage) {
         this.Status = Cnst.Radio.Errors.NoStoreNoNewMsg
         this.emit('ChangedRadioStatus')
+        this.emit('DoneCmd')
         return
       }
     }
 
     // start cmd, update Radio Status display 
     // console.log('Start Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
-    this.Status = 'Start ' + cmd + ' on slot ' + this.SelectedSlot
+    this.Status = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + this.SelectedSlot
     this.emit('ChangedRadioStatus')
-    // set pressed state of cmd button
-    this.CmdButtons[cmd] = true
-    this.emit('ChangeCmdButton')
+  
 
     setTimeout(() => {
       // end cmd,  update Radio Status display 
       // console.log('End Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
       this.Status = Cnst.Status.idle
       this.emit('ChangedRadioStatus')
-      // depress cmd button
-      this.CmdButtons[cmd] = false
-      this.emit('ChangeCmdButton')
+  
       // show new status in selected slot display
       this.SlotStatus[this.SelectedSlot] = Cnst.Radio.Results[cmd.toLowerCase()]
       this.emit('ChangeSlot')
-
+      
       if (cmd === Cnst.Radio.Actions.store) {
         // msg is store, clear new msg led, start timer next new msg
         this.NewMessage = false
+        this.emit('UpdateNewMessage')
         this.StartTimerNewMessage()
       }
+
+      this.emit('DoneCmd')
+
     }
       , Cnst.Radio.Time[cmd.toLowerCase()])
   }
@@ -88,7 +90,7 @@ class RadioStore extends EventEmitter {
     const nextIncoming = Math.floor(Math.random() * Cnst.Radio.Time.NewIncomingMessageMax) + Cnst.Radio.Time.NewIncomingMessageMin
     setTimeout(() => {
       this.NewMessage = true
-      this.emit('NewMessage')
+      this.emit('UpdateNewMessage')
     }, nextIncoming)
   }
 

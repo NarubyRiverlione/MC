@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 import { Cnst } from '../../Constants'
 import Button from '../ControlElements/Button'

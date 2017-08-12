@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 import { Cnst } from '../../Constants'
 
@@ -17,9 +17,17 @@ export default class Radio extends React.Component {
     this.state = {
       IncomingMessage: radioStore.NewMessage,
       Slots: radioStore.SlotStatus,
-      Buttons: radioStore.CmdButtons,
+      Buttons: {},
       SelectedSlot: radioStore.SelectedSlot
-    }
+    }   
+  }
+
+  ReleaseButtons() {
+    let Buttons = {}
+    Buttons[Cnst.Radio.Actions.store] = false
+    Buttons[Cnst.Radio.Actions.decode] = false
+    Buttons[Cnst.Radio.Actions.erase] = false
+    this.setState({ Buttons })
   }
 
   SelectedOtherSlot(slot) {
@@ -27,27 +35,36 @@ export default class Radio extends React.Component {
   }
 
   ExecuteAction(cmd) {
+    // hold pressed button down
+    let Buttons = this.state.Buttons
+    Buttons[cmd] = true
+    this.setState({ Buttons })
+
     RadioActions.ExecuteCmd(cmd)
   }
 
 
-  componentWillMount() {
-    radioStore.on('NewMessage', () => {
-      // start incoming timer led
-      this.setState({ IncomingMessage: true, IncomingTimer: Cnst.Radio.Time.NewMessage })
+  componentWillMount() {    
+    radioStore.on('UpdateNewMessage', () => {
+      this.setState({ IncomingMessage: radioStore.NewMessage })
     })
 
     radioStore.on('SlotChanged', () => {
       this.setState({ SelectedSlot: radioStore.SelectedSlot })
     })
 
-    radioStore.on('ChangeCmdButton', () => {
-      this.setState({ Buttons: radioStore.CmdButtons })
+    radioStore.on('DoneCmd', () => {
+      // release all buttons
+      this.ReleaseButtons()
     })
 
     radioStore.on('ChangeSlot', () => {
       this.setState({ Slots: radioStore.SlotStatus })
     })
+  }
+
+  componentDidMount() {
+    this.ReleaseButtons()
   }
 
   render() {

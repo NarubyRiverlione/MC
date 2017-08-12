@@ -7,6 +7,7 @@ const Cnst = {
 
   Radio: {
     Actions: { store: 'STORE', decode: 'DECODE', erase: 'ERASE' },
+    Busy:{ store: 'storing', decode: 'decoding', erase: 'erasing',onSlot:' on slot '},
     Results: { store: 'Stored', decode: 'Decrypted', erase: 'Empty' },
     Time: {
       store: 2000, decode: 5000, erase: 1000, NewMessage: 10000,
