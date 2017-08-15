@@ -7,54 +7,71 @@ import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
 
+import firecomputersStore from '../../Stores/FireComputersStore'
+import * as FireComputerActions from '../../Actions/FireComputersActions'
+
 export default class FireComputer extends React.Component {
   constructor(props) {
     super(props)
-    this.state = InitState
+    this.state = {
+      SelectedFC: firecomputersStore.SelectedFC,
+      FCStatus: firecomputersStore.FCStatus,
+      Reading: firecomputersStore.Reading,
+      Sending: firecomputersStore.Sending
+    }
   }
 
   componentDidMount() {
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCselected, () => {
+      console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
+      this.setState({ SelectedFC: firecomputersStore.SelectedFC })
+    })
 
+    firecomputersStore.on(Cnst.FireComputers.Emit.msgSlotChanged, () => {
+      console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
+      this.setState({ SelectedMsg: firecomputersStore.SelectedMsgSlot })
+    })
+
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCisReading, () => {
+      this.setState({ Reading: firecomputersStore.Reading })
+    })
+    // at the moment FCupdateReading and FCdoneReading are same, may be later need to trigger other thing
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneReading, () => {
+      this.setState({ Reading: firecomputersStore.Reading })
+    })
+
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCisSending, () => {
+      this.setState({ Send: firecomputersStore.Sending })
+    })
+    // at the moment FCisSending and FCdoneSending are same, may be later need to trigger other thing
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneSending, () => {
+      this.setState({ Reading: firecomputersStore.Sending  })
+    })
+
+    firecomputersStore.on(Cnst.FireComputers.Emit.FCupdateStatus, () => {
+      this.setState({ FCStatus: firecomputersStore.FCStatus })
+    })
   }
 
-  componentWillUnmount() {
-
-  }
 
   SelectMsg(slot) {
-    this.setState({ SelectedMsg: slot })
-    console.log('FireComputer msg ' + slot + ' selected.')
+    FireComputerActions.SelectSlot(slot)
   }
 
-  SelectFC(FC) {
-    const SelectedFC = this.state.SelectedFC !== FC ? FC : '' // clicked already selected == deselect
-    console.log('FireComputer  ' + SelectedFC + ' selected.')
-    this.setState({ SelectedFC })
+  SelectFC(fc) {
+    FireComputerActions.SelectFC(fc)
+  }
 
+  ShowStatusSelectedFC() {
+    return this.state.SelectedFC === '' ? '' : this.state.FCStatus[this.state.SelectedFC]
   }
 
   Read() {
-    console.log('Start reading msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
-    // this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start inputting msg ' + this.state.SelectedMsg + ' into FC ' + this.state.SelectedFC)
-    this.setState({ Reading: true })
-
-    setTimeout(() => {
-      this.setState({ Reading: false })
-      // this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
-      this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission recieved' }) : this.setState({ FCB_Text: 'Mission recieved' })
-    }, 1000)
+    FireComputerActions.ReadMsg()
   }
 
   Send() {
-    console.log('Start sending mission from FC ' + this.state.SelectedFC + ' to Launch Station')
-    // this.props.ChangeStatus(Cnst.Stations.FireComputers, 'Start sending mission from FC ' + this.state.SelectedFC)
-    this.setState({ Sending: true })
 
-    setTimeout(() => {
-      this.setState({ Sending: false })
-      // this.props.ChangeStatus(Cnst.Stations.FireComputers, Cnst.Status.idle)
-      this.state.SelectedFC === 'A' ? this.setState({ FCA_Text: 'Mission send' }) : this.setState({ FCB_Text: 'Mission send' })
-    }, 1000)
   }
 
   render() {
@@ -79,7 +96,7 @@ export default class FireComputer extends React.Component {
               </div>
 
               <div className='cell large-6'>
-                <Display Width={250} Text={this.state.SelectedFC === 'A' ? this.state.FCA_Text : this.state.FCB_Text} />
+                <Display Width={250} Text={this.ShowStatusSelectedFC.bind(this)()} />
               </div>
             </div>
 
@@ -107,7 +124,7 @@ export default class FireComputer extends React.Component {
               <div className='cell small-2' />
 
               <div className='cell small-4' >
-                <Button Caption={Cnst.FireComputers.Actions.read} Width={150} TextColor='yellow' Color='slategrey'
+                <Button Caption={Cnst.FireComputers.Actions.read} Width={325} TextColor='yellow' Color='slategrey'
                   SetPressed={this.state.Reading} cb={this.Read.bind(this)} />
               </div>
 
@@ -126,18 +143,3 @@ export default class FireComputer extends React.Component {
   }
 }
 
-const InitState = {
-  SelectedMsg: 1,
-  FCA_Text: 'Waiting mission',
-  FCB_Text: 'Waiting mission',
-  SelectedFC: '',
-  Reading: false
-}
-
-FireComputer.propTypes = {
-
-}
-
-FireComputer.defaultProps = {
-
-}

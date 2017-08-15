@@ -4,7 +4,7 @@ import ControlPanel from './Components/Panels/ControlPanel'
 import { Cnst } from './Constants'
 
 import radioStore from './Stores/RadioStore'
-
+import firecomputersStore from './Stores/FireComputersStore'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -29,6 +29,10 @@ export default class App extends React.Component {
   componentWillMount() {
     radioStore.on('ChangedRadioStatus', () => {
       this.SetStationStatus(Cnst.Stations.Radio, radioStore.Status)
+    })
+
+    firecomputersStore.on('ChangedFCstatus', () => {
+      this.SetStationStatus(Cnst.Stations.FireComputers, firecomputersStore.Status)
     })
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react'
 // import PropTypes from 'prop-types'
 
@@ -48,21 +49,21 @@ export default class Radio extends React.Component {
   }
 
   componentWillMount() {
-    radioStore.on('UpdateNewMessage', () => {
-      console.log('RADIO: UpdateNewMessage: '+radioStore.NewMessage)
+    radioStore.on(Cnst.Radio.Emit.UpdateNewMessage, () => {
+      console.log('RADIO: UpdateNewMessage: ' + radioStore.NewMessage)
       this.setState({ IncomingMessage: radioStore.NewMessage })
     })
 
-    radioStore.on('SlotChanged', () => {
+    radioStore.on(Cnst.Radio.Emit.SlotChanged, () => {
       this.setState({ SelectedSlot: radioStore.SelectedSlot })
     })
 
-    radioStore.on('DoneCmd', () => {
+    radioStore.on(Cnst.Radio.Emit.DoneCmd, () => {
       // release all buttons
       this.ReleaseButtons()
     })
 
-    radioStore.on('ChangeSlot', () => {
+    radioStore.on(Cnst.Radio.Emit.ChangeSlot, () => {
       this.setState({ Slots: radioStore.SlotStatus })
     })
   }
@@ -81,7 +82,7 @@ export default class Radio extends React.Component {
           RunTimer={this.state.IncomingMessage} Time={Cnst.Radio.Time.NewMessageTimeOut}
           TimerDoneCB={this.NewMessageTimedOut.bind(this)}
         />
-      
+
         <div className='grid-container'>
           <div className='grid-x'>
             {/* ACTION BUTTONS */}
