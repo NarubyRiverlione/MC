@@ -3,7 +3,7 @@ const Cnst = {
 
   Stations: { Radio: 'Radio', FireComputers: 'Fire Computers', Armory: 'Armory', LaunchStations: 'Launch Stations' },
 
-  Ordnance: { AA: 'Anti A ircraft', G: ' Cruise Missle', AS: 'Anti Ship Missle', T: 'Torpedo', D: 'Defence' },
+  Ordnance: { AA: 'Anti Aircraft', G: ' Cruise Missle', AS: 'Anti Ship Missle', T: 'Torpedo', D: 'Defence' },
 
   Radio: {
     Actions: { store: 'STORE', decode: 'DECODE', erase: 'ERASE' },
@@ -20,7 +20,7 @@ const Cnst = {
     },
     Emit: {
       ChangedRadioStatus: 'ChangedRadioStatus', DoneCmd: 'RadioDoneCmd', SlotChanged: 'RadioSlotChanged',
-      ChangeSlot:'RadioChangeSlot',UpdateNewMessage:'RadioUpdateNewMessage',
+      ChangeSlot: 'RadioChangeSlot', UpdateNewMessage: 'RadioUpdateNewMessage',
     }
   },
 
@@ -28,15 +28,23 @@ const Cnst = {
     Name: { A: 'A', B: 'B' },
     Actions: { read: 'Read msg into FC ', send: 'Send mission to Launch Station' },
     Results: { read: 'Mission recieved', empty: 'Waiting for mission' },
-    Time: { read: 5000, selectFC: 1000, send:4000 },
+    Time: { read: 5000, selectFC: 1000, send: 4000 },
     Errors: {
       NoMsg: 'ERROR: no msg availible', MsgNotDecoded: 'ERROR: msg not decoded',
-      NoFCselected: 'ERROR: no FC is selected', NoMissionInSelectedFC:'ERROR: no mission in selected FC'
+      NoFCselected: 'ERROR: no FC is selected', NoMissionInSelectedFC: 'ERROR: no mission in selected FC'
     },
     Emit: {
       ChangedFCstatus: 'ChangedFCstatus', FCisReading: 'FCisReading', FCdoneReading: 'FCdoneReading',
-      FCupdateStatus: 'FCupdateStatus', FCisSending: 'FCisSending', FCdoneSending:'FCdoneSending'
+      FCupdateStatus: 'FCupdateStatus', FCisSending: 'FCisSending', FCdoneSending: 'FCdoneSending'
     }
+  },
+
+  LaunchStations: {
+    Name: { rails: 'Rails', VLT: 'Vertical Launch Tube', tubes: 'Tubes' },
+    Numbers: { A: 'A', B: 'B', one: '1', two: '2', romanOn: 'I', romanTwo: 'II' },
+    Actions: { fire: 'F I R E', prepare: 'Prepare', remove: 'Remove', repair: 'Repair' },
+    Results: { fire: 'Fired', prepare: 'Ready to launch', remove: 'Empty', repair: 'Repaired' },
+    Emit: { selected: 'LSselected', fire: 'LSfiring' }
   }
 
 
@@ -47,6 +55,10 @@ const ActionCnst = {
   FireComputers: {
     SelectSlot: 'FIRECOMPUTERS_SELECT_SLOT', ReadMsg: 'FIRECOMPUTER_READ_MSG',
     SelectFireComputer: 'FIRECOMPUTERS_SELECT_FC', SendMission: 'FIRECOMPUTER_SEND_MISSION',
+  },
+  LaunchStations: {
+    Prepare: 'LAUNCHSTATION_PREPARE', Remove: 'LAUNCHSTATION_REMOVE', Repair: 'LAUNCHSTATION_REPAIR',
+    Select: 'LAUNCHSTATION_SELECT'
   }
 }
 

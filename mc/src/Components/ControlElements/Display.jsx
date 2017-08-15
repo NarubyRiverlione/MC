@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 export default class Display extends React.Component {
   constructor(props) {
     super(props)
-    this.Xoffset = !this.props.Title ? 10 : this.props.Title.length * 35
+    this.Xoffset = !this.props.Title ? 10 : this.props.Title.length * 15 + 20
   }
   render() {
     return (

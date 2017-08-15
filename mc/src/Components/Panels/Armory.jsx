@@ -26,7 +26,7 @@ export default class Radio extends React.Component {
       <div className='grid-container' id='ArmoryDisplay'>
         <div className='grid-x'>
           {/* Select ordnace */}
-          <div className='small-7 grid-y'>
+          <div className='medium-7 grid-y'>
             <div className='cell small-2'><p>Select Cnst.Ordnance</p></div>
             <div className='cell small-2'>
               <Button Caption={Cnst.Ordnance.AA} Width={250} Color='slategrey' TextColor='yellow'
@@ -57,7 +57,7 @@ export default class Radio extends React.Component {
 
 
           {/* amount in store */}
-          <div className='small-2 grid-y'>
+          <div className='medium-2 grid-y'>
             <div className='cell small-2'><p># store</p></div>
             <div className='cell small-2'><Display Text={this.state.Amount.AA.toString().padStart(2, '0')} Width={50} /></div>
             <div className='cell small-2'><Display Text={this.state.Amount.G.toString().padStart(2, '0')} Width={50} /></div>
@@ -67,7 +67,7 @@ export default class Radio extends React.Component {
           </div>
 
           {/* Send ordnace to Launch station */}
-          <div className='small-3 grid-y'>
+          <div className='large-3 grid-y'>
             <div className='cell small-5' />
             <div className='cell small-4'>
               <Button Caption='LOAD' Width={100} Color='slategrey' TextColor='yellow'
