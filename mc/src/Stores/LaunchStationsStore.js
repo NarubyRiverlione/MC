@@ -14,16 +14,16 @@ class LaunchStationsStore extends EventEmitter {
     this.LaunchStationStatus = ''
 
     this.Station[Cnst.LaunchStations.Name.rails] = {
-      [Cnst.LaunchStations.Numbers.one]: false,
-      [Cnst.LaunchStations.Numbers.two]: false,
+      [Cnst.LaunchStations.Numbers.one]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
+      [Cnst.LaunchStations.Numbers.two]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
     }
     this.Station[Cnst.LaunchStations.Name.VLT] = {
-      [Cnst.LaunchStations.Numbers.A]: false,
-      [Cnst.LaunchStations.Numbers.B]: false,
+      [Cnst.LaunchStations.Numbers.A]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
+      [Cnst.LaunchStations.Numbers.B]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
     }
     this.Station[Cnst.LaunchStations.Name.tubes] = {
-      [Cnst.LaunchStations.Numbers.romanOn]: false,
-      [Cnst.LaunchStations.Numbers.romanTwo]: false,
+      [Cnst.LaunchStations.Numbers.romanOn]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
+      [Cnst.LaunchStations.Numbers.romanTwo]: { button: false, status: Cnst.LaunchStations.StatusColor.empty },
     }
 
     this.Firing = false

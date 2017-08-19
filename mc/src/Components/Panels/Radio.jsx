@@ -78,7 +78,7 @@ export default class Radio extends React.Component {
         {/* INCOMING MESSAGE */}
         <TimerLed
           Caption='Incoming message'
-          Colors={['green', 'orange', 'red']} BackgroundColor={'Gainsboro'}
+          Colors={Cnst.LedColors} BackgroundColor={Cnst.LedBackgroundColor}
           RunTimer={this.state.IncomingMessage} Time={Cnst.Radio.Time.NewMessageTimeOut}
           TimerDoneCB={this.NewMessageTimedOut.bind(this)}
         />

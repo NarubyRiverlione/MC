@@ -6,21 +6,41 @@ import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import { Cnst } from '../../Constants'
 
-export default class Radio extends React.Component {
+import * as ArmoryActions from '../../Actions/ArmoryActions'
+import armoryStore from '../../Stores/ArmoryStore'
+
+export default class Armory extends React.Component {
   constructor(props) {
     super(props)
-    this.state = InitState
+    this.state = {
+      Selected: armoryStore.Selected,
+      Loading: armoryStore.Loading,
+      Amount: armoryStore.Amount
+    }
   }
 
-
   SetSelected(caption) {
-    this.state.Selected === caption ? this.setState({ Selected: '' }) : this.setState({ Selected: caption })
+    ArmoryActions.Select(caption)
+    // armoryStore.Selected === caption ? this.setState({ Selected: '' }) : this.setState({ Selected: caption })
   }
 
   Load() {
-    console.log('Load ' + this.state.Selected)
+    ArmoryActions.Load()
+    console.log('Load ' + armoryStore.Selected)
   }
 
+  componentDidMount() {
+    armoryStore.on(Cnst.Armory.Emit.selected, () => {
+      console.log('Armory  ' + armoryStore.selected + ' selected.')
+      this.setState({ Selected: armoryStore.Selected })
+    })
+
+    armoryStore.on(Cnst.Armory.Emit.loading, () => {
+      console.log('Armory start loading ' + armoryStore.selected + '.')
+      this.setState({ Loading: armoryStore.loading })
+    })
+
+  }
   render() {
     return (
       <div className='grid-container' id='ArmoryDisplay'>
@@ -70,7 +90,7 @@ export default class Radio extends React.Component {
           <div className='large-3 grid-y'>
             <div className='cell small-5' />
             <div className='cell small-4'>
-              <Button Caption='LOAD' Width={100} Color='slategrey' TextColor='yellow'
+              <Button Caption={Cnst.Armory.Actions.load} Width={100} Color='slategrey' TextColor='yellow'
                 SetPressed={this.state.Loading} cb={this.Load.bind(this)}
               />
             </div>
@@ -79,11 +99,5 @@ export default class Radio extends React.Component {
       </div>
     )
   }
-}
-
-const InitState = {
-  Amount: { AA: 9, G: 5, AS: 2, T: 2, D: 20 },
-  Selected: '',
-  Loading: false
 }
 

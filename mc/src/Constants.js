@@ -1,6 +1,9 @@
 const Cnst = {
   Status: { idle: 'Idle' },
 
+  LedColors: ['green', 'orange', 'red'],
+  LedBackgroundColor: 'Gainsboro',
+
   Stations: { Radio: 'Radio', FireComputers: 'Fire Computers', Armory: 'Armory', LaunchStations: 'Launch Stations' },
 
   Ordnance: { AA: 'Anti Aircraft', G: ' Cruise Missle', AS: 'Anti Ship Missle', T: 'Torpedo', D: 'Defence' },
@@ -42,11 +45,17 @@ const Cnst = {
   LaunchStations: {
     Name: { rails: 'Rails', VLT: 'Vertical Launch Tube', tubes: 'Tubes' },
     Numbers: { A: 'A', B: 'B', one: '1', two: '2', romanOn: 'I', romanTwo: 'II' },
+    StatusColor: { empty: 2, loading: 1, loaded: 0 },
     Actions: { fire: 'F I R E', prepare: 'Prepare', remove: 'Remove', repair: 'Repair' },
     Results: { fire: 'Fired', prepare: 'Ready to launch', remove: 'Empty', repair: 'Repaired' },
     Emit: { selected: 'LSselected', fire: 'LSfiring' }
-  }
+  },
 
+  Armory: {
+    Actions: { load: 'L O A D' },
+    Emit: { selected: 'OrdnanceIsSelected', loading: 'OrdnanceStartLoading' }
+
+  }
 
 }
 
@@ -59,6 +68,9 @@ const ActionCnst = {
   LaunchStations: {
     Prepare: 'LAUNCHSTATION_PREPARE', Remove: 'LAUNCHSTATION_REMOVE', Repair: 'LAUNCHSTATION_REPAIR',
     Select: 'LAUNCHSTATION_SELECT'
+  },
+  Armory: {
+    Select: 'ARMORY_SELECT', Load: 'ARMORY_LOAD'
   }
 }
 
