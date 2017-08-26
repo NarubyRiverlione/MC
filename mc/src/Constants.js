@@ -48,13 +48,38 @@ const Cnst = {
     StatusColor: { empty: 2, loading: 1, loaded: 0 },
     Actions: { fire: 'F I R E', prepare: 'Prepare', remove: 'Remove', repair: 'Repair' },
     Results: { fire: 'Fired', prepare: 'Ready to launch', remove: 'Empty', repair: 'Repaired' },
-    Emit: { selected: 'LSselected', fire: 'LSfiring' }
+    Emit: {
+      selected: 'LSselected', fire: 'LSfiring', ChangedSelectedStatus: 'LSselecedStatusChanged',
+      startLoading: 'LSstartLoading', doneLoading: 'LSdoneLoading', doneRemoving: 'LSdoneRemoving',
+      startPreparing: 'LSstartPreparing'
+    },
+    Errors: {
+      WrongLaunchStation: {
+        AA: 'ERROR: Anti Air needs a rail selected',
+        AS: 'ERROR: Anti Ship needs a rail selected',
+        G: 'ERROR: Ground Missile needs a VLT selected',
+        T: 'ERROR: Torpedo needs a Tube selected',
+      },
+      SelectedLSnotEmpty: 'ERROR: selected Launch Station not empty',
+      NoLSselected: 'ERROR: no Launch Station selected'
+    },
+    Time: { ErrorWrongStation: 4000, removing: 7000, loading: 5000, preparing: 4000 }
   },
 
   Armory: {
-    Actions: { load: 'L O A D' },
-    Emit: { selected: 'OrdnanceIsSelected', loading: 'OrdnanceStartLoading' }
-
+    Actions: { load: 'L O A D', loading: 'Loading into Launch Station' },
+    Emit: {
+      selected: 'OrdnanceIsSelected', loading: 'OrdnanceStartLoading', ChangedArmoryStatus: 'ChangedArmoryStatus',
+      changeAmount: 'ArmoryChangeAmount'
+    },
+    Errors: {
+      WrongLaunchStation: 'ERROR: Wrong Launch Station selected',
+      NoOrdnanceSelected: 'ERROR: no ordnance selected',
+      SelectedLSnotEmpty: 'ERROR: cannot load',
+      NoLSselected: 'ERROR: no Launch Station selected',
+      OrdnanceOutOfStock: 'ERROR: Ordnance out of stock'
+    },
+    Time: { ShowError: 6000, StartLoading: 1000, NoOrdnanceSelected: 4000, OrdnanceOutOfStock: 4000 }
   }
 
 }
@@ -67,10 +92,11 @@ const ActionCnst = {
   },
   LaunchStations: {
     Prepare: 'LAUNCHSTATION_PREPARE', Remove: 'LAUNCHSTATION_REMOVE', Repair: 'LAUNCHSTATION_REPAIR',
-    Select: 'LAUNCHSTATION_SELECT'
+    Select: 'LAUNCHSTATION_SELECT', ChangeStatus: 'LAUNCHSTATION_CHANGE_STATUS',
+    StartLoading: 'LAUNCHSTATION_START_LOADING', DoneLoading: 'LAUNCHSTATION_DONE_LOADING'
   },
   Armory: {
-    Select: 'ARMORY_SELECT', Load: 'ARMORY_LOAD'
+    Select: 'ARMORY_SELECT', Load: 'ARMORY_LOAD', ChangeStatus: 'ARMORY_CHANGE_STATUS'
   }
 }
 

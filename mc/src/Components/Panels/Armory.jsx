@@ -26,18 +26,23 @@ export default class Armory extends React.Component {
 
   Load() {
     ArmoryActions.Load()
-    console.log('Load ' + armoryStore.Selected)
+    console.log('Armory: Loading ' + armoryStore.Selected)
   }
 
   componentDidMount() {
     armoryStore.on(Cnst.Armory.Emit.selected, () => {
-      console.log('Armory  ' + armoryStore.selected + ' selected.')
+      console.log('Armory  ' + armoryStore.Selected + ' selected.')
       this.setState({ Selected: armoryStore.Selected })
     })
 
     armoryStore.on(Cnst.Armory.Emit.loading, () => {
-      console.log('Armory start loading ' + armoryStore.selected + '.')
-      this.setState({ Loading: armoryStore.loading })
+      console.log('Armory loading ' + armoryStore.Selected + ' = ' + armoryStore.loading)
+      this.setState({ Loading: armoryStore.Loading })
+    })
+
+    armoryStore.on(Cnst.Armory.Emit.changeAmount, () => {
+      console.log('Armory amount changed')
+      this.setState({ Amount: armoryStore.Amount })
     })
 
   }
@@ -79,11 +84,11 @@ export default class Armory extends React.Component {
           {/* amount in store */}
           <div className='medium-2 grid-y'>
             <div className='cell small-2'><p># store</p></div>
-            <div className='cell small-2'><Display Text={this.state.Amount.AA.toString().padStart(2, '0')} Width={50} /></div>
-            <div className='cell small-2'><Display Text={this.state.Amount.G.toString().padStart(2, '0')} Width={50} /></div>
-            <div className='cell small-2'><Display Text={this.state.Amount.AS.toString().padStart(2, '0')} Width={50} /></div>
-            <div className='cell small-2'><Display Text={this.state.Amount.T.toString().padStart(2, '0')} Width={50} /></div>
-            <div className='cell small-2'><Display Text={this.state.Amount.D.toString().padStart(2, '0')} Width={50} /></div>
+            <div className='cell small-2'><Display Text={this.state.Amount[Cnst.Ordnance.AA].toString().padStart(2, '0')} Width={50} /></div>
+            <div className='cell small-2'><Display Text={this.state.Amount[Cnst.Ordnance.G].toString().padStart(2, '0')} Width={50} /></div>
+            <div className='cell small-2'><Display Text={this.state.Amount[Cnst.Ordnance.AS].toString().padStart(2, '0')} Width={50} /></div>
+            <div className='cell small-2'><Display Text={this.state.Amount[Cnst.Ordnance.T].toString().padStart(2, '0')} Width={50} /></div>
+            <div className='cell small-2'><Display Text={this.state.Amount[Cnst.Ordnance.D].toString().padStart(2, '0')} Width={50} /></div>
           </div>
 
           {/* Send ordnace to Launch station */}

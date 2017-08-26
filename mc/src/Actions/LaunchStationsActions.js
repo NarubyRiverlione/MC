@@ -39,3 +39,16 @@ export function Fire() {
     type: ActionCnst.LaunchStations.Fire
   })
 }
+
+export function ChangeStatus(status) {
+  AppDispatcher.dispatch({
+    type: ActionCnst.LaunchStations.ChangeStatus,
+    payload: status
+  })
+}
+
+export function StartLoading() {
+  AppDispatcher.dispatch({
+    type: ActionCnst.LaunchStations.StartLoading
+  })
+}

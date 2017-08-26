@@ -5,6 +5,8 @@ import { Cnst } from './Constants'
 
 import radioStore from './Stores/RadioStore'
 import firecomputersStore from './Stores/FireComputersStore'
+import launchStationsStore from './Stores/LaunchStationsStore'
+import armoryStore from './Stores/ArmoryStore'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,9 +14,9 @@ export default class App extends React.Component {
 
     let Stations = {}
     Stations[Cnst.Stations.Radio] = { Status: radioStore.Status }
-    Stations[Cnst.Stations.FireComputers] = { Status: 'Idle' }
-    Stations[Cnst.Stations.Armory] = { Status: 'Idle' }
-    Stations[Cnst.Stations.LaunchStations] = { Status: 'Idle' }
+    Stations[Cnst.Stations.FireComputers] = { Status: firecomputersStore.Status }
+    Stations[Cnst.Stations.Armory] = { Status: armoryStore.Status }
+    Stations[Cnst.Stations.LaunchStations] = { Status: launchStationsStore.Status }
 
     this.state = { Stations }
   }
@@ -27,12 +29,21 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    radioStore.on('ChangedRadioStatus', () => {
+    // change Station Displays
+    radioStore.on(Cnst.Radio.Emit.ChangedRadioStatus, () => {
       this.SetStationStatus(Cnst.Stations.Radio, radioStore.Status)
     })
 
-    firecomputersStore.on('ChangedFCstatus', () => {
+    firecomputersStore.on(Cnst.FireComputers.Emit.ChangedFCstatus, () => {
       this.SetStationStatus(Cnst.Stations.FireComputers, firecomputersStore.Status)
+    })
+
+    launchStationsStore.on(Cnst.LaunchStations.Emit.ChangedLaunchStationsStatus, () => {
+      this.SetStationStatus(Cnst.Stations.LaunchStations, launchStationsStore.Status)
+    })
+
+    armoryStore.on(Cnst.Armory.Emit.ChangedArmoryStatus, () => {
+      this.SetStationStatus(Cnst.Stations.Armory, armoryStore.Status)
     })
   }
 
