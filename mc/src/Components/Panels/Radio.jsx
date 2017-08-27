@@ -17,9 +17,9 @@ export default class Radio extends React.Component {
     super(props)
     this.state = {
       IncomingMessage: radioStore.NewMessage,
-      Slots: radioStore.SlotStatus,
+      Slots: radioStore.Slots.map(sl => sl.status),
       Buttons: {},
-      SelectedSlot: radioStore.SelectedSlot
+      SelectedSlot: radioStore.Selected
     }
   }
 
@@ -45,7 +45,7 @@ export default class Radio extends React.Component {
   }
 
   NewMessageTimedOut() {
-    RadioActions.NewMessageTimedOut()
+    //TODO move to GameStore RadioActions.NewMessageTimedOut()
   }
 
   componentWillMount() {
@@ -55,7 +55,8 @@ export default class Radio extends React.Component {
     })
 
     radioStore.on(Cnst.Radio.Emit.SlotChanged, () => {
-      this.setState({ SelectedSlot: radioStore.SelectedSlot })
+      console.log('RADIO: selected slot: ' + radioStore.Selected)
+      this.setState({ SelectedSlot: radioStore.Selected })
     })
 
     radioStore.on(Cnst.Radio.Emit.DoneCmd, () => {
@@ -64,7 +65,7 @@ export default class Radio extends React.Component {
     })
 
     radioStore.on(Cnst.Radio.Emit.ChangeSlot, () => {
-      this.setState({ Slots: radioStore.SlotStatus })
+      this.setState({ Slots: radioStore.Slots.map(sl => sl.status) })
     })
   }
 
@@ -79,7 +80,8 @@ export default class Radio extends React.Component {
         <TimerLed
           Caption='Incoming message'
           Colors={Cnst.LedColors} BackgroundColor={Cnst.LedBackgroundColor}
-          RunTimer={this.state.IncomingMessage} Time={Cnst.Radio.Time.NewMessageTimeOut}
+          RunTimer={this.state.IncomingMessage}
+          Time={Cnst.Game.Time.NewMessageTimeOut}
           TimerDoneCB={this.NewMessageTimedOut.bind(this)}
         />
 
@@ -121,15 +123,15 @@ export default class Radio extends React.Component {
                 {/* slot displays */}
                 <div className='grid-y small-5' >
                   <div className='cell medium-4'>
-                    <Display BackgroundColor='darkgrey' Title='1' Text={this.state.Slots[1]} Width={100} />
+                    <Display BackgroundColor='darkgrey' Title='1' Text={this.state.Slots[0]} Width={100} />
                   </div>
 
                   <div className='cell medium-4'>
-                    <Display BackgroundColor='darkgrey' Title='2' Text={this.state.Slots[2]} Width={100} />
+                    <Display BackgroundColor='darkgrey' Title='2' Text={this.state.Slots[1]} Width={100} />
                   </div>
 
                   <div className='cell medium-4'>
-                    <Display BackgroundColor='darkgrey' Title='3' Text={this.state.Slots[3]} Width={100} />
+                    <Display BackgroundColor='darkgrey' Title='3' Text={this.state.Slots[2]} Width={100} />
                   </div>
                 </div>
               </div>

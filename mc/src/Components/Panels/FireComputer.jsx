@@ -15,7 +15,7 @@ export default class FireComputer extends React.Component {
     super(props)
     this.state = {
       SelectedFC: firecomputersStore.SelectedFC,
-      FCStatus: firecomputersStore.FCStatus,
+      FCStates: firecomputersStore.FCS.map(fc => fc.status),
       Reading: firecomputersStore.Reading,
       Sending: firecomputersStore.Sending
     }
@@ -45,11 +45,11 @@ export default class FireComputer extends React.Component {
     })
     // at the moment FCisSending and FCdoneSending are same, may be later need to trigger other thing
     firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneSending, () => {
-      this.setState({ Reading: firecomputersStore.Sending  })
+      this.setState({ Reading: firecomputersStore.Sending })
     })
 
     firecomputersStore.on(Cnst.FireComputers.Emit.FCupdateStatus, () => {
-      this.setState({ FCStatus: firecomputersStore.FCStatus })
+      this.setState({ FCStates: firecomputersStore.FCS.map(fc => fc.status) })
     })
   }
 
@@ -63,7 +63,7 @@ export default class FireComputer extends React.Component {
   }
 
   ShowStatusSelectedFC() {
-    return this.state.SelectedFC === '' ? '' : this.state.FCStatus[this.state.SelectedFC]
+    return this.state.SelectedFC === '' ? '' : this.state.FCStates[this.state.SelectedFC]
   }
 
   Read() {
@@ -87,12 +87,14 @@ export default class FireComputer extends React.Component {
 
               <div className='cell large-2'>
                 <Button Caption='A' Width={50} TextColor='yellow' Color='slategrey'
-                  SetPressed={this.state.SelectedFC === 'A' ? true : false} cb={this.SelectFC.bind(this)} />
+                  SetPressed={this.state.SelectedFC === 'A' ? true : false}
+                  cb={this.SelectFC.bind(this)} />
               </div>
 
               <div className='cell large-2'>
                 <Button Caption='B' Width={50} TextColor='yellow' Color='slategrey' Title=''
-                  SetPressed={this.state.SelectedFC === 'B' ? true : false} cb={this.SelectFC.bind(this)} />
+                  SetPressed={this.state.SelectedFC === 'B' ? true : false}
+                  cb={this.SelectFC.bind(this)} />
               </div>
 
               <div className='cell large-6'>

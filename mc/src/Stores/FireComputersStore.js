@@ -10,11 +10,20 @@ class FireComputersStore extends EventEmitter {
     super()
     this.SelectedFC = ''
 
-    this.SelectedMsgSlot = 1
+    this.SelectedMsgSlot = 2
 
-    this.FCStatus = {}
-    this.FCStatus[Cnst.FireComputers.Name.A] = Cnst.FireComputers.Results.empty
-    this.FCStatus[Cnst.FireComputers.Name.B] = Cnst.FireComputers.Results.empty
+    this.FCS = [
+      {
+        name: Cnst.FireComputers.Name.A,
+        status: Cnst.FireComputers.Results.empty,
+        missionID: -1
+      },
+      {
+        name: Cnst.FireComputers.Name.B,
+        status: Cnst.FireComputers.Results.empty,
+        missionID: -1
+      }
+    ]
 
     this.Sending = false
     this.Reading = false
@@ -38,14 +47,18 @@ class FireComputersStore extends EventEmitter {
   }
 
   SelectFCcomputer(fc) {
-    const SelectFC = this.SelectedFC !== fc ? fc : '' // clicked already selected == deselect
-    this.SelectedFC = SelectFC
+    this.SelectedFC = this.SelectedFC !== fc ? fc : '' // clicked already selected == deselect
     this.emit(Cnst.FireComputers.Emit.FCselected)
   }
 
   ReadMsg() {
-    const MsgStatus = RadioStore.SlotStatus[this.SelectedMsgSlot]
-    console.log('FC: SelectedFC: ' + this.SelectedFC + ' Selected MsgSlot ' + this.SelectedMsgSlot + ' MsgStatus: ' + MsgStatus)
+    const SelectedRadioSlot = RadioStore.Slots.find(sl => sl.slot === this.SelectedMsgSlot)
+    const { status, missionID } = SelectedRadioSlot
+
+    const workingWithFC = this.SelectedFC
+
+    console.log('FC: SelectedFC: ' + this.SelectedFC + ' Selected MsgSlot ' + this.SelectedMsgSlot
+      + ' MsgStatus: ' + status)
 
     // check if a FC is selected
     if (this.SelectedFC === '') {
@@ -55,14 +68,14 @@ class FireComputersStore extends EventEmitter {
       return
     }
     // check if selected slot contains a msg
-    if (MsgStatus === Cnst.Radio.Results.erase) {
+    if (status === Cnst.Radio.Results.erase) {
       console.log('FC: Selected msg slot ' + this.SelectedMsgSlot + ' is empty')
       this.Status = Cnst.FireComputers.Errors.NoMsg
       this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
       return
     }
     // check if msg is decrypted
-    if (MsgStatus === Cnst.Radio.Results.store) {
+    if (status === Cnst.Radio.Results.store) {
       console.log('FC: Selected msg ' + this.SelectedMsgSlot + ' is not decrypted')
       this.Status = Cnst.FireComputers.Errors.MsgNotDecoded
       this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
@@ -87,8 +100,15 @@ class FireComputersStore extends EventEmitter {
       this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
       // release read button down
       this.emit(Cnst.FireComputers.Emit.FCdoneReading)
-      // set status selected FC
-      this.FCStatus[this.SelectedFC] = Cnst.FireComputers.Results.read
+      // set 'read' status in selected FC
+      const newFCSstatus = {
+        name: workingWithFC,
+        status: Cnst.FireComputers.Results.read,
+        missionID: missionID
+      }
+      this.FCS = this.FCS.map(fc =>
+        fc.name === workingWithFC ? newFCSstatus : fc
+      )
       this.emit(Cnst.FireComputers.Emit.FCupdateStatus)
     }
       , Cnst.FireComputers.Time.read
@@ -104,8 +124,8 @@ class FireComputersStore extends EventEmitter {
       return
     }
     // check if selected FC has mission
-    if (this.FCStatus[this.SelectedFC] !==Cnst.FireComputers.Results.read ) {
-      console.log('FC: selected fc '+this.SelectedFC+' hasn no mission')
+    if (this.FCS[this.SelectedFC].status !== Cnst.FireComputers.Results.read) {
+      console.log('FC: selected fc ' + this.SelectedFC + ' hasn no mission')
       this.Status = Cnst.FireComputers.Errors.NoMissionInSelectedFC
       this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
       return
@@ -127,6 +147,13 @@ class FireComputersStore extends EventEmitter {
       this.Sending = false
       this.emit(Cnst.FireComputers.Emit.FCdoneSending)
       // set selected FC to waiting
+      // TODO
+      this.FCS = this.FCS.map(fc =>
+        fc.name === this.SelectedFC ?
+          { ...fc, status: Cnst.FireComputers.Results.empty } // copy all props, change status
+          : fc
+      )
+
       this.FCStatus[this.SelectedFC] = Cnst.FireComputers.Results.empty
     }
       , Cnst.FireComputers.Time.send

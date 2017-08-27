@@ -3,44 +3,59 @@ import AppDispatcher from '../AppDispatcher'
 import { ActionCnst, Cnst } from '../Constants'
 import { EventEmitter } from 'events'
 
+import gameStore from './GameStore'
+
 class RadioStore extends EventEmitter {
   constructor(dispatcher) {
     super()
     this.NewMessage = false
 
-    this.SelectedSlot = 1
+    this.Selected = 1
 
     // this.CmdButtons = {}
     // this.CmdButtons[Cnst.Radio.Actions.store] = false
     // this.CmdButtons[Cnst.Radio.Actions.decode] = false
     // this.CmdButtons[Cnst.Radio.Actions.erase] = false
 
-    this.SlotStatus = ['', Cnst.Radio.Results.erase, Cnst.Radio.Results.erase, Cnst.Radio.Results.erase]
+    // this.SlotStatus = ['',
+    //   Cnst.Radio.Results.erase,
+    //   Cnst.Radio.Results.erase,
+    //   Cnst.Radio.Results.erase]
+
+    this.Slots = [
+      { slot: 1, status: Cnst.Radio.Results.erase, missionID: -1 },
+      { slot: 2, status: Cnst.Radio.Results.erase, missionID: -1 },
+      { slot: 3, status: Cnst.Radio.Results.erase, missionID: -1 },
+    ]
 
     this.Status = Cnst.Status.idle
 
-    this.StartTimerNewMessage()
   }
 
   EvaluateActions(action) {
     switch (action.type) {
       case ActionCnst.Radio.SelectSlot: this.SelectSlot(action.payload); break
       case ActionCnst.Radio.ExecuteCmd: this.ExecuteCmd(action.payload); break
+      case ActionCnst.Radio.NewMessage: this.NewMsg(); break
       case ActionCnst.Radio.NewMessageTimedOut: this.NewMessageTimedOut(); break
       default: break
     }
   }
 
   SelectSlot(slot) {
-    this.SelectedSlot = slot
+    this.Selected = slot
+    console.log('radio inside slot: ' + this.Selected)
     this.emit(Cnst.Radio.Emit.SlotChanged)
   }
 
   ExecuteCmd(cmd) {
+    const selectedSlot = this.Slots.find(sl => sl.slot === this.Selected)
+    const workingSelected = this.Selected
+
     // trying to start decoding ?
     if (cmd === Cnst.Radio.Actions.decode) {
       // there must be a message stored
-      if (this.SlotStatus[this.SelectedSlot] !== Cnst.Radio.Results.store) {
+      if (selectedSlot.status !== Cnst.Radio.Results.store) {
         this.Status = Cnst.Radio.Errors.NoDecodeNothingStored
         this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
         this.emit(Cnst.Radio.Emit.DoneCmd)
@@ -59,26 +74,35 @@ class RadioStore extends EventEmitter {
     }
 
     // start cmd, update Radio Status display 
-    // console.log('Start Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
-    this.Status = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + this.SelectedSlot
+    // console.log('Start Radio action ' + cmd + ' on slot ' + this.Selected)
+    this.Status = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + workingSelected
     this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
 
 
     setTimeout(() => {
       // end cmd,  update Radio Status display 
-      // console.log('End Radio action ' + cmd + ' on slot ' + this.SelectedSlot)
+      // console.log('End Radio action ' + cmd + ' on slot ' + this.Selected)
       this.Status = Cnst.Status.idle
       this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
 
-      // show new status in selected slot display
-      this.SlotStatus[this.SelectedSlot] = Cnst.Radio.Results[cmd.toLowerCase()]
+      // set new status and missionID in selected slot
+      const newSlotStatus = {
+        slot: workingSelected,
+        status: Cnst.Radio.Results[cmd.toLowerCase()],
+        missionID: gameStore.lastMissionID
+      }
+
+      this.Slots = this.Slots.map(sl =>
+        sl.slot === workingSelected ? newSlotStatus : sl
+      )
+
       this.emit(Cnst.Radio.Emit.ChangeSlot)
 
+      // msg is stored..
       if (cmd === Cnst.Radio.Actions.store) {
-        // msg is store, clear new msg status, start timer next new msg
+        //... clear new msg status
         this.NewMessage = false
         this.emit(Cnst.Radio.Emit.UpdateNewMessage)
-        this.StartTimerNewMessage()
       }
 
       this.emit(Cnst.Radio.Emit.DoneCmd)
@@ -87,30 +111,23 @@ class RadioStore extends EventEmitter {
       , Cnst.Radio.Time[cmd.toLowerCase()])
   }
 
-  StartTimerNewMessage() {
-    // wait for new msg is random between NewIncomingMessageMin and NewIncomingMessageMax
-    const nextIncoming = Math.floor(Math.random() * Cnst.Radio.Time.NewIncomingMessageMax) + Cnst.Radio.Time.NewIncomingMessageMin
-    console.log('New msg in ' + nextIncoming / 1000 + ' sec')
-    setTimeout(() => {
-      console.log('New msg created')
-      this.NewMessage = true
-      this.emit(Cnst.Radio.Emit.UpdateNewMessage)
-    }, nextIncoming)
+  NewMsg() {
+    this.NewMessage = true
+    this.emit(Cnst.Radio.Emit.UpdateNewMessage)
   }
 
   NewMessageTimedOut() {
-    // TODO: move to GameStore, reduce Rank, sound alert
     this.Status = Cnst.Radio.Errors.NewMessageTimedOut
     this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
     this.NewMessage = false
-    
+
     setTimeout(() => {
+      //  clear error status, start timer new msg
       this.Status = Cnst.Status.idle
-      this.emit(Cnst.Radio.Emit.ChangedRadioStatus)      
-      this.StartTimerNewMessage()
+      this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
+      //  this.StartTimerNewMessage()
     }, 2000)
   }
-
 }
 
 
