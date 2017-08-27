@@ -38,16 +38,27 @@ class GameStore extends EventEmitter {
       this.CreateNewMission()
       // set new message in Radio
       RadioNewMessage()
+      //restart timer new mission
+      this.StartTimerNewMessage()
     }, nextIncoming)
   }
 
 
   NewMessageTimedOut() {
-    // clear IncommingMessage
-    //TODO
-
     // signal via Radio status the time out
     RadioTimedOut()
+
+    // restart timer new mission
+    this.StartTimerNewMessage()
+
+    // reduce Rank
+    this.Rank = this.Rank - 1
+    // TODO: show rank
+    console.log('Rank reducde to ' + this.Rank)
+    if (this.Rank < 0) {
+      //TODO: end game
+      console.warn('END GAME, rank < 0')
+    }
   }
 
   CreateNewMission() {
@@ -56,17 +67,9 @@ class GameStore extends EventEmitter {
     // add new mission
     this.Missions = this.Missions.concat(NewMission)
   }
-
-  // SetMissionPanelLocation(panelLoc, ID) {
-  //   let changeMission = this.Missions.find(m => m.ID === ID)
-  //   changeMission.PanelLocation = panelLoc
-
-  //   this.Missions = Object.assign(this.Missions, changeMission)
-  // }
-
-
-
 }
+
+
 const gameStore = new GameStore()
 // elke instance van RadioStore doet eigen afhandeling van acties
 AppDispatcher.register(gameStore.EvaluateActions.bind(gameStore))

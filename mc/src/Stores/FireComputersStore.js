@@ -4,13 +4,14 @@ import { ActionCnst, Cnst } from '../Constants'
 import { EventEmitter } from 'events'
 
 import RadioStore from './RadioStore'
+import GameStore from './GameStore'
 
 class FireComputersStore extends EventEmitter {
   constructor(dispatcher) {
     super()
     this.SelectedFC = ''
 
-    this.SelectedMsgSlot = 2
+    this.SelectedMsgSlot = 3
 
     this.FCS = [
       {
@@ -93,26 +94,39 @@ class FireComputersStore extends EventEmitter {
 
 
     setTimeout(() => {
-      console.log('Fc: Done reading msg into FC ' + this.SelectedFC)
-      this.Reading = false
-      // show FC status idle
-      this.Status = Cnst.Status.idle
-      this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
-      // release read button down
-      this.emit(Cnst.FireComputers.Emit.FCdoneReading)
-      // set 'read' status in selected FC
-      const newFCSstatus = {
-        name: workingWithFC,
-        status: Cnst.FireComputers.Results.read,
-        missionID: missionID
-      }
-      this.FCS = this.FCS.map(fc =>
-        fc.name === workingWithFC ? newFCSstatus : fc
-      )
-      this.emit(Cnst.FireComputers.Emit.FCupdateStatus)
+      this.DoneLoading(workingWithFC, missionID)
     }
       , Cnst.FireComputers.Time.read
     )
+  }
+
+  // when message is loaded into FC
+  DoneLoading(workingWithFC, missionID) {
+    console.log('Fc: Done reading msg into FC ' + this.SelectedFC)
+    this.Reading = false
+
+    // show FC status idle
+    this.Status = Cnst.Status.idle
+    this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
+
+    // release read button down
+    this.emit(Cnst.FireComputers.Emit.FCdoneReading)
+
+    // show Mission type on FC display
+    const mission = GameStore.Missions.find(m => m.ID === missionID)
+
+    // set 'read' status in selected FC
+    const newFCSstatus = {
+      name: workingWithFC,
+      status: Cnst.FireComputers.Results.read + mission.Type,
+      missionID: missionID
+    }
+    this.FCS = this.FCS.map(fc =>
+      fc.name === workingWithFC ? newFCSstatus : fc
+    )
+    this.emit(Cnst.FireComputers.Emit.FCupdateStatus)
+
+
   }
 
   SendMission() {

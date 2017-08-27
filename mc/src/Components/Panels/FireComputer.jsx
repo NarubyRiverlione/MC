@@ -15,6 +15,7 @@ export default class FireComputer extends React.Component {
     super(props)
     this.state = {
       SelectedFC: firecomputersStore.SelectedFC,
+      SelectedMsg: firecomputersStore.SelectedMsgSlot,
       FCStates: firecomputersStore.FCS.map(fc => fc.status),
       Reading: firecomputersStore.Reading,
       Sending: firecomputersStore.Sending
@@ -23,12 +24,12 @@ export default class FireComputer extends React.Component {
 
   componentDidMount() {
     firecomputersStore.on(Cnst.FireComputers.Emit.FCselected, () => {
-      console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
+      //    console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
       this.setState({ SelectedFC: firecomputersStore.SelectedFC })
     })
 
     firecomputersStore.on(Cnst.FireComputers.Emit.msgSlotChanged, () => {
-      console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
+      //     console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
       this.setState({ SelectedMsg: firecomputersStore.SelectedMsgSlot })
     })
 
@@ -63,7 +64,14 @@ export default class FireComputer extends React.Component {
   }
 
   ShowStatusSelectedFC() {
-    return this.state.SelectedFC === '' ? '' : this.state.FCStates[this.state.SelectedFC]
+    switch (this.state.SelectedFC) {
+      case Cnst.FireComputers.Name.A:
+        return this.state.FCStates[0]
+      case Cnst.FireComputers.Name.B:
+        return this.state.FCStates[1]
+      default:
+        return ''
+    }
   }
 
   Read() {

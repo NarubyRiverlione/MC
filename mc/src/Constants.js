@@ -1,6 +1,5 @@
 const Cnst = {
   Status: { idle: 'Idle' },
-
   LedColors: ['green', 'orange', 'red', 'blue'],
   LedBackgroundColor: 'Gainsboro',
 
@@ -17,6 +16,7 @@ const Cnst = {
     Missions: {
       IDMax: 10, IDMin: 0,
       Targets: [' A', ' B', ' C', ' D', ' E', ' F', ' G', ' H', ' I', ' J', ' K', ' L', ' M', ' N', ' O', ' P', ' Q', ' R', ' T', ' S', ' V', ' W'],
+      Type: ['Aircaft Attack', 'Ground Attack', 'Ship Attack', 'Submarine Attack']
     },
   },
 
@@ -40,7 +40,7 @@ const Cnst = {
   FireComputers: {
     Name: { A: 'A', B: 'B' },
     Actions: { read: 'Read msg into FC ', send: 'Send mission to Launch Station' },
-    Results: { read: 'Mission recieved', empty: 'Waiting for mission' },
+    Results: { read: 'Recieved: ', empty: 'Waiting for mission' },
     Time: { read: 5000, selectFC: 1000, send: 4000 },
     Errors: {
       NoMsg: 'ERROR: no msg availible', MsgNotDecoded: 'ERROR: msg not decoded',

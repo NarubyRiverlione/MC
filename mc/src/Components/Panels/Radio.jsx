@@ -55,7 +55,7 @@ export default class Radio extends React.Component {
     })
 
     radioStore.on(Cnst.Radio.Emit.SlotChanged, () => {
-      console.log('RADIO: selected slot: ' + radioStore.Selected)
+      //     console.log('RADIO: selected slot: ' + radioStore.Selected)
       this.setState({ SelectedSlot: radioStore.Selected })
     })
 
