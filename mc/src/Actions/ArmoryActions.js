@@ -6,6 +6,13 @@ import armoryStore from '../Stores/ArmoryStore'
 
 import { ChangeStatus as LSChangeStatus, StartLoading as LSstartLoading } from '../Actions/LaunchStationsActions'
 
+export function AddOneToArmory(ord) {
+  AppDispatcher.dispatch({
+    type: ActionCnst.Armory.AddOneToArmory,
+    payload: ord
+  })
+}
+
 export function Select(ord) {
   AppDispatcher.dispatch({
     type: ActionCnst.Armory.Select,
@@ -51,8 +58,8 @@ function StartLoading() {
     type: ActionCnst.Armory.Load
   })
 
-  // start Loading process in Launch Station
-  LSstartLoading()
+  // start Loading selected ordnance in Launch Station
+  LSstartLoading(armoryStore.Selected)
 }
 
 function WrongStationSelected() {

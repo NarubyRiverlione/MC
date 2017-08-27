@@ -3,6 +3,8 @@ import AppDispatcher from '../AppDispatcher'
 import { ActionCnst, Cnst } from '../Constants'
 import { EventEmitter } from 'events'
 
+import { AddOneToArmory } from '../Actions/ArmoryActions'
+
 class LaunchStationsStore extends EventEmitter {
   constructor(dispatcher) {
     super()
@@ -11,14 +13,32 @@ class LaunchStationsStore extends EventEmitter {
     this.Selected = ''
     this.SelectedStatus = ''
 
-    this.Station[Cnst.LaunchStations.Numbers.one] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
-    this.Station[Cnst.LaunchStations.Numbers.two] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
+    this.Station[Cnst.LaunchStations.Numbers.one] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
+    this.Station[Cnst.LaunchStations.Numbers.two] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
 
-    this.Station[Cnst.LaunchStations.Numbers.A] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
-    this.Station[Cnst.LaunchStations.Numbers.B] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
+    this.Station[Cnst.LaunchStations.Numbers.A] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
+    this.Station[Cnst.LaunchStations.Numbers.B] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
 
-    this.Station[Cnst.LaunchStations.Numbers.romanOn] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
-    this.Station[Cnst.LaunchStations.Numbers.romanTwo] = { button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty }
+    this.Station[Cnst.LaunchStations.Numbers.romanOn] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
+    this.Station[Cnst.LaunchStations.Numbers.romanTwo] = {
+      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: ''
+    }
 
 
     this.Firing = false
@@ -38,24 +58,30 @@ class LaunchStationsStore extends EventEmitter {
       case ActionCnst.LaunchStations.Remove: this.Remove(); break
       case ActionCnst.LaunchStations.Repair: this.Repair(); break
       case ActionCnst.LaunchStations.ChangeStatus: this.ChangeStatus(action.payload); break
-      case ActionCnst.LaunchStations.StartLoading: this.StartLoading(); break
+      case ActionCnst.LaunchStations.StartLoading: this.StartLoading(action.payload); break
       // case ActionCnst.LaunchStations.DoneLoading: this.DoneLoading(); break
       default: break
     }
   }
 
-  StartLoading() {
-    // signal  loading in progress by setting led color
-    this.Station[this.Selected].loadingStatus = Cnst.LaunchStations.StatusColor.loading
-    this.emit(Cnst.LaunchStations.Emit.startLoading)
+  StartLoading(ordnance) {
     const loadThisStation = this.Selected // remeber after wait time, may be other LS is then selected
-    // show selected status
+    const LS = this.Station[loadThisStation]
+
+    // set ordnance type in LS
+    LS.ordnance = ordnance
+
+    // signal  loading in progress by setting led color
+    LS.loadingStatus = Cnst.LaunchStations.StatusColor.loading
+    this.emit(Cnst.LaunchStations.Emit.startLoading)
+
+    // show selected LS status
     this.ShowSelectedStatus()
 
     // wait for loading time
     setTimeout(() => {
-      // signal loading done but led color
-      this.Station[loadThisStation].loadingStatus = Cnst.LaunchStations.StatusColor.loaded
+      // signal loading done by led color
+      LS.loadingStatus = Cnst.LaunchStations.StatusColor.loaded
       this.emit(Cnst.LaunchStations.Emit.doneLoading)
       // show selected status
       this.ShowSelectedStatus()
@@ -63,8 +89,6 @@ class LaunchStationsStore extends EventEmitter {
       , Cnst.LaunchStations.Time.loading)
   }
 
-  // DoneLoading() {
-  // }
 
   ChangeStatus(status) {
     this.Status = status
@@ -85,12 +109,21 @@ class LaunchStationsStore extends EventEmitter {
   }
 
   ShowSelectedStatus() {
-    const loadingStatus = this.Station[this.Selected].loadingStatus
-    // find key (= description) for statusColor
-    let selStatusTxt = Object.keys(Cnst.LaunchStations.StatusColor)
-      .find(key => Cnst.LaunchStations.StatusColor[key] === loadingStatus)
+    if (this.Selected === '') {
+      // nothing selected, nothing to show
+      this.SelectedStatus = ''
+    } else {
+      const loadingStatus = this.Station[this.Selected].loadingStatus
+      // find key (= description) for statusColor
+      let selStatusTxt = Object.keys(Cnst.LaunchStations.StatusColor)
+        .find(key => Cnst.LaunchStations.StatusColor[key] === loadingStatus)
 
-    this.SelectedStatus = selStatusTxt
+      // add ordnance type
+      selStatusTxt += ': ' + this.Station[this.Selected].ordnance
+
+      this.SelectedStatus = selStatusTxt
+    }
+
     this.emit(Cnst.LaunchStations.Emit.ChangedSelectedStatus)
   }
 
@@ -101,7 +134,36 @@ class LaunchStationsStore extends EventEmitter {
   }
 
   Remove() {
+    const LS = this.Station[this.Selected] // to remember later on which LS
 
+    // check if selected is not empty
+    if (LS.loadingStatus === Cnst.LaunchStations.StatusColor.empty) {
+      this.ChangeStatus(Cnst.LaunchStations.Errors.NoRemoveOfEmpty)
+      setTimeout(() => {
+        this.ChangeStatus(Cnst.Status.idle)
+      }
+        , Cnst.LaunchStations.Time.ErrorRemoveEmpty)
+      return
+    }
+
+    // set status removing
+    this.Removing = true
+    LS.loadingStatus = Cnst.LaunchStations.StatusColor.removing
+    this.emit(Cnst.LaunchStations.Emit.startRemoving)
+    this.ShowSelectedStatus()
+
+    setTimeout(() => {
+      this.Removing = false
+      // add one back to the Armory
+      AddOneToArmory(LS.ordnance)
+      // clear LaunchStation
+      LS.ordnance = ''
+      LS.loadingStatus = Cnst.LaunchStations.StatusColor.empty
+      this.emit(Cnst.LaunchStations.Emit.doneRemoving)
+      this.ShowSelectedStatus()
+
+    }
+      , Cnst.LaunchStations.Time.removing)
   }
 
   Repair() {

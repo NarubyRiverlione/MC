@@ -47,8 +47,10 @@ export function ChangeStatus(status) {
   })
 }
 
-export function StartLoading() {
+export function StartLoading(ord) {
   AppDispatcher.dispatch({
-    type: ActionCnst.LaunchStations.StartLoading
+    type: ActionCnst.LaunchStations.StartLoading,
+    payload: ord
   })
 }
+

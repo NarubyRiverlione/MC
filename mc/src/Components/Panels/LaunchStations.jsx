@@ -23,6 +23,16 @@ export default class LaunchStations extends React.Component {
   }
 
   componentDidMount() {
+    launchStationStore.on(Cnst.LaunchStations.Emit.startRemoving, () => {
+      console.log('Launch Station: start removing')
+      this.setState({ Stations: launchStationStore.Station })
+    })
+
+    launchStationStore.on(Cnst.LaunchStations.Emit.doneRemoving, () => {
+      console.log('Launch Station: done removing')
+      this.setState({ Stations: launchStationStore.Station })
+    })
+
     launchStationStore.on(Cnst.LaunchStations.Emit.startLoading, () => {
       console.log('Launch Station: start loading')
       this.setState({ Stations: launchStationStore.Station })

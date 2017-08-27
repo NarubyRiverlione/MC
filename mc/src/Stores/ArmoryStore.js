@@ -26,6 +26,7 @@ class ArmoryStore extends EventEmitter {
       case ActionCnst.Armory.Select: this.Select(action.payload); break
       case ActionCnst.Armory.Load: this.StartLoading(); break
       case ActionCnst.Armory.ChangeStatus: this.ChangeStatus(action.payload); break
+      case ActionCnst.Armory.AddOneToArmory: this.AddOneToArmory(action.payload); break
       default: break
     }
   }
@@ -62,8 +63,12 @@ class ArmoryStore extends EventEmitter {
       , Cnst.Armory.Time.StartLoading)
   }
 
-
+  AddOneToArmory(ordnance) {
+    this.Amount[ordnance] = this.Amount[ordnance] + 1
+    this.emit(Cnst.Armory.Emit.changeAmount)
+  }
 }
+
 const armoryStore = new ArmoryStore()
 // elke instance van RadioStore doet eigen afhandeling van acties
 AppDispatcher.register(armoryStore.EvaluateActions.bind(armoryStore))

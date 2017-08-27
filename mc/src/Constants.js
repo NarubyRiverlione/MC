@@ -1,7 +1,7 @@
 const Cnst = {
   Status: { idle: 'Idle' },
 
-  LedColors: ['green', 'orange', 'red'],
+  LedColors: ['green', 'orange', 'red', 'blue'],
   LedBackgroundColor: 'Gainsboro',
 
   Stations: { Radio: 'Radio', FireComputers: 'Fire Computers', Armory: 'Armory', LaunchStations: 'Launch Stations' },
@@ -45,12 +45,13 @@ const Cnst = {
   LaunchStations: {
     Name: { rails: 'Rails', VLT: 'Vertical Launch Tube', tubes: 'Tubes' },
     Numbers: { A: 'A', B: 'B', one: '1', two: '2', romanOn: 'I', romanTwo: 'II' },
-    StatusColor: { empty: 2, loading: 1, loaded: 0 },
+    StatusColor: { empty: 2, loading: 1, loaded: 0, removing: 3 },
     Actions: { fire: 'F I R E', prepare: 'Prepare', remove: 'Remove', repair: 'Repair' },
     Results: { fire: 'Fired', prepare: 'Ready to launch', remove: 'Empty', repair: 'Repaired' },
     Emit: {
       selected: 'LSselected', fire: 'LSfiring', ChangedSelectedStatus: 'LSselecedStatusChanged',
-      startLoading: 'LSstartLoading', doneLoading: 'LSdoneLoading', doneRemoving: 'LSdoneRemoving',
+      startLoading: 'LSstartLoading', doneLoading: 'LSdoneLoading',
+      startRemoving: 'LSstartRemoving', doneRemoving: 'LSdoneRemoving',
       startPreparing: 'LSstartPreparing'
     },
     Errors: {
@@ -61,9 +62,13 @@ const Cnst = {
         T: 'ERROR: Torpedo needs a Tube selected',
       },
       SelectedLSnotEmpty: 'ERROR: selected Launch Station not empty',
-      NoLSselected: 'ERROR: no Launch Station selected'
+      NoLSselected: 'ERROR: no Launch Station selected',
+      NoRemoveOfEmpty: 'ERROR: Launch Station is already empty'
     },
-    Time: { ErrorWrongStation: 4000, removing: 7000, loading: 5000, preparing: 4000 }
+    Time: {
+      ErrorWrongStation: 4000, removing: 7000, loading: 5000, preparing: 4000,
+      ErrorRemoveEmpty: 2000
+    }
   },
 
   Armory: {
@@ -96,7 +101,8 @@ const ActionCnst = {
     StartLoading: 'LAUNCHSTATION_START_LOADING', DoneLoading: 'LAUNCHSTATION_DONE_LOADING'
   },
   Armory: {
-    Select: 'ARMORY_SELECT', Load: 'ARMORY_LOAD', ChangeStatus: 'ARMORY_CHANGE_STATUS'
+    Select: 'ARMORY_SELECT', Load: 'ARMORY_LOAD', ChangeStatus: 'ARMORY_CHANGE_STATUS',
+    AddOneToArmory: 'ARMORY_ADD_ONE_ORDNANCE'
   }
 }
 
