@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import AppDispatcher from '../AppDispatcher'
-import { ActionCnst, Cnst } from '../Constants'
+import { Cnst } from '../Constants'
 import { EventEmitter } from 'events'
 
 import { NewMessage as RadioNewMessage, NewMessageTimedOut as RadioTimedOut } from '../Actions/RadioActions'
@@ -13,44 +13,59 @@ class GameStore extends EventEmitter {
     this.Missions = []
     this.lastMissionID = 0
 
-    this.Rank = ''
+    this.Rank = 5
 
-    this.StartTimerNewMessage()
-
+    // first msg in Cnst first msg, then start random timer for next msg
+    this.StartNewMessageTimer(Cnst.Game.Time.FirstMsg)
   }
 
   EvaluateActions(action) {
     switch (action.type) {
-      case ActionCnst.Game.StartTimerNewMessage: this.StartTimerNewMessage(); break
-      case ActionCnst.Game.NewMessageTimedOut: this.NewMessageTimedOut(); break
+      // case ActionCnst.Game.NewMessageTimedOut: this.NewMessageTimedOut(); break
       // case ActionCnst.Game.SetMissionPanelLocation: this.SetMissionPanelLocation(...action.payload); break
       default: break
     }
   }
 
-  // wait for new msg is random between NewIncomingMessageMin and NewIncomingMessageMax
-  StartTimerNewMessage() {
-    const nextIncoming = Math.floor(Math.random() * Cnst.Game.Time.NewIncomingMessageMax) + Cnst.Radio.Time.NewIncomingMessageMin
-    console.log('Game: New msg in ' + nextIncoming / 1000 + ' sec')
+  // wait for new msg  use fixed time if provided, 
+  // else random between NewIncomingMessageMin and NewIncomingMessageMax
+  StartNewMessageTimer(fixedTimer) {
+    const nextRandomIncoming = Math.floor(Math.random() * Cnst.Game.Time.NewIncomingMessageMax) + Cnst.Game.Time.NewIncomingMessageMin
+    const nextIncoming = fixedTimer ? fixedTimer : nextRandomIncoming
+
+    console.log('Game: New msg in ' + (nextIncoming / 1000).toString() + ' sec')
+
     setTimeout(() => {
-      console.log('Game: New msg created')
-      // Create new Mission
-      this.CreateNewMission()
-      // set new message in Radio
-      RadioNewMessage()
-      //restart timer new mission
-      this.StartTimerNewMessage()
-    }, nextIncoming)
+      // create and show new msg
+      this.CreateNewMsg()
+      //restart timer new msg
+      this.StartNewMessageTimer()
+    }
+      , nextIncoming)
   }
 
+  CreateNewMsg() {
+    console.log('Game: New msg created')
+    // Create new Mission
+    this.CreateNewMission()
+    // show new message warning in Radio
+    RadioNewMessage()
+    // start time out timer
+    this.StartMsgTimeoutTimer()
+  }
 
+  // time in which a new msg must be stored
+  StartMsgTimeoutTimer() {
+    setTimeout(() => {
+      this.NewMessageTimedOut()
+      // signal via Radio status the time out
+      RadioTimedOut()
+    }
+      , Cnst.Game.Time.NewMessageTimeOut)
+  }
+
+  // new msg timed out, deal with fail
   NewMessageTimedOut() {
-    // signal via Radio status the time out
-    RadioTimedOut()
-
-    // restart timer new mission
-    this.StartTimerNewMessage()
-
     // reduce Rank
     this.Rank = this.Rank - 1
     // TODO: show rank
@@ -61,6 +76,7 @@ class GameStore extends EventEmitter {
     }
   }
 
+  // create a mission inside the msg
   CreateNewMission() {
     this.lastMissionID = this.lastMissionID + 1
     const NewMission = new Mission(this.lastMissionID)

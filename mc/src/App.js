@@ -3,10 +3,12 @@ import React from 'react'
 import ControlPanel from './Components/Panels/ControlPanel'
 import { Cnst } from './Constants'
 
+// import gameStore from './Stores/GameStore'
 import radioStore from './Stores/RadioStore'
 import firecomputersStore from './Stores/FireComputersStore'
 import launchStationsStore from './Stores/LaunchStationsStore'
 import armoryStore from './Stores/ArmoryStore'
+
 
 export default class App extends React.Component {
   constructor(props) {

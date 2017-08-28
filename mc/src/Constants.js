@@ -9,9 +9,8 @@ const Cnst = {
 
   Game: {
     Time: {
-      NewMessageTimeOut: 10000,
-      NewIncomingMessageMax: 10000, NewIncomingMessageMin: 5000
-
+      FirstMsg: 2000, NewMessageTimeOut: 10000,
+      NewIncomingMessageMax: 30000, NewIncomingMessageMin: 15000
     },
     Missions: {
       IDMax: 10, IDMin: 0,
@@ -24,7 +23,7 @@ const Cnst = {
     Actions: { store: 'STORE', decode: 'DECODE', erase: 'ERASE' },
     Busy: { store: 'storing', decode: 'decoding', erase: 'erasing', onSlot: ' on slot ' },
     Results: { store: 'Stored', decode: 'Decrypted', erase: 'Empty' },
-    Time: { store: 2000, decode: 5000, erase: 1000 },
+    Time: { store: 2000, decode: 5000, erase: 1000, ShowError: 5000 },
     Errors: {
       NoDecodeNothingStored: 'ERROR no msg stored to decode',
       NoStoreNoNewMsg: 'ERROR no msg to store',
@@ -109,7 +108,7 @@ const ActionCnst = {
 
   Radio: {
     SelectSlot: 'RADIO_SELECT_SLOT', ExecuteCmd: 'RADIO_EXEC_CMD',
-    NewMessage: 'RADIO_NEW_MESSAGE'
+    NewMessage: 'RADIO_NEW_MSG', NewMessageTimedOut: 'RADIO_NEW_MSG_TIMEDOUT'
   },
 
   FireComputers: {

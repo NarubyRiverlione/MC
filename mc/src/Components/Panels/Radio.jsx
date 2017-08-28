@@ -45,7 +45,7 @@ export default class Radio extends React.Component {
   }
 
   NewMessageTimedOut() {
-    //TODO move to GameStore RadioActions.NewMessageTimedOut()
+    // Timeout is handle with timer in GameStore, not via view-action
   }
 
   componentWillMount() {

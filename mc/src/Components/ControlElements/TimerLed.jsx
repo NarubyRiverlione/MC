@@ -11,8 +11,8 @@ export default class TimerLed extends React.Component {
   }
 
   Timer = () => {
-    // set Ticks to count down, evaluate evevry 500ms (to blink) ==> ticks = Time sec * 2 
-    this.Tick = this.props.Time * 2
+    // set Ticks to count down, evaluate evevry 500ms (to blink) 
+    this.Tick = this.props.Time
 
     const TimerID = setInterval(() => {
       // reduce Tick until 0,
@@ -22,11 +22,11 @@ export default class TimerLed extends React.Component {
         clearInterval(TimerID)
         this.Blinking = false
         this.setState({ On: false })
-        if (this.props.TimerDoneCB &&this.props.RunTimer) this.props.TimerDoneCB() // use CB, if provided, to warn timer is done
+        if (this.props.TimerDoneCB && this.props.RunTimer) this.props.TimerDoneCB() // use CB, if provided, to warn timer is done
       }
       else {
         // change color based on timer (0-50% = color 0, 50-75%= color 1, 75-100% = color 2 & blinking)
-        if (this.props.Colors.length === 3) {
+        if (this.props.Colors.length >= 3) {
           if (this.Tick > this.props.Time) this.setState({ CurrentColor: 0 })
           if (this.Tick < this.props.Time) this.setState({ CurrentColor: 1 })
           if (this.Tick < this.props.Time / 2) {

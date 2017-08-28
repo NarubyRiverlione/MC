@@ -12,16 +12,6 @@ class RadioStore extends EventEmitter {
 
     this.Selected = 1
 
-    // this.CmdButtons = {}
-    // this.CmdButtons[Cnst.Radio.Actions.store] = false
-    // this.CmdButtons[Cnst.Radio.Actions.decode] = false
-    // this.CmdButtons[Cnst.Radio.Actions.erase] = false
-
-    // this.SlotStatus = ['',
-    //   Cnst.Radio.Results.erase,
-    //   Cnst.Radio.Results.erase,
-    //   Cnst.Radio.Results.erase]
-
     this.Slots = [
       { slot: 1, status: Cnst.Radio.Results.erase, missionID: -1 },
       { slot: 2, status: Cnst.Radio.Results.erase, missionID: -1 },
@@ -91,11 +81,9 @@ class RadioStore extends EventEmitter {
         status: Cnst.Radio.Results[cmd.toLowerCase()],
         missionID: gameStore.lastMissionID
       }
-
       this.Slots = this.Slots.map(sl =>
         sl.slot === workingSelected ? newSlotStatus : sl
       )
-
       this.emit(Cnst.Radio.Emit.ChangeSlot)
 
       // msg is stored..
@@ -111,22 +99,25 @@ class RadioStore extends EventEmitter {
       , Cnst.Radio.Time[cmd.toLowerCase()])
   }
 
+  // start new msg timer led
   NewMsg() {
     this.NewMessage = true
     this.emit(Cnst.Radio.Emit.UpdateNewMessage)
   }
 
+  // msg timed out, turn timer led out, show error in radio panel
   NewMessageTimedOut() {
     this.Status = Cnst.Radio.Errors.NewMessageTimedOut
     this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
+
     this.NewMessage = false
+    this.emit(Cnst.Radio.Emit.UpdateNewMessage)
 
     setTimeout(() => {
       //  clear error status, start timer new msg
       this.Status = Cnst.Status.idle
       this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
-      //  this.StartTimerNewMessage()
-    }, 2000)
+    }, Cnst.Radio.Time.ShowError)
   }
 }
 
