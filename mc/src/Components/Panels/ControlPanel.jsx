@@ -9,7 +9,6 @@ import Armory from './Armory'
 import LaunchStations from './LaunchStations'
 
 export default class ControlPanel extends React.Component {
-
   RenderStation() {
     switch (this.props.Name) {
       case Cnst.Stations.Radio:
@@ -26,15 +25,18 @@ export default class ControlPanel extends React.Component {
   }
 
   render() {
+    const { Name, StatusStatus } = this.props
     return (
       <div className="card CardStyle">
         <div className="card-divider grid-x">
-          <div className='cell medium-6'>{this.props.Name}</div>
-          <div className='cell medium-6'>
-            <Display Title='' Width={250} Text={this.props.StatusStatus} />
+          <div className="cell medium-5">{Name}</div>
+          <div className="cell medium-7">
+            <Display Width={300} Text={StatusStatus} />
           </div>
         </div>
-        <div className="card-section"> {this.RenderStation.bind(this)()} </div>
+        <div className="card-section">
+          {this.RenderStation()}
+        </div>
       </div>
     )
   }
@@ -43,5 +45,5 @@ export default class ControlPanel extends React.Component {
 
 ControlPanel.propTypes = {
   Name: PropTypes.string.isRequired,
-  StatusStatus: PropTypes.string.isRequired
+  StatusStatus: PropTypes.string.isRequired,
 }

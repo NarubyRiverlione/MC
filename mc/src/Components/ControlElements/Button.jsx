@@ -2,34 +2,54 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 export default class Button extends React.Component {
-  constructor(props) {
-    super(props)
-    this.Background = (!this.props.SetPressed ? 'dark' : 'light') + this.props.Color
-    this.BorderColor = (!this.props.SetPressed ? 'light' : 'dark') + this.props.Color
-    this.TextColor = (!this.props.SetPressed ? '' : 'light') + this.props.TextColor
-  }
+  state = { Background: '', BorderColor: '', ButtonTextColor: '' }
 
   componentDidMount() {
-
+    this.UpdateButton()
   }
 
-  componentWillUpdate(nextProps) {
-    this.Background = (!nextProps.SetPressed ? 'dark' : 'light') + this.props.Color
-    this.BorderColor = (!nextProps.SetPressed ? 'light' : 'dark') + this.props.Color
-    this.TextColor = (!nextProps.SetPressed ? '' : 'light') + this.props.TextColor
+  componentDidUpdate(prevProps) {
+    const { SetPressed } = this.props
+    if (prevProps.SetPressed !== SetPressed) this.UpdateButton()
+  }
+
+  UpdateButton() {
+    const { SetPressed, Color, TextColor } = this.props
+    const Background = (!SetPressed ? 'dark' : 'light') + Color
+    const BorderColor = (!SetPressed ? 'light' : 'dark') + Color
+    const ButtonTextColor = (!SetPressed ? '' : 'light') + TextColor
+
+    this.setState({ Background, BorderColor, ButtonTextColor })
   }
 
   Click() {
-    if (this.props.cb) { this.props.cb(this.props.Caption) }
+    const { cb, Caption } = this.props
+    if (cb) {
+      cb(Caption)
+    }
   }
 
   render() {
+    const { ButtonTextColor, Background, BorderColor } = this.state
+    const { Width, Caption } = this.props
     return (
-      <div className="" onClick={this.Click.bind(this)}>
+      <div
+        className=""
+        onClick={() => {
+          this.Click()
+        }}
+      >
         <svg width="100%" height="60">
-          <rect x="5" y="5" rx="20" ry="20" width={this.props.Width} height="50"
-            style={{ fill: this.Background, stroke: this.BorderColor, strokeWidth: 5 }} />
-          <text x={this.props.Width / 2 + 5} y='37' fontSize="1.25em" textAnchor="middle" fontWeight="bold" fill={this.TextColor}>{this.props.Caption}</text>
+          <rect
+            x="5"
+            y="5"
+            rx="20"
+            ry="20"
+            width={Width}
+            height="50"
+            style={{ fill: Background, stroke: BorderColor, strokeWidth: 5 }}
+          />
+          <text x={Width / 2 + 5} y="37" fontSize="1.25em" textAnchor="middle" fontWeight="bold" fill={ButtonTextColor}>{Caption}</text>
         </svg>
       </div>
     )
@@ -43,8 +63,10 @@ Button.propTypes = {
   Color: PropTypes.string.isRequired,
   TextColor: PropTypes.string.isRequired,
   SetPressed: PropTypes.bool,
-  cb: PropTypes.func
+  cb: PropTypes.func,
 }
 Button.defaultProps = {
-  Width: 140
+  Width: 140,
+  SetPressed: false,
+  cb: undefined,
 }

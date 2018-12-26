@@ -8,5 +8,8 @@
   "editor.formatOnType": true,
   "debug.inlineValues": true,
   "debug.internalConsoleOptions": "openOnSessionStart",
-  "editor.autoIndent": true
+  "editor.autoIndent": true,
+  "cSpell.words": [
+    "Cnst"
+  ]
 }

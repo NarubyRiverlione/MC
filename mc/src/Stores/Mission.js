@@ -3,8 +3,11 @@ import { Cnst } from '../Constants'
 
 export default class Mission {
   ID = 0
+
   Target = ''
+
   TargetLocation = ''
+
   Type = ''
 
 

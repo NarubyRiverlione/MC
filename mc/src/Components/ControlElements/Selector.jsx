@@ -1,49 +1,57 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+
+const cx = r => r + 5
+const cy = r => r + 20
+
 export default class Selector extends React.Component {
   constructor(props) {
     super(props)
-    this.cx = this.props.r + 5
-    this.cy = this.props.r + 20
+    this.state = { MidX: 0, MidY: 0 }
+    const { StartSelected } = this.props
+    this.Selected = StartSelected
   }
 
-  componentWillMount() {
-    this.selectedNotch = this.props.Selected
-    this.Calc()
+  componentDidMount() {
+    this.CalcSelectedNotch()
   }
 
-  componentWillUpdate(nextProps) {
-    this.selectedNotch = nextProps.Selected
-    this.Calc()
-  }
+  CalcSelectedNotch() {
+    const { Side, Amount, r } = this.props
 
-  Calc() {
-    const AngleNotch = 180.0 / (this.props.Amount + 1)
-    const Align = this.props.Side === 'R' ? -1 : 1
-    const AngleSelectedNotch = 90.0 + (this.selectedNotch * AngleNotch * Align)
+    const AngleNotch = 180.0 / (Amount + 1)
+    const Align = Side === 'R' ? -1 : 1
+    const AngleSelectedNotch = 90.0 + (this.Selected * AngleNotch * Align)
     const RadialNotch = AngleSelectedNotch * Math.PI / 180.0
 
-    this.MidX = this.cx + this.props.r * Math.cos(RadialNotch) + (15 * Align)
-    this.MidY = this.cy - this.props.r * Math.sin(RadialNotch)
-
+    const MidX = cx(r) + r * Math.cos(RadialNotch) + (15 * Align)
+    const MidY = cy(r) - r * Math.sin(RadialNotch)
+    this.setState({ MidX, MidY })
   }
 
   SelectNextNotch() {
-    const NewSelectedNotch = this.selectedNotch + 1 > this.props.Amount ? 1 : this.selectedNotch + 1
-    if (this.props.cb) { this.props.cb(NewSelectedNotch) } // cb will change prop Selected
+    const { Amount, cb } = this.props
+    const NewSelectedNotch = this.Selected + 1 > Amount ? 1 : this.Selected + 1
+    this.Selected = NewSelectedNotch
+    this.CalcSelectedNotch()
+
+    if (cb) { cb(NewSelectedNotch) } // cb will change prop Selected
   }
 
 
   render() {
+    const { r } = this.props
+    const { MidX, MidY } = this.state
+
     return (
-      <div onClick={this.SelectNextNotch.bind(this)}>
-        <svg height={this.props.r * 2 + 30} width={this.props.r * 2 + 10}>
+      <div onClick={() => this.SelectNextNotch()}>
+        <svg height={r * 2 + 30} width={r * 2 + 10}>
           {/* Knob */}
-          <circle cx={this.cx} cy={this.cy} r={this.props.r} stroke="darkgrey" strokeWidth="1" fill="none" />
-          <circle cx={this.cx} cy={this.cy} r={this.props.r - 3} stroke="grey" strokeWidth="5" fill="grey" />
+          <circle cx={cx(r)} cy={cy(r)} r={r} stroke="darkgrey" strokeWidth="1" fill="none" />
+          <circle cx={cx(r)} cy={cy(r)} r={r - 3} stroke="grey" strokeWidth="5" fill="grey" />
           {/* Marker */}
-          <circle cx={this.MidX} cy={this.MidY} r={10} stroke="white" fill="darkgrey" />
+          <circle cx={MidX} cy={MidY} r={10} stroke="white" fill="darkgrey" />
         </svg>
       </div>
     )
@@ -52,13 +60,13 @@ export default class Selector extends React.Component {
 
 Selector.propTypes = {
   Amount: PropTypes.number.isRequired,
-  Selected: PropTypes.number,
+  StartSelected: PropTypes.number,
   r: PropTypes.number.isRequired,
   cb: PropTypes.func,
   Side: PropTypes.oneOf(['L', 'R'])
 }
 
 Selector.defaultProps = {
-  Selected: 1,
+  StartSelected: 1,
   Side: 'R'
 }

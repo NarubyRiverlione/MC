@@ -6,57 +6,68 @@ export default class TimerLed extends React.Component {
   constructor(props) {
     super(props)
     this.state = { On: false, CurrentColor: 0 }
-    this.Blinking = false
-    this.Tick = 0
+    // this.Blinking = false
+    //   this.Tick = 0
   }
 
-  Timer = () => {
-    // set Ticks to count down, evaluate evevry 500ms (to blink) 
-    this.Tick = this.props.Time
+  Timer = (BlinkTime) => {
+    const { Time, Colors, RunTimer, TimerDoneCB } = this.props
+    // set Ticks to count down, evaluate every 500 ms (to blink) 
+    let Tick = Time
+    let Blinking = false
 
     const TimerID = setInterval(() => {
+      const { On } = this.state
       // reduce Tick until 0,
-      this.Tick = this.Tick - 500
-      // set led off when time runs out or prop.RunTimer is false (stop timer)
-      if (this.Tick <= 0 || !this.props.RunTimer) {
+      Tick = Tick - 500
+      // set led off when time runs out or RunTimer is false (stop timer)
+      if (Tick <= 0 || !RunTimer) {
         clearInterval(TimerID)
-        this.Blinking = false
+        Blinking = false
         this.setState({ On: false })
-        if (this.props.TimerDoneCB && this.props.RunTimer) this.props.TimerDoneCB() // use CB, if provided, to warn timer is done
+        if (TimerDoneCB && RunTimer) TimerDoneCB() // use CB, if provided, to warn timer is done
       }
       else {
         // change color based on timer (0-50% = color 0, 50-75%= color 1, 75-100% = color 2 & blinking)
-        if (this.props.Colors.length >= 3) {
-          if (this.Tick > this.props.Time) this.setState({ CurrentColor: 0 })
-          if (this.Tick < this.props.Time) this.setState({ CurrentColor: 1 })
-          if (this.Tick < this.props.Time / 2) {
+        if (Colors.length >= 3) {
+          if (Tick > Time) this.setState({ CurrentColor: 0 })
+          if (Tick < Time) this.setState({ CurrentColor: 1 })
+          if (Tick < Time / 2) {
             this.setState({ CurrentColor: 2 })
-            this.Blinking = true
+            Blinking = true
           }
         }
-        // blick if needed, else set solid On
-        if (this.Blinking)
-          this.setState({ On: !this.state.On })
-        else if (!this.state.On)
+        // blink if needed, else set solid On
+        if (Blinking)
+          this.setState({ On: !On })
+        else if (!On)
           this.setState({ On: true })
       }
 
-    }, 500)
+    }, BlinkTime)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.RunTimer && !this.props.RunTimer) {
+  componentDidUpdate(prevProps) {
+    const { RunTimer } = this.props
+    if (!prevProps.RunTimer && RunTimer) {
       // start timer now    
-      this.Timer()
+      this.Timer(500)
     }
   }
+
+  CheckTimerNeedsStarting() {
+    const { RunTimer } = this.props
+    if (RunTimer) {
+      // start timer now
+      this.Timer(500)
+    }
+  }
+
 
   componentDidMount() {
-    if (this.props.RunTimer) {
-      // start timer now
-      this.Timer()
-    }
+    this.CheckTimerNeedsStarting()
   }
+
 
   render() {
     return (

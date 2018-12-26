@@ -1,25 +1,50 @@
 {
   "env": {
-    "es6": true,
     "node": true,
-    "commonjs": true
+    "browser": true,
+    "es6": true,
+    "jest": true
   },
+  "settings": {
+    "react": {
+      "version": "16.3.1"
+    }
+  },
+  "parser": "babel-eslint",
   "plugins": [
-    "react"
+    "react",
+    "react-native"
   ],
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "modules": true
     }
   },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "react-app"
+    "airbnb"
   ],
   "rules": {
+    "react/destructuring-assignment": "warn",
+    "react/forbid-prop-types": "off",
+    "brace-style": [
+      "error",
+      "stroustrup"
+    ],
+    "no-underscore-dangle": "off",
+    "prefer-promise-reject-errors": "off",
+    "import/no-unresolved": "off",
+    "no-unused-vars": "warn",
+    "max-len": [
+      1,
+      {
+        "code": 120,
+        "tabWidth": 2,
+        "comments": 150
+      }
+    ],
     "indent": [
       "warn",
       2,
@@ -41,8 +66,15 @@
     "no-mixed-spaces-and-tabs": [
       "warn",
       "smart-tabs"
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
     ]
-    // "react/jsx-uses-react":"error",
-    // "react/jsx-uses-vars":"error"
   }
 }

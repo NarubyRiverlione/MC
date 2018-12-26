@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
+import { EventEmitter } from 'events'
 import AppDispatcher from '../AppDispatcher'
 import { ActionCnst, Cnst } from '../Constants'
-import { EventEmitter } from 'events'
 
 import gameStore from './GameStore'
 
@@ -19,7 +19,6 @@ class RadioStore extends EventEmitter {
     ]
 
     this.Status = Cnst.Status.idle
-
   }
 
   EvaluateActions(action) {
@@ -34,7 +33,7 @@ class RadioStore extends EventEmitter {
 
   SelectSlot(slot) {
     this.Selected = slot
-    console.log('radio inside slot: ' + this.Selected)
+    console.log(`radio inside slot: ${this.Selected}`)
     this.emit(Cnst.Radio.Emit.SlotChanged)
   }
 
@@ -54,7 +53,7 @@ class RadioStore extends EventEmitter {
     }
     // trying to store a msg ?
     if (cmd === Cnst.Radio.Actions.store) {
-      //there must be a new message waiting
+      // there must be a new message waiting
       if (!this.NewMessage) {
         this.Status = Cnst.Radio.Errors.NoStoreNoNewMsg
         this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
@@ -63,14 +62,14 @@ class RadioStore extends EventEmitter {
       }
     }
 
-    // start cmd, update Radio Status display 
+    // start cmd, update Radio Status display
     // console.log('Start Radio action ' + cmd + ' on slot ' + this.Selected)
     this.Status = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + workingSelected
     this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
 
 
     setTimeout(() => {
-      // end cmd,  update Radio Status display 
+      // end cmd,  update Radio Status display
       // console.log('End Radio action ' + cmd + ' on slot ' + this.Selected)
       this.Status = Cnst.Status.idle
       this.emit(Cnst.Radio.Emit.ChangedRadioStatus)
@@ -79,24 +78,21 @@ class RadioStore extends EventEmitter {
       const newSlotStatus = {
         slot: workingSelected,
         status: Cnst.Radio.Results[cmd.toLowerCase()],
-        missionID: gameStore.lastMissionID
+        missionID: gameStore.lastMissionID,
       }
-      this.Slots = this.Slots.map(sl =>
-        sl.slot === workingSelected ? newSlotStatus : sl
-      )
+      this.Slots = this.Slots.map(sl => (sl.slot === workingSelected ? newSlotStatus : sl))
       this.emit(Cnst.Radio.Emit.ChangeSlot)
 
       // msg is stored..
       if (cmd === Cnst.Radio.Actions.store) {
-        //... clear new msg status
+        // ... clear new msg status
         this.NewMessage = false
         this.emit(Cnst.Radio.Emit.UpdateNewMessage)
       }
 
       this.emit(Cnst.Radio.Emit.DoneCmd)
-
-    }
-      , Cnst.Radio.Time[cmd.toLowerCase()])
+    },
+    Cnst.Radio.Time[cmd.toLowerCase()])
   }
 
   // start new msg timer led

@@ -4,25 +4,25 @@ import { ActionCnst } from '../Constants'
 export function SelectSlot(slot) {
   AppDispatcher.dispatch({
     type: ActionCnst.Radio.SelectSlot,
-    payload: slot
+    payload: slot,
   })
 }
 
 export function ExecuteCmd(cmd) {
   AppDispatcher.dispatch({
     type: ActionCnst.Radio.ExecuteCmd,
-    payload: cmd
+    payload: cmd,
   })
 }
 
 export function NewMessage() {
   AppDispatcher.dispatch({
-    type: ActionCnst.Radio.NewMessage
+    type: ActionCnst.Radio.NewMessage,
   })
 }
 
 export function NewMessageTimedOut() {
   AppDispatcher.dispatch({
-    type: ActionCnst.Radio.NewMessageTimedOut
+    type: ActionCnst.Radio.NewMessageTimedOut,
   })
 }

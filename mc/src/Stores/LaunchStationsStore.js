@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
+import { EventEmitter } from 'events'
 import AppDispatcher from '../AppDispatcher'
 import { ActionCnst, Cnst } from '../Constants'
-import { EventEmitter } from 'events'
 
 import { AddOneToArmory } from '../Actions/ArmoryActions'
 
@@ -14,30 +14,36 @@ class LaunchStationsStore extends EventEmitter {
     this.SelectedStatus = ''
 
     this.Station[Cnst.LaunchStations.Numbers.one] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
     this.Station[Cnst.LaunchStations.Numbers.two] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
 
     this.Station[Cnst.LaunchStations.Numbers.A] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
     this.Station[Cnst.LaunchStations.Numbers.B] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
 
     this.Station[Cnst.LaunchStations.Numbers.romanOn] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
     this.Station[Cnst.LaunchStations.Numbers.romanTwo] = {
-      button: false, loadingStatus: Cnst.LaunchStations.StatusColor.empty,
-      ordnance: ''
+      button: false,
+      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      ordnance: '',
     }
 
 
@@ -57,7 +63,7 @@ class LaunchStationsStore extends EventEmitter {
       case ActionCnst.LaunchStations.Prepare: this.Prepare(); break
       case ActionCnst.LaunchStations.Remove: this.Remove(); break
       case ActionCnst.LaunchStations.Repair: this.Repair(); break
-      case ActionCnst.LaunchStations.ChangeStatus: this.ChangeStatus(action.payload); break
+      case ActionCnst.LaunchStations.ShowErrorStatus: this.ShowErrorStatus(action.payload); break
       case ActionCnst.LaunchStations.StartLoading: this.StartLoading(action.payload); break
       // case ActionCnst.LaunchStations.DoneLoading: this.DoneLoading(); break
       default: break
@@ -85,14 +91,18 @@ class LaunchStationsStore extends EventEmitter {
       this.emit(Cnst.LaunchStations.Emit.doneLoading)
       // show selected status
       this.ShowSelectedStatus()
-    }
-      , Cnst.LaunchStations.Time.loading)
+    },
+    Cnst.LaunchStations.Time.loading)
   }
 
-
-  ChangeStatus(status) {
-    this.Status = status
+  ShowErrorStatus(err) {
+    this.Status = err
     this.emit(Cnst.LaunchStations.Emit.ChangedLaunchStationsStatus)
+
+    setTimeout(() => {
+      this.Status = Cnst.Status.idle
+      this.emit(Cnst.LaunchStations.Emit.ChangedLaunchStationsStatus)
+    }, Cnst.LaunchStations.Time.Error)
   }
 
   Select(slot) {
@@ -100,7 +110,8 @@ class LaunchStationsStore extends EventEmitter {
     if (this.Selected !== slot.caption) { // only select if not alread selected
       this.Selected = slot.caption
       this.Station[slot.caption].button = true
-    } else {
+    }
+    else {
       this.Selected = ''
     }
     this.emit(Cnst.LaunchStations.Emit.selected)
@@ -112,14 +123,15 @@ class LaunchStationsStore extends EventEmitter {
     if (this.Selected === '') {
       // nothing selected, nothing to show
       this.SelectedStatus = ''
-    } else {
+    }
+    else {
       const loadingStatus = this.Station[this.Selected].loadingStatus
       // find key (= description) for statusColor
       let selStatusTxt = Object.keys(Cnst.LaunchStations.StatusColor)
         .find(key => Cnst.LaunchStations.StatusColor[key] === loadingStatus)
 
       // add ordnance type
-      selStatusTxt += ': ' + this.Station[this.Selected].ordnance
+      selStatusTxt += `: ${this.Station[this.Selected].ordnance}`
 
       this.SelectedStatus = selStatusTxt
     }
@@ -138,11 +150,7 @@ class LaunchStationsStore extends EventEmitter {
 
     // check if selected is not empty
     if (LS.loadingStatus === Cnst.LaunchStations.StatusColor.empty) {
-      this.ChangeStatus(Cnst.LaunchStations.Errors.NoRemoveOfEmpty)
-      setTimeout(() => {
-        this.ChangeStatus(Cnst.Status.idle)
-      }
-        , Cnst.LaunchStations.Time.ErrorRemoveEmpty)
+      this.ShowErrorStatus(Cnst.LaunchStations.Errors.NoRemoveOfEmpty)
       return
     }
 
@@ -161,9 +169,8 @@ class LaunchStationsStore extends EventEmitter {
       LS.loadingStatus = Cnst.LaunchStations.StatusColor.empty
       this.emit(Cnst.LaunchStations.Emit.doneRemoving)
       this.ShowSelectedStatus()
-
-    }
-      , Cnst.LaunchStations.Time.removing)
+    },
+    Cnst.LaunchStations.Time.removing)
   }
 
   Repair() {
@@ -179,7 +186,6 @@ class LaunchStationsStore extends EventEmitter {
 
     this.Station[Cnst.LaunchStations.Numbers.romanOn].button = false
     this.Station[Cnst.LaunchStations.Numbers.romanTwo].button = false
-
   }
 }
 

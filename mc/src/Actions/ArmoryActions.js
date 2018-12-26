@@ -4,65 +4,31 @@ import { ActionCnst, Cnst } from '../Constants'
 import launchStationStore from '../Stores/LaunchStationsStore'
 import armoryStore from '../Stores/ArmoryStore'
 
-import { ChangeStatus as LSChangeStatus, StartLoading as LSstartLoading } from '../Actions/LaunchStationsActions'
+import { ShowErrorStatus as LSshowErr, StartLoading as LSstartLoading } from './LaunchStationsActions'
 
-export function AddOneToArmory(ord) {
+const ShowErrorStatus = (status) => {
   AppDispatcher.dispatch({
-    type: ActionCnst.Armory.AddOneToArmory,
-    payload: ord
+    type: ActionCnst.Armory.ShowErrorStatus,
+    payload: status,
   })
 }
 
-export function Select(ord) {
+const StartLoading = () => {
   AppDispatcher.dispatch({
-    type: ActionCnst.Armory.Select,
-    payload: ord
-  })
-}
-
-export function Load() {
-
-  // check if ordnance is selected
-  if (armoryStore.Selected === '') {
-    ChangeStatus(Cnst.Armory.Errors.NoOrdnanceSelected)
-    setTimeout(() => {
-      ChangeStatus(Cnst.Status.idle)
-    }, Cnst.Armory.Time.NoOrdnanceSelected)
-
-    return
-  }
-  // check if ordnance is still in store
-  if (armoryStore.Amount[armoryStore.Selected] < 1) {
-    ChangeStatus(Cnst.Armory.Errors.OrdnanceOutOfStock)
-
-    setTimeout(() => {
-      ChangeStatus(Cnst.Status.idle)
-    }, Cnst.Armory.Time.OrdnanceOutOfStock)
-
-    return
-  }
-
-  // check if correct LaunchStation is selected
-  CheckSelectedLaunchStation()
-}
-
-function ChangeStatus(status) {
-  AppDispatcher.dispatch({
-    type: ActionCnst.Armory.ChangeStatus,
-    payload: status
-  })
-}
-
-function StartLoading() {
-  AppDispatcher.dispatch({
-    type: ActionCnst.Armory.Load
+    type: ActionCnst.Armory.Load,
   })
 
   // start Loading selected ordnance in Launch Station
   LSstartLoading(armoryStore.Selected)
 }
 
-function WrongStationSelected() {
+// show general error on Armory display and specific error on Launch Station display
+const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => {
+  ShowErrorStatus(armoryErr)
+  LSshowErr(LSerr)
+}
+
+const WrongStationSelected = () => {
   let errorMsg
   switch (armoryStore.Selected) {
     case Cnst.Ordnance.AA:
@@ -79,24 +45,9 @@ function WrongStationSelected() {
   ShowErrorInArmoryAndLS(Cnst.Armory.Errors.WrongLaunchStation, errorMsg)
 }
 
-
-// show general error on Armory display and specific error on Launch Station display
-function ShowErrorInArmoryAndLS(armoryErr, LSerr) {
-  ChangeStatus(armoryErr)
-  LSChangeStatus(LSerr)
-  // clear status after timeout
-  setTimeout(() => {
-    ChangeStatus(Cnst.Status.idle)
-    LSChangeStatus(Cnst.Status.idle)
-  }
-    , Cnst.Armory.Time.ShowError)
-
-}
-
-
 // check if correct Launch Station is Selected
 // TODO: check is selected LS isn't already loaded of loading
-function CheckSelectedLaunchStation() {
+const CheckSelectedLaunchStation = () => {
   // check if LS is selected
   if (launchStationStore.Selected === '') {
     ShowErrorInArmoryAndLS(Cnst.Armory.Errors.NoLSselected, Cnst.LaunchStations.Errors.NoLSselected)
@@ -116,7 +67,8 @@ function CheckSelectedLaunchStation() {
     if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.one
       || launchStationStore.Selected === Cnst.LaunchStations.Numbers.two) {
       StartLoading()
-    } else {
+    }
+    else {
       WrongStationSelected()
     }
   }
@@ -125,7 +77,8 @@ function CheckSelectedLaunchStation() {
     if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.A
       || launchStationStore.Selected === Cnst.LaunchStations.Numbers.B) {
       StartLoading()
-    } else {
+    }
+    else {
       WrongStationSelected()
     }
   }
@@ -134,8 +87,39 @@ function CheckSelectedLaunchStation() {
     if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.romanOn
       || launchStationStore.Selected === Cnst.LaunchStations.Numbers.romanTwo) {
       StartLoading()
-    } else {
+    }
+    else {
       WrongStationSelected()
     }
   }
+}
+
+export const AddOneToArmory = (ord) => {
+  AppDispatcher.dispatch({
+    type: ActionCnst.Armory.AddOneToArmory,
+    payload: ord,
+  })
+}
+
+export const Select = (ord) => {
+  AppDispatcher.dispatch({
+    type: ActionCnst.Armory.Select,
+    payload: ord,
+  })
+}
+
+export const Load = () => {
+  // check if ordnance is selected
+  if (armoryStore.Selected === '') {
+    ShowErrorStatus(Cnst.Armory.Errors.NoOrdnanceSelected)
+    return
+  }
+  // check if ordnance is still in store
+  if (armoryStore.Amount[armoryStore.Selected] < 1) {
+    ShowErrorStatus(Cnst.Armory.Errors.OrdnanceOutOfStock)
+    return
+  }
+
+  // check if correct LaunchStation is selected
+  CheckSelectedLaunchStation()
 }

@@ -14,7 +14,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
 
-    let Stations = {}
+    const Stations = {}
     Stations[Cnst.Stations.Radio] = { Status: radioStore.Status }
     Stations[Cnst.Stations.FireComputers] = { Status: firecomputersStore.Status }
     Stations[Cnst.Stations.Armory] = { Status: armoryStore.Status }
@@ -23,14 +23,7 @@ export default class App extends React.Component {
     this.state = { Stations }
   }
 
-
-  SetStationStatus(station, newStatus) {
-    let Stations = this.state.Stations
-    Stations[station].Status = newStatus
-    this.setState(Stations)
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     // change Station Displays
     radioStore.on(Cnst.Radio.Emit.ChangedRadioStatus, () => {
       this.SetStationStatus(Cnst.Stations.Radio, radioStore.Status)
@@ -49,23 +42,29 @@ export default class App extends React.Component {
     })
   }
 
+  SetStationStatus(station, newStatus) {
+    const Stations = this.state.Stations
+    Stations[station].Status = newStatus
+    this.setState(Stations)
+  }
+
   render() {
     return (
-      <div className="Application" >
+      <div className="Application">
         <div className="grid-container ShowContainer">
           <div className="grid-y grid-padding-y grid-padding-x">
 
             <div className="cell medium-6 ShowCellY">
-              <div className="grid-x grid-margin-x ShowGrid" >
+              <div className="grid-x grid-margin-x ShowGrid">
 
-                <div className="cell medium-6 ShowCell" >
+                <div className="cell medium-6 ShowCell">
                   <ControlPanel
                     Name={Cnst.Stations.Radio}
                     StatusStatus={this.state.Stations[Cnst.Stations.Radio].Status}
                   />
                 </div>
 
-                <div className="cell medium-6  ShowCell" >
+                <div className="cell medium-6  ShowCell">
                   <ControlPanel
                     Name={Cnst.Stations.FireComputers}
                     StatusStatus={this.state.Stations[Cnst.Stations.FireComputers].Status}
@@ -99,8 +98,7 @@ export default class App extends React.Component {
           </div>
 
         </div>
-      </div >
-
+      </div>
     )
   }
 }

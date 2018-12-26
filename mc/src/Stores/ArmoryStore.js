@@ -1,16 +1,14 @@
 /* eslint-disable no-console */
+import { EventEmitter } from 'events'
 import AppDispatcher from '../AppDispatcher'
 import { ActionCnst, Cnst } from '../Constants'
-import { EventEmitter } from 'events'
-
-//import launchStationsStore from './LaunchStationsStore'
 
 class ArmoryStore extends EventEmitter {
   constructor(dispatcher) {
     super()
     this.Selected = ''
     this.Amount = {}
-    this.Amount[Cnst.Ordnance.AA] = 1 //9
+    this.Amount[Cnst.Ordnance.AA] = 1 // 9
     this.Amount[Cnst.Ordnance.G] = 5
     this.Amount[Cnst.Ordnance.AS] = 2
     this.Amount[Cnst.Ordnance.T] = 2
@@ -25,15 +23,20 @@ class ArmoryStore extends EventEmitter {
     switch (action.type) {
       case ActionCnst.Armory.Select: this.Select(action.payload); break
       case ActionCnst.Armory.Load: this.StartLoading(); break
-      case ActionCnst.Armory.ChangeStatus: this.ChangeStatus(action.payload); break
+      case ActionCnst.Armory.ShowErrorStatus: this.ShowErrorStatus(action.payload); break
       case ActionCnst.Armory.AddOneToArmory: this.AddOneToArmory(action.payload); break
       default: break
     }
   }
 
-  ChangeStatus(status) {
-    this.Status = status
-    this.emit(Cnst.Armory.Emit.ChangedArmoryStatus)
+  ShowErrorStatus(err) {
+    this.Status = err
+    this.emit(Cnst.ArmoryStore.Emit.ChangedArmoryStatus)
+
+    setTimeout(() => {
+      this.Status = Cnst.Status.idle
+      this.emit(Cnst.ArmoryStore.Emit.ChangedArmoryStatus)
+    }, Cnst.LaunchStations.Time.Error)
   }
 
   Select(ord) {
@@ -42,12 +45,11 @@ class ArmoryStore extends EventEmitter {
     this.emit(Cnst.Armory.Emit.selected)
   }
 
-
   StartLoading() {
     // hold Loading button down
     this.Loading = true
     this.emit(Cnst.Armory.Emit.Loading)
-    // change amount in armory 
+    // change amount in armory
     this.Amount[this.Selected]--
     this.emit(Cnst.Armory.Emit.changeAmount)
     // change station of armory
@@ -59,8 +61,8 @@ class ArmoryStore extends EventEmitter {
       this.emit(Cnst.Armory.Emit.Loading)
       // set status idle
       this.ChangeStatus(Cnst.Status.idle)
-    }
-      , Cnst.Armory.Time.StartLoading)
+    },
+    Cnst.Armory.Time.StartLoading)
   }
 
   AddOneToArmory(ordnance) {
@@ -74,4 +76,3 @@ const armoryStore = new ArmoryStore()
 AppDispatcher.register(armoryStore.EvaluateActions.bind(armoryStore))
 
 export default armoryStore
-

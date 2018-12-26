@@ -10,6 +10,23 @@ import Selector from '../ControlElements/Selector'
 import firecomputersStore from '../../Stores/FireComputersStore'
 import * as FireComputerActions from '../../Actions/FireComputersActions'
 
+
+const SelectMsg = (slot) => {
+  FireComputerActions.SelectSlot(slot)
+}
+
+const SelectFC = (fc) => {
+  FireComputerActions.SelectFC(fc)
+}
+
+const Read = () => {
+  FireComputerActions.ReadMsg()
+}
+
+const Send = () => {
+  FireComputerActions.SendMission()
+}
+
 export default class FireComputer extends React.Component {
   constructor(props) {
     super(props)
@@ -18,7 +35,7 @@ export default class FireComputer extends React.Component {
       SelectedMsg: firecomputersStore.SelectedMsgSlot,
       FCStates: firecomputersStore.FCS.map(fc => fc.status),
       Reading: firecomputersStore.Reading,
-      Sending: firecomputersStore.Sending
+      Sending: firecomputersStore.Sending,
     }
   }
 
@@ -55,101 +72,116 @@ export default class FireComputer extends React.Component {
   }
 
 
-  SelectMsg(slot) {
-    FireComputerActions.SelectSlot(slot)
-  }
-
-  SelectFC(fc) {
-    FireComputerActions.SelectFC(fc)
-  }
-
   ShowStatusSelectedFC() {
-    switch (this.state.SelectedFC) {
+    const { SelectedFC, FCStates } = this.state
+    switch (SelectedFC) {
       case Cnst.FireComputers.Name.A:
-        return this.state.FCStates[0]
+        return FCStates[0]
       case Cnst.FireComputers.Name.B:
-        return this.state.FCStates[1]
+        return FCStates[1]
       default:
         return ''
     }
   }
 
-  Read() {
-    FireComputerActions.ReadMsg()
-  }
-
-  Send() {
-
-  }
 
   render() {
+    const {
+      Sending, SelectedFC, SelectedMsg, Reading,
+    } = this.state
+
     return (
-      <div className='grid-container' id='FireComputerPanel'>
-        <div className='grid-y'>
-          {/* Select FC*/}
-          <div className='cell medium-4'>
-            <div className='grid-x'>
-              <div className='cell large-2'>
-                <p className='text'>Select</p>
+      <div className="grid-container" id="FireComputerPanel">
+        <div className="grid-y">
+          {/* Select FC */}
+          <div className="cell medium-4">
+            <div className="grid-x">
+              <div className="cell large-2">
+                <p className="text">Select</p>
               </div>
 
-              <div className='cell large-2'>
-                <Button Caption='A' Width={50} TextColor='yellow' Color='slategrey'
-                  SetPressed={this.state.SelectedFC === 'A' ? true : false}
-                  cb={this.SelectFC.bind(this)} />
+              <div className="cell large-2">
+                <Button
+                  Caption="A"
+                  Width={50}
+                  TextColor="yellow"
+                  Color="slategrey"
+                  SetPressed={SelectedFC === 'A'}
+                  cb={SelectFC()}
+                />
               </div>
 
-              <div className='cell large-2'>
-                <Button Caption='B' Width={50} TextColor='yellow' Color='slategrey' Title=''
-                  SetPressed={this.state.SelectedFC === 'B' ? true : false}
-                  cb={this.SelectFC.bind(this)} />
+              <div className="cell large-2">
+                <Button
+                  Caption="B"
+                  Width={50}
+                  TextColor="yellow"
+                  Color="slategrey"
+                  Title=""
+                  SetPressed={SelectedFC === 'B'}
+                  cb={SelectFC()}
+                />
               </div>
 
-              <div className='cell large-6'>
+              <div className="cell large-6">
                 <Display Width={250} Text={this.ShowStatusSelectedFC.bind(this)()} />
               </div>
             </div>
 
           </div>
           {/* Select Msg + actions */}
-          <div className='grid-x medium-8'>
+          <div className="grid-x medium-8">
 
             {/* msg selector */}
-            <div className='cell small-4'>
+            <div className="cell small-4">
               <p>Select Slot</p>
-              <div className='grid-x'>
-                <div className='cell medium-1 '>
+              <div className="grid-x">
+                <div className="cell medium-1 ">
                   <p>1</p>
                   <p>2</p>
                   <p>3</p>
                 </div>
-                <div className='cell medium-10 medium-offset-1'>
-                  <Selector Amount={3} r={50} Side='L'
-                    Selected={this.state.SelectedMsg} cb={this.SelectMsg.bind(this)} />
+                <div className="cell medium-10 medium-offset-1">
+                  <Selector
+                    Amount={3}
+                    r={50}
+                    Side="L"
+                    Selected={SelectedMsg}
+                    cb={SelectMsg()}
+                  />
                 </div>
               </div>
             </div>
-            {/* action buttons*/}
-            <div className='small-8 grid-y'>
-              <div className='cell small-2' />
+            {/* action buttons */}
+            <div className="small-8 grid-y">
+              <div className="cell small-2" />
 
-              <div className='cell small-4' >
-                <Button Caption={Cnst.FireComputers.Actions.read} Width={325} TextColor='yellow' Color='slategrey'
-                  SetPressed={this.state.Reading} cb={this.Read.bind(this)} />
+              <div className="cell small-4">
+                <Button
+                  Caption={Cnst.FireComputers.Actions.read}
+                  Width={325}
+                  TextColor="yellow"
+                  Color="slategrey"
+                  SetPressed={Reading}
+                  cb={Read()}
+                />
               </div>
 
-              <div className='cell small-4'>
-                <Button Caption={Cnst.FireComputers.Actions.send} Width={325} TextColor='yellow' Color='slategrey'
-                  SetPressed={this.state.Sending} cb={this.Send.bind(this)} />
+              <div className="cell small-4">
+                <Button
+                  Caption={Cnst.FireComputers.Actions.send}
+                  Width={325}
+                  TextColor="yellow"
+                  Color="slategrey"
+                  SetPressed={Sending}
+                  cb={Send()}
+                />
               </div>
-
 
             </div>
-
           </div>
         </div>
       </div>
     )
   }
 }
-
