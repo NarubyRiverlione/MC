@@ -1,5 +1,4 @@
-import { Cnst } from '../Constants'
-
+import { Cnst } from './Constants'
 
 export default class Mission {
   ID = 0
@@ -9,7 +8,6 @@ export default class Mission {
   TargetLocation = ''
 
   Type = ''
-
 
   constructor(newID) {
     const TargetID = Math.floor(Math.random() * Cnst.Game.Missions.IDMax) + Cnst.Game.Missions.IDMin

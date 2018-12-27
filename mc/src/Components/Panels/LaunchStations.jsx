@@ -6,8 +6,8 @@ import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import ButtonWithLed from '../ControlElements/ButtonWithLed'
 
-import launchStationStore from '../../Stores/LaunchStationsStore'
-import * as LaunchStationsActions from '../../Actions/LaunchStationsActions'
+// import launchStationStore from '../../Stores/LaunchStationsStore'
+// import * as LaunchStationsActions from '../../Actions/LaunchStationsActions'
 
 const Select = (caption) => {
   LaunchStationsActions.Select(caption)
@@ -42,36 +42,36 @@ export default class LaunchStations extends React.Component {
     }
   }
 
-  componentDidMount() {
-    launchStationStore.on(Cnst.LaunchStations.Emit.startRemoving, () => {
-      console.log('Launch Station: start removing')
-      this.setState({ Stations: launchStationStore.Station })
-    })
+  // componentDidMount() {
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.startRemoving, () => {
+  //     console.log('Launch Station: start removing')
+  //     this.setState({ Stations: launchStationStore.Station })
+  //   })
 
-    launchStationStore.on(Cnst.LaunchStations.Emit.doneRemoving, () => {
-      console.log('Launch Station: done removing')
-      this.setState({ Stations: launchStationStore.Station })
-    })
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.doneRemoving, () => {
+  //     console.log('Launch Station: done removing')
+  //     this.setState({ Stations: launchStationStore.Station })
+  //   })
 
-    launchStationStore.on(Cnst.LaunchStations.Emit.startLoading, () => {
-      console.log('Launch Station: start loading')
-      this.setState({ Stations: launchStationStore.Station })
-    })
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.startLoading, () => {
+  //     console.log('Launch Station: start loading')
+  //     this.setState({ Stations: launchStationStore.Station })
+  //   })
 
-    launchStationStore.on(Cnst.LaunchStations.Emit.selected, () => {
-      console.log(`Launch Station: selected: ${launchStationStore.Selected}`)
-      this.setState({ Stations: launchStationStore.Station })
-    })
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.selected, () => {
+  //     console.log(`Launch Station: selected: ${launchStationStore.Selected}`)
+  //     this.setState({ Stations: launchStationStore.Station })
+  //   })
 
-    launchStationStore.on(Cnst.LaunchStations.Emit.doneLoading, () => {
-      console.log('Launch Station: done loading')
-      this.setState({ Stations: launchStationStore.Station })
-    })
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.doneLoading, () => {
+  //     console.log('Launch Station: done loading')
+  //     this.setState({ Stations: launchStationStore.Station })
+  //   })
 
-    launchStationStore.on(Cnst.LaunchStations.Emit.ChangedSelectedStatus, () => {
-      this.setState({ SelectedStatus: launchStationStore.SelectedStatus })
-    })
-  }
+  //   launchStationStore.on(Cnst.LaunchStations.Emit.ChangedSelectedStatus, () => {
+  //     this.setState({ SelectedStatus: launchStationStore.SelectedStatus })
+  //   })
+  // }
 
   render() {
     const {

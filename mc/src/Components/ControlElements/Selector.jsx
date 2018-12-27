@@ -36,7 +36,10 @@ export default class Selector extends React.Component {
     this.Selected = NewSelectedNotch
     this.CalcSelectedNotch()
 
-    if (cb) { cb(NewSelectedNotch) } // cb will change prop Selected
+    // cb will change prop Selected
+    if (cb) {
+      cb(this.Selected)
+    }
   }
 
 
@@ -63,10 +66,10 @@ Selector.propTypes = {
   StartSelected: PropTypes.number,
   r: PropTypes.number.isRequired,
   cb: PropTypes.func,
-  Side: PropTypes.oneOf(['L', 'R'])
+  Side: PropTypes.oneOf(['L', 'R']),
 }
 
 Selector.defaultProps = {
   StartSelected: 1,
-  Side: 'R'
+  Side: 'R',
 }

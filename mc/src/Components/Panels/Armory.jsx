@@ -6,8 +6,8 @@ import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import { Cnst } from '../../Constants'
 
-import * as ArmoryActions from '../../Actions/ArmoryActions'
-import armoryStore from '../../Stores/ArmoryStore'
+// import * as ArmoryActions from '../../Actions/ArmoryActions'
+// import armoryStore from '../../Stores/ArmoryStore'
 
 
 const SetSelected = (caption) => {
@@ -31,22 +31,22 @@ export default class Armory extends React.Component {
     }
   }
 
-  componentDidMount() {
-    armoryStore.on(Cnst.Armory.Emit.selected, () => {
-      console.log(`Armory  ${armoryStore.Selected} selected.`)
-      this.setState({ Selected: armoryStore.Selected })
-    })
+  // componentDidMount() {
+  //   armoryStore.on(Cnst.Armory.Emit.selected, () => {
+  //     console.log(`Armory  ${armoryStore.Selected} selected.`)
+  //     this.setState({ Selected: armoryStore.Selected })
+  //   })
 
-    armoryStore.on(Cnst.Armory.Emit.loading, () => {
-      console.log(`Armory loading ${armoryStore.Selected} = ${armoryStore.loading}`)
-      this.setState({ Loading: armoryStore.Loading })
-    })
+  //   armoryStore.on(Cnst.Armory.Emit.loading, () => {
+  //     console.log(`Armory loading ${armoryStore.Selected} = ${armoryStore.loading}`)
+  //     this.setState({ Loading: armoryStore.Loading })
+  //   })
 
-    armoryStore.on(Cnst.Armory.Emit.changeAmount, () => {
-      console.log('Armory amount changed')
-      this.setState({ Amount: armoryStore.Amount })
-    })
-  }
+  //   armoryStore.on(Cnst.Armory.Emit.changeAmount, () => {
+  //     console.log('Armory amount changed')
+  //     this.setState({ Amount: armoryStore.Amount })
+  //   })
+  // }
 
 
   render() {

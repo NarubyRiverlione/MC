@@ -7,8 +7,8 @@ import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
 
-import firecomputersStore from '../../Stores/FireComputersStore'
-import * as FireComputerActions from '../../Actions/FireComputersActions'
+// import firecomputersStore from '../../Stores/FireComputersStore'
+// import * as FireComputerActions from '../../Actions/FireComputersActions'
 
 
 const SelectMsg = (slot) => {
@@ -39,37 +39,37 @@ export default class FireComputer extends React.Component {
     }
   }
 
-  componentDidMount() {
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCselected, () => {
-      //    console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
-      this.setState({ SelectedFC: firecomputersStore.SelectedFC })
-    })
+  // componentDidMount() {
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCselected, () => {
+  //     //    console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
+  //     this.setState({ SelectedFC: firecomputersStore.SelectedFC })
+  //   })
 
-    firecomputersStore.on(Cnst.FireComputers.Emit.msgSlotChanged, () => {
-      //     console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
-      this.setState({ SelectedMsg: firecomputersStore.SelectedMsgSlot })
-    })
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.msgSlotChanged, () => {
+  //     //     console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
+  //     this.setState({ SelectedMsg: firecomputersStore.SelectedMsgSlot })
+  //   })
 
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCisReading, () => {
-      this.setState({ Reading: firecomputersStore.Reading })
-    })
-    // at the moment FCupdateReading and FCdoneReading are same, may be later need to trigger other thing
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneReading, () => {
-      this.setState({ Reading: firecomputersStore.Reading })
-    })
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCisReading, () => {
+  //     this.setState({ Reading: firecomputersStore.Reading })
+  //   })
+  //   // at the moment FCupdateReading and FCdoneReading are same, may be later need to trigger other thing
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneReading, () => {
+  //     this.setState({ Reading: firecomputersStore.Reading })
+  //   })
 
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCisSending, () => {
-      this.setState({ Send: firecomputersStore.Sending })
-    })
-    // at the moment FCisSending and FCdoneSending are same, may be later need to trigger other thing
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneSending, () => {
-      this.setState({ Reading: firecomputersStore.Sending })
-    })
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCisSending, () => {
+  //     this.setState({ Send: firecomputersStore.Sending })
+  //   })
+  //   // at the moment FCisSending and FCdoneSending are same, may be later need to trigger other thing
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneSending, () => {
+  //     this.setState({ Reading: firecomputersStore.Sending })
+  //   })
 
-    firecomputersStore.on(Cnst.FireComputers.Emit.FCupdateStatus, () => {
-      this.setState({ FCStates: firecomputersStore.FCS.map(fc => fc.status) })
-    })
-  }
+  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCupdateStatus, () => {
+  //     this.setState({ FCStates: firecomputersStore.FCS.map(fc => fc.status) })
+  //   })
+  // }
 
 
   ShowStatusSelectedFC() {

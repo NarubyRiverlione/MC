@@ -8,7 +8,11 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-foundation": "^0.8.2",
-    "react-scripts": "2.1.2"
+    "react-redux": "^6.0.0",
+    "react-scripts": "2.1.2",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "lint": "eslint ./src/**/*.js* --fix",
@@ -18,7 +22,6 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^5.3.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-react-app": "^3.0.6",
     "eslint-plugin-flowtype": "^3.2.0",

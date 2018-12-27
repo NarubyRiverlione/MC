@@ -1,104 +1,53 @@
-/* eslint-disable no-console */
+/* eslint-disable  react/jsx-filename-extension */
 import React from 'react'
-import ControlPanel from './Components/Panels/ControlPanel'
-import { Cnst } from './Constants'
 
-// import gameStore from './Stores/GameStore'
-import radioStore from './Stores/RadioStore'
-import firecomputersStore from './Stores/FireComputersStore'
-import launchStationsStore from './Stores/LaunchStationsStore'
-import armoryStore from './Stores/ArmoryStore'
+// redux & middleware
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import { createLogger } from 'redux-logger'
 
+// gecombineerde root reducer (combineReducers)
+// import Sentry from 'sentry-expo'
+import RootReducer from './Reducers'
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props)
+// presentatie container rond app laadscherm
+import GameContainer from './Containers/GameContainer'
 
-    const Stations = {}
-    Stations[Cnst.Stations.Radio] = { Status: radioStore.Status }
-    Stations[Cnst.Stations.FireComputers] = { Status: firecomputersStore.Status }
-    Stations[Cnst.Stations.Armory] = { Status: armoryStore.Status }
-    Stations[Cnst.Stations.LaunchStations] = { Status: launchStationsStore.Status }
+// crash log reporter
+// import Sentry from 'sentry-expo'
+// // Sentry.enableInExpoDevelopment = true
+// Sentry.config('https://22d6a0a3278d41b8a617663ad2a584b6@sentry.io/1253436', {
+//   release: '0e4fdef81448dcfa0e16ecc4433ff3997aa53572',
+// }).install()
 
-    this.state = { Stations }
-  }
+// logger middleware enkel in dev
+const loggerMiddleWare = createLogger(
+  {
+    // eslint-disable-next-line
+    predicate: (getState, action) => true
+  },
+)
 
-  componentDidMount() {
-    // change Station Displays
-    radioStore.on(Cnst.Radio.Emit.ChangedRadioStatus, () => {
-      this.SetStationStatus(Cnst.Stations.Radio, radioStore.Status)
-    })
-
-    firecomputersStore.on(Cnst.FireComputers.Emit.ChangedFCstatus, () => {
-      this.SetStationStatus(Cnst.Stations.FireComputers, firecomputersStore.Status)
-    })
-
-    launchStationsStore.on(Cnst.LaunchStations.Emit.ChangedLaunchStationsStatus, () => {
-      this.SetStationStatus(Cnst.Stations.LaunchStations, launchStationsStore.Status)
-    })
-
-    armoryStore.on(Cnst.Armory.Emit.ChangedArmoryStatus, () => {
-      this.SetStationStatus(Cnst.Stations.Armory, armoryStore.Status)
-    })
-  }
-
-  SetStationStatus(station, newStatus) {
-    const Stations = this.state.Stations
-    Stations[station].Status = newStatus
-    this.setState(Stations)
-  }
-
-  render() {
-    return (
-      <div className="Application">
-        <div className="grid-container ShowContainer">
-          <div className="grid-y grid-padding-y grid-padding-x">
-
-            <div className="cell medium-6 ShowCellY">
-              <div className="grid-x grid-margin-x ShowGrid">
-
-                <div className="cell medium-6 ShowCell">
-                  <ControlPanel
-                    Name={Cnst.Stations.Radio}
-                    StatusStatus={this.state.Stations[Cnst.Stations.Radio].Status}
-                  />
-                </div>
-
-                <div className="cell medium-6  ShowCell">
-                  <ControlPanel
-                    Name={Cnst.Stations.FireComputers}
-                    StatusStatus={this.state.Stations[Cnst.Stations.FireComputers].Status}
-                  />
-                </div>
-
-              </div>
-            </div>
-
-
-            <div className="cell medium-6 ShowCellY">
-              <div className="grid-x grid-margin-x ShowGrid">
-
-                <div className="cell medium-6 ShowCell">
-                  <ControlPanel
-                    Name={Cnst.Stations.Armory}
-                    StatusStatus={this.state.Stations[Cnst.Stations.Armory].Status}
-                  />
-                </div>
-
-                <div className="cell medium-6 ShowCell">
-                  <ControlPanel
-                    Name={Cnst.Stations.LaunchStations}
-                    StatusStatus={this.state.Stations[Cnst.Stations.LaunchStations].Status}
-                  />
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    )
-  }
+// bundel middleware in 1 enhancer, maak dan de store
+const configureStore = (initState) => {
+  const enhancer = compose(
+    applyMiddleware(
+      loggerMiddleWare,
+      thunkMiddleware,
+    ),
+  )
+  return createStore(RootReducer, initState, enhancer)
 }
+
+// maak normale redux store met de config die de root reducer en middleware bevat
+const store = configureStore({})
+
+// Provider = container rond App Component om store mee te geven
+const App = () => (
+  <Provider store={store}>
+    <GameContainer />
+  </Provider>
+)
+
+export default App

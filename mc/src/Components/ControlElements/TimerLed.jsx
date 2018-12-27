@@ -10,16 +10,29 @@ export default class TimerLed extends React.Component {
     //   this.Tick = 0
   }
 
-  Timer = (BlinkTime) => {
-    const { Time, Colors, RunTimer, TimerDoneCB } = this.props
-    // set Ticks to count down, evaluate every 500 ms (to blink) 
-    let Tick = Time
-    let Blinking = false
+  componentDidMount() {
+    this.CheckTimerNeedsStarting()
+  }
 
+  componentDidUpdate(prevProps) {
+    const { RunTimer } = this.props
+    if (!prevProps.RunTimer && RunTimer) {
+      // start timer now
+      this.Timer(500)
+    }
+  }
+
+  Timer = (BlinkTime) => {
     const TimerID = setInterval(() => {
+      const {
+        Time, Colors, RunTimer, TimerDoneCB,
+      } = this.props
+      // set Ticks to count down, evaluate every 500 ms (to blink)
+      let Tick = Time
+      let Blinking = false
       const { On } = this.state
       // reduce Tick until 0,
-      Tick = Tick - 500
+      Tick -= 500
       // set led off when time runs out or RunTimer is false (stop timer)
       if (Tick <= 0 || !RunTimer) {
         clearInterval(TimerID)
@@ -38,22 +51,16 @@ export default class TimerLed extends React.Component {
           }
         }
         // blink if needed, else set solid On
-        if (Blinking)
+        if (Blinking) {
           this.setState({ On: !On })
-        else if (!On)
+        }
+        else if (!On) {
           this.setState({ On: true })
+        }
       }
-
     }, BlinkTime)
   }
 
-  componentDidUpdate(prevProps) {
-    const { RunTimer } = this.props
-    if (!prevProps.RunTimer && RunTimer) {
-      // start timer now    
-      this.Timer(500)
-    }
-  }
 
   CheckTimerNeedsStarting() {
     const { RunTimer } = this.props
@@ -64,19 +71,16 @@ export default class TimerLed extends React.Component {
   }
 
 
-  componentDidMount() {
-    this.CheckTimerNeedsStarting()
-  }
-
-
   render() {
+    const { On, CurrentColor } = this.state
+    const { Colors, BackgroundColor, Caption } = this.props
     return (
       <MultiColorLed
-        On={this.state.On}
-        Colors={this.props.Colors}
-        CurrentColor={this.state.CurrentColor}
-        BackgroundColor={this.props.BackgroundColor}
-        Caption={this.props.Caption}
+        On={On}
+        Colors={Colors}
+        CurrentColor={CurrentColor}
+        BackgroundColor={BackgroundColor}
+        Caption={Caption}
       />
     )
   }
@@ -88,7 +92,5 @@ TimerLed.propTypes = {
   Caption: PropTypes.string.isRequired,
   RunTimer: PropTypes.bool.isRequired,
   Time: PropTypes.number.isRequired, // msec
-  TimerDoneCB: PropTypes.func
+  TimerDoneCB: PropTypes.func,
 }
-
-
