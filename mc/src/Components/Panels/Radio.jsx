@@ -11,42 +11,6 @@ import Selector from '../ControlElements/Selector'
 
 
 export default class Radio extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     IncomingMessage: radioStore.NewMessage,
-  //     Slots: radioStore.Slots.map(sl => sl.status),
-  //     Buttons: {},
-  //     SelectedSlot: radioStore.Selected,
-  //   }
-  // }
-
-  // componentWillMount() {
-  //   radioStore.on(Cnst.Radio.Emit.UpdateNewMessage, () => {
-  //     console.log(`RADIO: UpdateNewMessage: ${radioStore.NewMessage}`)
-  //     this.setState({ IncomingMessage: radioStore.NewMessage })
-  //   })
-
-  //   radioStore.on(Cnst.Radio.Emit.SlotChanged, () => {
-  //     //     console.log('RADIO: selected slot: ' + radioStore.Selected)
-  //     this.setState({ SelectedSlot: radioStore.Selected })
-  //   })
-
-  //   radioStore.on(Cnst.Radio.Emit.DoneCmd, () => {
-  //     // release all buttons
-  //     this.ReleaseButtons()
-  //   })
-
-  //   radioStore.on(Cnst.Radio.Emit.ChangeSlot, () => {
-  //     this.setState({ Slots: radioStore.Slots.map(sl => sl.status) })
-  //   })
-  // }
-
-  // componentDidMount() {
-  //   this.ReleaseButtons()
-  // }
-
-
   ExecuteAction(cmd) {
     // hold pressed button down
     const { ExecuteCmd, UpdateButton } = this.props

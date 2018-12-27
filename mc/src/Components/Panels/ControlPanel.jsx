@@ -4,21 +4,21 @@ import PropTypes from 'prop-types'
 import Display from '../ControlElements/Display'
 import { Cnst } from '../../Constants'
 import RadioContainer from '../../Containers/RadioContainer'
-// import FireComputer from './FireComputer'
-// import Armory from './Armory'
-// import LaunchStations from './LaunchStations'
+import FCContainer from '../../Containers/FCContainer'
+import ArmoryContainer from '../../Containers/ArmoryContainer'
+import LSContainer from '../../Containers/LSContainer'
 
 
 const RenderStation = (Name) => {
   switch (Name) {
     case Cnst.Stations.Radio:
       return <RadioContainer />
-    // case Cnst.Stations.FireComputers:
-    //   return <FireComputer />
-    // case Cnst.Stations.Armory:
-    //   return <Armory />
-    // case Cnst.Stations.LaunchStations:
-    //   return <LaunchStations />
+    case Cnst.Stations.FireComputers:
+      return <FCContainer />
+    case Cnst.Stations.Armory:
+      return <ArmoryContainer />
+    case Cnst.Stations.LaunchStations:
+      return <LSContainer />
     default:
       return <div />
   }

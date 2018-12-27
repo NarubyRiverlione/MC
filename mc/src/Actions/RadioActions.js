@@ -84,7 +84,7 @@ export const ExecuteCmd = cmd => (
         status: Cnst.Radio.Results[cmd.toLowerCase()],
         missionID: lastMissionID,
       }
-      // const UpdatedSlots = Object.assign([...Slots], { [SelectedSlot]: NewSlotStatus })
+      // update slot
       const UpdatedSlots = Slots.map((sl) => {
         let temp = Object.assign({}, sl)
         if (temp.slotNR === SelectedSlot) temp = NewSlotStatus

@@ -1,125 +1,142 @@
-import AppDispatcher from '../AppDispatcher'
-import { ActionCnst, Cnst } from '../Constants'
 
-import launchStationStore from '../Stores/LaunchStationsStore'
-import armoryStore from '../Stores/ArmoryStore'
+import { ActionCnst, Cnst } from '../Constants'
 
 import { ShowErrorStatus as LSshowErr, StartLoading as LSstartLoading } from './LaunchStationsActions'
 
-const ShowErrorStatus = (status) => {
-  AppDispatcher.dispatch({
-    type: ActionCnst.Armory.ShowErrorStatus,
-    payload: status,
-  })
-}
+const { Armory: ArmoryActions } = ActionCnst
 
-const StartLoading = () => {
-  AppDispatcher.dispatch({
-    type: ActionCnst.Armory.Load,
+const ShowErrorStatus = status => (
+  dispatch => dispatch({
+    type: ArmoryActions.ShowErrorStatus,
+    status,
   })
+)
 
-  // start Loading selected ordnance in Launch Station
-  LSstartLoading(armoryStore.Selected)
-}
+const StartLoading = () => (
+  (dispatch, getState) => {
+    const { Armory: { Selected } } = getState()
+
+    dispatch({ type: ArmoryActions.Load })
+    // start Loading selected ordnance in Launch Station
+    dispatch(LSstartLoading(Selected))
+  })
 
 // show general error on Armory display and specific error on Launch Station display
-const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => {
-  ShowErrorStatus(armoryErr)
-  LSshowErr(LSerr)
-}
-
-const WrongStationSelected = () => {
-  let errorMsg
-  switch (armoryStore.Selected) {
-    case Cnst.Ordnance.AA:
-      errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AA; break
-    case Cnst.Ordnance.AG:
-      errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AS; break
-    case Cnst.Ordnance.G:
-      errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.G; break
-    case Cnst.Ordnance.T:
-      errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.T; break
-    default:
-      break
+const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
+  (dispatch) => {
+    dispatch(ShowErrorStatus(armoryErr))
+    dispatch(LSshowErr(LSerr))
   }
-  ShowErrorInArmoryAndLS(Cnst.Armory.Errors.WrongLaunchStation, errorMsg)
-}
+)
+
+const WrongStationSelected = () => (
+  (dispatch, getState) => {
+    const { Armory: { Selected } } = getState()
+    let errorMsg
+    switch (Selected) {
+      case Cnst.Ordnance.AA:
+        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AA; break
+      case Cnst.Ordnance.AG:
+        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AS; break
+      case Cnst.Ordnance.G:
+        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.G; break
+      case Cnst.Ordnance.T:
+        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.T; break
+      default:
+        break
+    }
+    dispatch(ShowErrorInArmoryAndLS(Cnst.Armory.Errors.WrongLaunchStation, errorMsg))
+  }
+)
 
 // check if correct Launch Station is Selected
 // TODO: check is selected LS isn't already loaded of loading
-const CheckSelectedLaunchStation = () => {
-  // check if LS is selected
-  if (launchStationStore.Selected === '') {
-    ShowErrorInArmoryAndLS(Cnst.Armory.Errors.NoLSselected, Cnst.LaunchStations.Errors.NoLSselected)
-    return
-  }
+const CheckSelectedLaunchStation = () => (
+  (dispatch, getState) => {
+    const {
+      Armory: { Selected: ArmorySelected },
+      LaunchStations: { Selected: LSselected, Stations: LSstations },
+    } = getState()
+    // check if LS is selected
+    if (LSselected === '') {
+      dispatch(ShowErrorInArmoryAndLS(Cnst.Armory.Errors.NoLSselected, Cnst.LaunchStations.Errors.NoLSselected))
+      return
+    }
 
-  // check is selected LS is empty
-  const loadingStatusSelectedLS = launchStationStore.Station[launchStationStore.Selected].loadingStatus
-  if (loadingStatusSelectedLS !== Cnst.LaunchStations.StatusColor.empty) {
-    // show error
-    ShowErrorInArmoryAndLS(Cnst.Armory.Errors.SelectedLSnotEmpty, Cnst.LaunchStations.Errors.SelectedLSnotEmpty)
-    return
-  }
+    // check is selected LS is empty
+    const loadingStatusSelectedLS = LSstations[LSselected].loadingStatus
+    if (loadingStatusSelectedLS !== Cnst.LaunchStations.StatusColor.empty) {
+      // show error
+      dispatch(ShowErrorInArmoryAndLS(
+        Cnst.Armory.Errors.SelectedLSnotEmpty,
+        Cnst.LaunchStations.Errors.SelectedLSnotEmpty,
+      ))
+      return
+    }
 
-  // check correct type of LS is selected for selected ordnance
-  if (armoryStore.Selected === Cnst.Ordnance.AA || armoryStore.Selected === Cnst.Ordnance.AS) {
-    if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.one
-      || launchStationStore.Selected === Cnst.LaunchStations.Numbers.two) {
-      StartLoading()
+    // check correct type of LS is selected for selected ordnance
+    if (ArmorySelected === Cnst.Ordnance.AA || ArmorySelected === Cnst.Ordnance.AS) {
+      if (LSselected === Cnst.LaunchStations.Numbers.one
+        || LSselected === Cnst.LaunchStations.Numbers.two) {
+        dispatch(StartLoading())
+      }
+      else {
+        dispatch(WrongStationSelected())
+      }
     }
-    else {
-      WrongStationSelected()
+
+    if (ArmorySelected === Cnst.Ordnance.G) {
+      if (LSselected === Cnst.LaunchStations.Numbers.A
+        || LSselected === Cnst.LaunchStations.Numbers.B) {
+        StartLoading()
+      }
+      else {
+        WrongStationSelected()
+      }
+    }
+
+    if (ArmorySelected === Cnst.Ordnance.T) {
+      if (LSselected === Cnst.LaunchStations.Numbers.romanOn
+        || LSselected === Cnst.LaunchStations.Numbers.romanTwo) {
+        StartLoading()
+      }
+      else {
+        WrongStationSelected()
+      }
     }
   }
+)
 
-  if (armoryStore.Selected === Cnst.Ordnance.G) {
-    if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.A
-      || launchStationStore.Selected === Cnst.LaunchStations.Numbers.B) {
-      StartLoading()
-    }
-    else {
-      WrongStationSelected()
-    }
-  }
-
-  if (armoryStore.Selected === Cnst.Ordnance.T) {
-    if (launchStationStore.Selected === Cnst.LaunchStations.Numbers.romanOn
-      || launchStationStore.Selected === Cnst.LaunchStations.Numbers.romanTwo) {
-      StartLoading()
-    }
-    else {
-      WrongStationSelected()
-    }
-  }
-}
-
-export const AddOneToArmory = (ord) => {
-  AppDispatcher.dispatch({
+export const AddOneToArmory = ord => (
+  dispatch => dispatch({
     type: ActionCnst.Armory.AddOneToArmory,
     payload: ord,
   })
-}
+)
 
-export const Select = (ord) => {
-  AppDispatcher.dispatch({
+export const SetSelected = ord => (
+  dispatch => dispatch({
     type: ActionCnst.Armory.Select,
     payload: ord,
   })
-}
+)
 
-export const Load = () => {
-  // check if ordnance is selected
-  if (armoryStore.Selected === '') {
-    ShowErrorStatus(Cnst.Armory.Errors.NoOrdnanceSelected)
-    return
-  }
-  // check if ordnance is still in store
-  if (armoryStore.Amount[armoryStore.Selected] < 1) {
-    ShowErrorStatus(Cnst.Armory.Errors.OrdnanceOutOfStock)
-    return
-  }
+export const Load = () => (
+  (dispatch, getState) => {
+    const { Armory: { Selected, Amount } } = getState()
 
-  // check if correct LaunchStation is selected
-  CheckSelectedLaunchStation()
-}
+    // check if ordnance is selected
+    if (Selected === '') {
+      dispatch(ShowErrorStatus(Cnst.Armory.Errors.NoOrdnanceSelected))
+      return
+    }
+    // check if ordnance is still in store
+    if (Amount[Selected] < 1) {
+      dispatch(ShowErrorStatus(Cnst.Armory.Errors.OrdnanceOutOfStock))
+      return
+    }
+
+    // check if correct LaunchStation is selected
+    dispatch(CheckSelectedLaunchStation())
+  }
+)

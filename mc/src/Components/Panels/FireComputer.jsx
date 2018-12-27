@@ -1,79 +1,16 @@
 /* eslint-disable no-console */
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import { Cnst } from '../../Constants'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
 
-// import firecomputersStore from '../../Stores/FireComputersStore'
-// import * as FireComputerActions from '../../Actions/FireComputersActions'
-
-
-const SelectMsg = (slot) => {
-  FireComputerActions.SelectSlot(slot)
-}
-
-const SelectFC = (fc) => {
-  FireComputerActions.SelectFC(fc)
-}
-
-const Read = () => {
-  FireComputerActions.ReadMsg()
-}
-
-const Send = () => {
-  FireComputerActions.SendMission()
-}
 
 export default class FireComputer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      SelectedFC: firecomputersStore.SelectedFC,
-      SelectedMsg: firecomputersStore.SelectedMsgSlot,
-      FCStates: firecomputersStore.FCS.map(fc => fc.status),
-      Reading: firecomputersStore.Reading,
-      Sending: firecomputersStore.Sending,
-    }
-  }
-
-  // componentDidMount() {
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCselected, () => {
-  //     //    console.log('FireComputer  ' + firecomputersStore.SelectedFC + ' selected.')
-  //     this.setState({ SelectedFC: firecomputersStore.SelectedFC })
-  //   })
-
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.msgSlotChanged, () => {
-  //     //     console.log('FireComputer  msg slot ' + firecomputersStore.SelectedMsgSlot + ' selected.')
-  //     this.setState({ SelectedMsg: firecomputersStore.SelectedMsgSlot })
-  //   })
-
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCisReading, () => {
-  //     this.setState({ Reading: firecomputersStore.Reading })
-  //   })
-  //   // at the moment FCupdateReading and FCdoneReading are same, may be later need to trigger other thing
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneReading, () => {
-  //     this.setState({ Reading: firecomputersStore.Reading })
-  //   })
-
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCisSending, () => {
-  //     this.setState({ Send: firecomputersStore.Sending })
-  //   })
-  //   // at the moment FCisSending and FCdoneSending are same, may be later need to trigger other thing
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCdoneSending, () => {
-  //     this.setState({ Reading: firecomputersStore.Sending })
-  //   })
-
-  //   firecomputersStore.on(Cnst.FireComputers.Emit.FCupdateStatus, () => {
-  //     this.setState({ FCStates: firecomputersStore.FCS.map(fc => fc.status) })
-  //   })
-  // }
-
-
   ShowStatusSelectedFC() {
-    const { SelectedFC, FCStates } = this.state
+    const { SelectedFC, FCStates } = this.props
     switch (SelectedFC) {
       case Cnst.FireComputers.Name.A:
         return FCStates[0]
@@ -87,8 +24,9 @@ export default class FireComputer extends React.Component {
 
   render() {
     const {
-      Sending, SelectedFC, SelectedMsg, Reading,
-    } = this.state
+      Sending, SelectedFC, SelectedMsgSlot, Reading,
+      SelectFC, SelectSlot, ReadMsg, SendMission,
+    } = this.props
 
     return (
       <div className="grid-container" id="FireComputerPanel">
@@ -107,7 +45,9 @@ export default class FireComputer extends React.Component {
                   TextColor="yellow"
                   Color="slategrey"
                   SetPressed={SelectedFC === 'A'}
-                  cb={SelectFC()}
+                  cb={(Selected) => {
+                    SelectFC(Selected)
+                  }}
                 />
               </div>
 
@@ -119,12 +59,17 @@ export default class FireComputer extends React.Component {
                   Color="slategrey"
                   Title=""
                   SetPressed={SelectedFC === 'B'}
-                  cb={SelectFC()}
+                  cb={(Selected) => {
+                    SelectFC(Selected)
+                  }}
                 />
               </div>
 
               <div className="cell large-6">
-                <Display Width={250} Text={this.ShowStatusSelectedFC.bind(this)()} />
+                <Display
+                  Width={250}
+                  Text={this.ShowStatusSelectedFC()}
+                />
               </div>
             </div>
 
@@ -146,8 +91,10 @@ export default class FireComputer extends React.Component {
                     Amount={3}
                     r={50}
                     Side="L"
-                    Selected={SelectedMsg}
-                    cb={SelectMsg()}
+                    StartSelected={SelectedMsgSlot}
+                    cb={(Selected) => {
+                      SelectSlot(Selected)
+                    }}
                   />
                 </div>
               </div>
@@ -163,7 +110,9 @@ export default class FireComputer extends React.Component {
                   TextColor="yellow"
                   Color="slategrey"
                   SetPressed={Reading}
-                  cb={Read()}
+                  cb={() => {
+                    ReadMsg()
+                  }}
                 />
               </div>
 
@@ -174,7 +123,9 @@ export default class FireComputer extends React.Component {
                   TextColor="yellow"
                   Color="slategrey"
                   SetPressed={Sending}
-                  cb={Send()}
+                  cb={() => {
+                    SendMission()
+                  }}
                 />
               </div>
 
@@ -184,4 +135,17 @@ export default class FireComputer extends React.Component {
       </div>
     )
   }
+}
+
+FireComputer.propTypes = {
+  Sending: PropTypes.bool.isRequired,
+  Reading: PropTypes.bool.isRequired,
+  SelectedFC: PropTypes.string.isRequired,
+  SelectedMsgSlot: PropTypes.number.isRequired,
+  FCStates: PropTypes.array.isRequired,
+
+  SelectSlot: PropTypes.func.isRequired,
+  SelectFC: PropTypes.func.isRequired,
+  ReadMsg: PropTypes.func.isRequired,
+  SendMission: PropTypes.func.isRequired,
 }
