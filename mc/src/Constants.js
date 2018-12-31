@@ -64,10 +64,18 @@ const Cnst = {
       empty: 2, loading: 1, loaded: 0, removing: 3,
     },
     Actions: {
-      fire: 'F I R E', prepare: 'Prepare', remove: 'Remove', repair: 'Repair',
+      fire: 'F I R E',
+      prepare: 'Prepare',
+      remove: 'Remove',
+      repair: 'Repair',
+      receiving: 'Receiving fire mission',
     },
     Results: {
-      fire: 'Fired', prepare: 'Ready to launch', remove: 'Empty', repair: 'Repaired',
+      fire: 'Fired',
+      prepare: 'Ready to launch',
+      remove: 'Empty',
+      repair: 'Repaired',
+      received: 'Received fire mission',
     },
     Errors: {
       WrongLaunchStation: {
@@ -144,14 +152,10 @@ const ActionCnst = {
     DeselectStations: 'LAUNCHSTATION_DESELECT_ALL',
     UpdateSelectedStatus: 'LAUNCHSTATION_UPDATE_SELECTED_STATUS',
     UpdatedStations: 'LAUNCHSTATION_UPDATE_STATIONS',
+    ReceivedMission: 'LAUNCHSTATION_RECEIVED_MISSION',
     Prepare: 'LAUNCHSTATION_PREPARE',
-
     Repair: 'LAUNCHSTATION_REPAIR',
     Select: 'LAUNCHSTATION_SELECT',
-
-    //   StartLoading: 'LAUNCHSTATION_START_LOADING',
-    //   DoneLoading: 'LAUNCHSTATION_DONE_LOADING',
-
     ShowErrorStatus: 'LAUNCHSTATION_SHOW_ERR',
     StatusUpdate: 'LAUNCHSTATION_STATUS_UPDATE',
   },

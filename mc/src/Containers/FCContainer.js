@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   SelectedFC: state.FireComputer.SelectedFC,
   SelectedMsgSlot: state.FireComputer.SelectedMsgSlot,
-  FCStates: state.FireComputer.FCS.map(fc => fc.status),
+  FCStates: state.FireComputer.FCS.map(fc => fc.display),
   Sending: state.FireComputer.Sending,
   Reading: state.FireComputer.Reading,
 })

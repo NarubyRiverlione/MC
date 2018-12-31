@@ -1,6 +1,6 @@
 import { ActionCnst, Cnst } from '../Constants'
 
-import { StatusUpdate as LSshowErr } from './LaunchStationsActions'
+import { StatusUpdate as LSshowErr, ReceivedMission as SendToLaunchStation } from './LaunchStationsActions'
 
 const { FireComputers: FCActie } = ActionCnst
 
@@ -34,13 +34,13 @@ const DoneLoading = (workingFC, missionID) => (
 
     // show Mission type on FC display
     const mission = Missions.find(m => m.ID === missionID)
-
     // set 'read + mission type' as status in selected FC
     const showMission = Cnst.FireComputers.Results.read + mission.Type
 
     const UpdatedFC = {
       ...workingFC,
-      status: showMission,
+      status: Cnst.FireComputers.Results.read,
+      display: showMission,
       missionID,
     }
     const UpdatedFCS = FCS.map((sl) => {
@@ -113,9 +113,18 @@ export const ReadMsg = () => (
   })
 
 
-export const SendMission = () => ({
-  type: FCActie.SendMission,
-})
+// export const SendMission = () => (
+//   (dispatch, getState) => {
+//     const { FireComputer: { SelectedFC, FCS } } = getState()
+//     const { missionID } = FCS.find(fc => fc.name === SelectedFC)
+
+//     dispatch(SendToLaunchStation(missionID))
+
+//     dispatch({
+//       type: FCActie.SendMission,
+//     })
+//   })
+
 
 export const ReadMsgDone = () => ({
   type: FCActie.ReadMsgDone,
@@ -142,15 +151,16 @@ const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
   return IsCorrect
 }
 
-export const SendMissionDone = () => (
+export const SendMission = () => (
   (dispatch, getState) => {
     const {
+      Game: { Missions },
       FireComputer: { SelectedFC, FCS },
-      LaunchStations: { SelectedStatus: LSselectedStatus, Selected: SelectedLS },
+      LaunchStations: { Stations, Selected: SelectedLS },
     } = getState()
 
-    const WorkingFC = FCS.filter(fc => fc.name === SelectedFC)
-    const MissionType = FCS.filter(fc => fc.name === SelectedFC).map(fc => fc.WorkingFC)
+    const WorkingFC = FCS.find(fc => fc.name === SelectedFC)
+
     // check if a FC is selected
     if (!WorkingFC) {
       console.log('FC: no fc selected send mission')
@@ -163,8 +173,18 @@ export const SendMissionDone = () => (
       dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.NoMissionInSelectedFC))
       return
     }
+    // check if a Launch station is selected
+    if (SelectedLS === '') {
+      // general error on FCS
+      dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.CannotSend))
+      // specific err on LS
+      dispatch(LSshowErr(Cnst.LaunchStations.Errors.NoLSselected))
+      return
+    }
     // check if selected LS is loaded
-    if (LSselectedStatus !== Cnst.LaunchStations.StatusColor.loaded) {
+    const WorkingStation = Stations[SelectedLS]
+    const { handleStatus } = WorkingStation
+    if (handleStatus !== Cnst.LaunchStations.StatusColor.loaded) {
       // general error on FCS
       dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.CannotSend))
       // specific err on LS
@@ -172,6 +192,8 @@ export const SendMissionDone = () => (
       return
     }
     // check if selected LS is correct for this Mission Type
+    const WorkingMission = Missions.find(m => m.ID === WorkingFC.missionID)
+    const { Type: MissionType, ID: missionID } = WorkingMission
     if (!CheckCorrectLSforMission(MissionType, SelectedLS)) {
       // general error on FCS
       dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.CannotSend))
@@ -183,20 +205,21 @@ export const SendMissionDone = () => (
     // start sending Fire Mission to selected Launch Station
     console.log(`Start sending mission from FC ${WorkingFC.name} to Launch Station ${SelectedLS}`)
     dispatch(StatusUpdate(Cnst.FireComputers.Actions.send))
-    this.emit(Cnst.FireComputers.Emit.ChangedFCstatus)
+    dispatch(LSshowErr(Cnst.LaunchStations.Actions.receiving))
+
     // hold read button down
     dispatch({ type: FCActie.SendMission })
-
 
     setTimeout(() => {
       // show FC status idle
       dispatch(StatusUpdate(Cnst.Status.Idle))
       // release send button
       dispatch({ type: FCActie.SendMissionDone })
-      // set selected FC to empty
+      // clear  selected FC
       const UpdatedFC = {
         ...WorkingFC,
         status: Cnst.FireComputers.Results.empty,
+        display: Cnst.FireComputers.Results.empty,
         missionID: -1,
       }
       const UpdatedFCS = FCS.map((sl) => {
@@ -205,6 +228,9 @@ export const SendMissionDone = () => (
         return temp
       })
       dispatch({ type: ActionCnst.FireComputers.UpdateFCs, UpdatedFCS })
+
+      // send fire mission to launch station
+      dispatch(SendToLaunchStation(missionID))
     }, Cnst.FireComputers.Time.send)
   }
 )

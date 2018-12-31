@@ -10,11 +10,13 @@ const InitState = {
   FCS: [{
     name: Cnst.FireComputers.Name.A,
     status: Cnst.FireComputers.Results.empty,
+    display: Cnst.FireComputers.Results.empty,
     missionID: -1,
   },
   {
     name: Cnst.FireComputers.Name.B,
     status: Cnst.FireComputers.Results.empty,
+    display: Cnst.FireComputers.Results.empty,
     missionID: -1,
   },
   ],
@@ -28,7 +30,7 @@ const FireComputerReducer = (state = InitState, action) => {
         ...state,
         Status: action.StatusText,
       }
-    // select a msdg slot
+    // select a msg slot
     case FCActie.SelectSlot:
       return {
         ...state,

@@ -6,32 +6,32 @@ const InitState = {
   Stations:
   {
     [Cnst.LaunchStations.Numbers.one]: {
-      //  button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.two]: {
-      // button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.A]: {
-      // button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.B]: {
-      // button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.romanOn]: {
-      // button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.romanTwo]: {
-      // button: false,
+      missionID: -1,
       handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
@@ -72,6 +72,7 @@ const LaunchStationsReducer = (state = InitState, action) => {
       }
     // update Stations
     case LaunchStationActie.UpdatedStations:
+    case LaunchStationActie.ReceivedMission:
       return {
         ...state,
         Stations: action.UpdatedStations,

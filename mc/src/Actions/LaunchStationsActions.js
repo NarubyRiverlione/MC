@@ -27,10 +27,12 @@ const ShowSelectedStatus = () => (
   }
 )
 
+
 export const StatusUpdate = StatusText => ({
   type: LSActie.StatusUpdate,
   StatusText,
 })
+
 
 // show error in status of set time, then set idle status
 export const ShowErrorStatus = err => (
@@ -65,10 +67,7 @@ export const Select = stationName => (
 export const HandelingLaunchStation = (ordnance, loading = true) => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
-    const handelingStation = Selected // remember after wait time, may be other LS is then selected
-
     const LS = { ...Stations[Selected] }
-    // const LS = UpdatedStations[handelingStation]
 
     // loading: set ordnance type in LS so it can be removing later
     if (loading) LS.ordnance = ordnance
@@ -94,6 +93,8 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
       LS.handleStatus = loading
         ? Cnst.LaunchStations.StatusColor.loaded
         : Cnst.LaunchStations.StatusColor.empty
+      // reset missionID when removing
+      if (!loading) LS.missionID = -1
 
       const DoneStations = { ...Stations }
       DoneStations[Selected] = { ...LS }
@@ -107,6 +108,23 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
       // show selected LS status
       dispatch(ShowSelectedStatus())
     }, Cnst.LaunchStations.Time.loading)
+  }
+)
+
+export const ReceivedMission = missionID => (
+  (dispatch, getState) => {
+    const { LaunchStations: { Selected, Stations } } = getState()
+    const LS = { ...Stations[Selected] }
+    LS.missionID = missionID
+
+    const UpdatedStations = { ...Stations }
+    UpdatedStations[Selected] = { ...LS }
+    dispatch({
+      type: LSActie.UpdatedStations,
+      UpdatedStations,
+    })
+    // show mission received on status display
+    dispatch(StatusUpdate(Cnst.LaunchStations.Results.received))
   }
 )
 
