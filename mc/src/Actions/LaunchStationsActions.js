@@ -1,8 +1,9 @@
 
 import { ActionCnst, Cnst } from '../Constants'
 
-const { LaunchStations: LSActie } = ActionCnst
+import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
 
+const { LaunchStations: LSActie } = ActionCnst
 
 const ShowSelectedStatus = () => (
   (dispatch, getState) => {
@@ -13,13 +14,14 @@ const ShowSelectedStatus = () => (
       dispatch({ type: LSActie.UpdateSelectedStatus, SelectedStatus: '' })
     }
     else {
-      const { loadingStatus } = Stations[Selected]
+      const { handleStatus } = Stations[Selected]
       // find key (= description) for statusColor
       let selStatusTxt = Object.keys(Cnst.LaunchStations.StatusColor)
-        .find(key => Cnst.LaunchStations.StatusColor[key] === loadingStatus)
+        .find(key => Cnst.LaunchStations.StatusColor[key] === handleStatus)
 
-      // add ordnance type
-      selStatusTxt += `: ${Stations[Selected].ordnance}`
+      // add ordnance type when LS is not empty
+      if (handleStatus !== 2) selStatusTxt += `: ${Stations[Selected].ordnance}`
+
       dispatch({ type: LSActie.UpdateSelectedStatus, SelectedStatus: selStatusTxt })
     }
   }
@@ -40,58 +42,46 @@ export const ShowErrorStatus = err => (
     }, Cnst.LaunchStations.Time.error)
   })
 
-const DeselectAll = () => (
-  (dispatch, getState) => {
-    const { LaunchStations: { Stations } } = getState()
+const DeselectAll = () => ({
+  type: LSActie.DeselectStations,
+})
 
-    const DeselectedStations = Object.assign({}, Stations)
-    Object.keys(DeselectedStations).forEach((name) => {
-      DeselectedStations[name].button = false
-    })
-
-    dispatch({
-      type: LSActie.DeselectStations,
-      DeselectedStations,
-    })
-  })
 
 export const Select = stationName => (
-  (dispatch, getState) => {
+  (dispatch) => {
     dispatch(DeselectAll())
-    const { LaunchStations: { Selected, Stations } } = getState()
 
-    if (Selected !== stationName) { // only select if not already selected
-      // update station
-      const UpdatedStations = Object.assign({}, Stations)
-      UpdatedStations[stationName].button = true
+    dispatch({
+      type: LSActie.Select,
+      Selected: stationName,
+    })
 
-      dispatch({
-        type: LSActie.Select,
-        Selected: stationName,
-        UpdatedStations,
-      })
-
-      // show status of selected LS
-      dispatch(ShowSelectedStatus())
-    }
+    // show status of selected LS
+    dispatch(ShowSelectedStatus())
   }
 )
 
-export const StartLoading = ordnance => (
+
+export const HandelingLaunchStation = (ordnance, loading = true) => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
-    const loadThisStation = Selected // remember after wait time, may be other LS is then selected
+    const handelingStation = Selected // remember after wait time, may be other LS is then selected
 
-    const UpdatedStations = Object.assign({}, Stations)
-    const LS = UpdatedStations[loadThisStation]
+    const LS = { ...Stations[Selected] }
+    // const LS = UpdatedStations[handelingStation]
 
-    // set ordnance type in LS
-    LS.ordnance = ordnance
-    // signal  loading in progress by setting led color
-    LS.loadingStatus = Cnst.LaunchStations.StatusColor.loading
+    // loading: set ordnance type in LS so it can be removing later
+    if (loading) LS.ordnance = ordnance
 
+    // signal handeling in progress by setting led color
+    LS.handleStatus = loading
+      ? Cnst.LaunchStations.StatusColor.loading
+      : Cnst.LaunchStations.StatusColor.removing
+
+    const UpdatedStations = { ...Stations }
+    UpdatedStations[Selected] = { ...LS }
     dispatch({
-      type: LSActie.StartLoading,
+      type: LSActie.UpdatedStations,
       UpdatedStations,
     })
 
@@ -101,46 +91,24 @@ export const StartLoading = ordnance => (
     // wait for loading time
     setTimeout(() => {
       // signal loading done by led color
-      LS.loadingStatus = Cnst.LaunchStations.StatusColor.loaded
+      LS.handleStatus = loading
+        ? Cnst.LaunchStations.StatusColor.loaded
+        : Cnst.LaunchStations.StatusColor.empty
 
+      const DoneStations = { ...Stations }
+      DoneStations[Selected] = { ...LS }
       dispatch({
-        type: LSActie.DoneLoading,
-        UpdatedStations,
+        type: LSActie.UpdatedStations,
+        UpdatedStations: DoneStations,
       })
+      if (loading) dispatch(ArmoryLoadingDone())
+      else dispatch(AddOneToArmory(LS.ordnance))
 
       // show selected LS status
       dispatch(ShowSelectedStatus())
     }, Cnst.LaunchStations.Time.loading)
   }
 )
-// export const Select = caption => (
-//   (dispatch) => {
-//     let SelectedStation
-//     switch (caption) {
-//       case Cnst.LaunchStations.Numbers.one:
-//       case Cnst.LaunchStations.Numbers.two:
-//         SelectedStation = Cnst.LaunchStations.Name.rails; break
-//       case Cnst.LaunchStations.Numbers.A:
-//       case Cnst.LaunchStations.Numbers.B:
-//         SelectedStation = Cnst.LaunchStations.Name.VLT; break
-//       case Cnst.LaunchStations.Numbers.romanOn:
-//       case Cnst.LaunchStations.Numbers.romanTwo:
-//         SelectedStation = Cnst.LaunchStations.Name.tubes; break
-//       default:
-//         SelectedStation = null
-//     }
-//     if (SelectedStation) {
-//       dispatch({
-//         type: LSActie.Select,
-//         SelectedStation,
-//       })
-//     }
-//   })
-
-export const Remove = () => (
-  (dispatch) => {
-    dispatch({ type: LSActie.Remove })
-  })
 
 export const Prepare = () => (
   (dispatch) => {

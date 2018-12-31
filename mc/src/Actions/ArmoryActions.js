@@ -1,25 +1,46 @@
 
 import { ActionCnst, Cnst } from '../Constants'
 
-import { ShowErrorStatus as LSshowErr, StartLoading as LSstartLoading } from './LaunchStationsActions'
+import { ShowErrorStatus as LSshowErr, HandelingLaunchStation } from './LaunchStationsActions'
 
 const { Armory: ArmoryActions } = ActionCnst
 
-const ShowErrorStatus = status => (
-  dispatch => dispatch({
-    type: ArmoryActions.ShowErrorStatus,
-    status,
+
+export const StatusUpdate = StatusText => ({
+  type: ArmoryActions.StatusUpdate,
+  StatusText,
+})
+
+// show error in status of set time, then set idle status
+const ShowErrorStatus = err => (
+  (dispatch) => {
+    dispatch(StatusUpdate(err))
+
+    setTimeout(() => {
+      dispatch(StatusUpdate(Cnst.Status.Idle))
+    }, Cnst.Armory.Time.error)
   })
-)
+
 
 const StartLoading = () => (
   (dispatch, getState) => {
-    const { Armory: { Selected } } = getState()
+    const { Armory: { Selected, Amount } } = getState()
+    // reduce amount of the ordnance
+    const UpdatedAmount = { ...Amount }
+    // eslint-disable-next-line no-plusplus
+    UpdatedAmount[Selected]--
+    dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
 
-    dispatch({ type: ArmoryActions.Load })
     // start Loading selected ordnance in Launch Station
-    dispatch(LSstartLoading(Selected))
+    dispatch({ type: ArmoryActions.Loading })
+    dispatch(HandelingLaunchStation(Selected, true))
   })
+
+export const LoadingDone = () => ({
+  type: ArmoryActions.LoadingDone,
+  Loading: false,
+  Selected: '',
+})
 
 // show general error on Armory display and specific error on Launch Station display
 const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
@@ -29,14 +50,15 @@ const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
   }
 )
 
-const WrongStationSelected = () => (
+
+const ShowMsgWrongStationSelected = () => (
   (dispatch, getState) => {
     const { Armory: { Selected } } = getState()
     let errorMsg
     switch (Selected) {
       case Cnst.Ordnance.AA:
         errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AA; break
-      case Cnst.Ordnance.AG:
+      case Cnst.Ordnance.AS:
         errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AS; break
       case Cnst.Ordnance.G:
         errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.G; break
@@ -64,8 +86,8 @@ const CheckSelectedLaunchStation = () => (
     }
 
     // check is selected LS is empty
-    const loadingStatusSelectedLS = LSstations[LSselected].loadingStatus
-    if (loadingStatusSelectedLS !== Cnst.LaunchStations.StatusColor.empty) {
+    const handleStatusSelectedLS = LSstations[LSselected].handleStatus
+    if (handleStatusSelectedLS !== Cnst.LaunchStations.StatusColor.empty) {
       // show error
       dispatch(ShowErrorInArmoryAndLS(
         Cnst.Armory.Errors.SelectedLSnotEmpty,
@@ -74,52 +96,60 @@ const CheckSelectedLaunchStation = () => (
       return
     }
 
-    // check correct type of LS is selected for selected ordnance
+    /* check correct type of LS is selected for selected ordnance */
+    // AA
     if (ArmorySelected === Cnst.Ordnance.AA || ArmorySelected === Cnst.Ordnance.AS) {
       if (LSselected === Cnst.LaunchStations.Numbers.one
         || LSselected === Cnst.LaunchStations.Numbers.two) {
         dispatch(StartLoading())
       }
       else {
-        dispatch(WrongStationSelected())
+        dispatch(ShowMsgWrongStationSelected())
       }
     }
-
+    // G
     if (ArmorySelected === Cnst.Ordnance.G) {
       if (LSselected === Cnst.LaunchStations.Numbers.A
         || LSselected === Cnst.LaunchStations.Numbers.B) {
-        StartLoading()
+        dispatch(StartLoading())
       }
       else {
-        WrongStationSelected()
+        dispatch(ShowMsgWrongStationSelected())
       }
     }
-
+    // T
     if (ArmorySelected === Cnst.Ordnance.T) {
       if (LSselected === Cnst.LaunchStations.Numbers.romanOn
         || LSselected === Cnst.LaunchStations.Numbers.romanTwo) {
-        StartLoading()
+        dispatch(StartLoading())
       }
       else {
-        WrongStationSelected()
+        dispatch(ShowMsgWrongStationSelected())
       }
     }
   }
 )
 
-export const AddOneToArmory = ord => (
+
+export const AddOneToArmory = ordnance => (
+  (dispatch, getState) => {
+    const { Armory: { Amount } } = getState()
+    // increment amount of the ordnance
+    const UpdatedAmount = { ...Amount }
+    // eslint-disable-next-line no-plusplus
+    UpdatedAmount[ordnance]++
+    dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
+  }
+)
+
+
+export const SetSelected = Selected => (
   dispatch => dispatch({
-    type: ActionCnst.Armory.AddOneToArmory,
-    payload: ord,
+    type: ActionCnst.Armory.Select,
+    Selected,
   })
 )
 
-export const SetSelected = ord => (
-  dispatch => dispatch({
-    type: ActionCnst.Armory.Select,
-    payload: ord,
-  })
-)
 
 export const Load = () => (
   (dispatch, getState) => {

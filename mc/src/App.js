@@ -25,7 +25,7 @@ import GameContainer from './Containers/GameContainer'
 const loggerMiddleWare = createLogger(
   {
     // eslint-disable-next-line
-    predicate: (getState, action) => false
+    predicate: (getState, action) => true
   },
 )
 

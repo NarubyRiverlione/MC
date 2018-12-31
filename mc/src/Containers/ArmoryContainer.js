@@ -6,8 +6,8 @@ import {
 } from '../Actions/ArmoryActions'
 
 const mapDispatchToProps = dispatch => ({
-  SetSelected: (SelectedMsgSlot) => {
-    dispatch(SetSelected(SelectedMsgSlot))
+  SetSelected: (SelectedOrdnance) => {
+    dispatch(SetSelected(SelectedOrdnance))
   },
   Load: () => {
     dispatch(Load())

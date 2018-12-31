@@ -28,6 +28,25 @@ const ArmoryReducer = (state = InitState, action) => {
         ...state,
         Selected: action.Selected,
       }
+    // start loading
+    case ArmoryActie.Loading:
+      return {
+        ...state,
+        Loading: true,
+      }
+    //  loading done
+    case ArmoryActie.LoadingDone:
+      return {
+        ...state,
+        Loading: action.Loading,
+        Selected: action.Selected,
+      }
+    // update amount
+    case ArmoryActie.UpdateAmount:
+      return {
+        ...state,
+        Amount: action.UpdatedAmount,
+      }
     default:
       return state
   }

@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import LaunchStations from '../Components/Panels/LaunchStations'
 
 import {
-  Select, Prepare, Remove, Repair, Fire,
+  Select, Prepare, HandelingLaunchStation, Repair, Fire,
 } from '../Actions/LaunchStationsActions'
 
 
@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(Prepare())
   },
   Remove: () => {
-    dispatch(Remove())
+    dispatch(HandelingLaunchStation('', false))
   },
   Repair: () => {
     dispatch(Repair())
@@ -26,6 +26,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   Stations: state.LaunchStations.Stations,
+  Selected: state.LaunchStations.Selected,
   SelectedStatus: state.LaunchStations.SelectedStatus,
   Prepairing: state.LaunchStations.Prepairing,
   Repairing: state.LaunchStations.Repairing,

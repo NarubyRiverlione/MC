@@ -9,7 +9,7 @@ import ButtonWithLed from '../ControlElements/ButtonWithLed'
 
 
 const LaunchStations = ({
-  Stations, SelectedStatus, Prepairing, Repairing, Firing, Removing,
+  Stations, Selected, SelectedStatus, Prepairing, Repairing, Firing, Removing,
   Select, Prepare, Remove, Repair, Fire,
 }) => (
   <div className="grid-container" id="LaunchStationsPanel">
@@ -26,12 +26,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.one].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.one].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.one}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.one].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.one}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.one)
                 }}
@@ -42,12 +42,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.two].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.two].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.two}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.two].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.two}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.two)
                 }}
@@ -65,12 +65,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.A].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.A].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.A}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.A].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.A}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.A)
                 }}
@@ -81,12 +81,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.B].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.B].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.B}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.B].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.B}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.B)
                 }}
@@ -104,12 +104,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanOn].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanOn].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.romanOn}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.romanOn].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanOn}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.romanOn)
                 }}
@@ -120,12 +120,12 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanTwo].loadingStatus}
+                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanTwo].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.romanTwo}
                 ButtonWidth={50}
                 ButtonColor="slategrey"
                 ButtonTextColor="yellow"
-                ButtonStatus={Stations[Cnst.LaunchStations.Numbers.romanTwo].button}
+                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanTwo}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.romanTwo)
                 }}
@@ -151,7 +151,7 @@ const LaunchStations = ({
                 Color="slategrey"
                 TextColor="yellow"
                 SetPressed={Prepairing}
-                cb={Prepare()}
+                cb={Prepare}
               />
             </div>
             <div className="cell small-6">
@@ -161,7 +161,7 @@ const LaunchStations = ({
                 Color="slategrey"
                 TextColor="yellow"
                 SetPressed={Removing}
-                cb={Remove()}
+                cb={Remove}
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ const LaunchStations = ({
               Color="slategrey"
               TextColor="yellow"
               SetPressed={Repairing}
-              cb={Repair()}
+              cb={Repair}
             />
           </div>
         </div>
@@ -192,6 +192,7 @@ const LaunchStations = ({
 
 LaunchStations.propTypes = {
   Stations: PropTypes.object.isRequired,
+  Selected: PropTypes.string.isRequired,
   SelectedStatus: PropTypes.string.isRequired,
   Prepairing: PropTypes.bool.isRequired,
   Repairing: PropTypes.bool.isRequired,

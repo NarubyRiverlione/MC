@@ -99,7 +99,8 @@ const StartNewMessageTimer = fixedTimer => (
       dispatch(SendNewMessage())
 
       // restart timer new msg
-      dispatch(StartNewMessageTimer())
+      /* */
+      // dispatch(StartNewMessageTimer())
     }, nextIncoming)
   }
 )

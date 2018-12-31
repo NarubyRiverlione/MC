@@ -6,33 +6,33 @@ const InitState = {
   Stations:
   {
     [Cnst.LaunchStations.Numbers.one]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      //  button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.two]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      // button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.A]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      // button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.B]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      // button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.romanOn]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      // button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
     [Cnst.LaunchStations.Numbers.romanTwo]: {
-      button: false,
-      loadingStatus: Cnst.LaunchStations.StatusColor.empty,
+      // button: false,
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
       ordnance: '',
     },
   },
@@ -57,20 +57,24 @@ const LaunchStationsReducer = (state = InitState, action) => {
       return {
         ...state,
         Selected: action.Selected,
-        Stations: action.UpdatedStations,
       }
     // DeselectStations all LS stations
     case LaunchStationActie.DeselectStations:
       return {
         ...state,
-        Stations: action.DeselectedStations,
         Selected: '',
       }
-    // update status of selected weapon
+    // update display status of selected weapon
     case LaunchStationActie.UpdateSelectedStatus:
       return {
         ...state,
         SelectedStatus: action.SelectedStatus,
+      }
+    // update Stations
+    case LaunchStationActie.UpdatedStations:
+      return {
+        ...state,
+        Stations: action.UpdatedStations,
       }
     // Prepairing
     case LaunchStationActie.Prepare:
@@ -90,12 +94,7 @@ const LaunchStationsReducer = (state = InitState, action) => {
         ...state,
         Firing: true,
       }
-    // Removing
-    case LaunchStationActie.Remove:
-      return {
-        ...state,
-        Removing: true,
-      }
+
     default:
       return state
   }

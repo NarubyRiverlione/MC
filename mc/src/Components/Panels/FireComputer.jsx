@@ -40,11 +40,11 @@ export default class FireComputer extends React.Component {
 
               <div className="cell large-2">
                 <Button
-                  Caption="A"
+                  Caption={Cnst.FireComputers.Name.A}
                   Width={50}
                   TextColor="yellow"
                   Color="slategrey"
-                  SetPressed={SelectedFC === 'A'}
+                  SetPressed={SelectedFC === Cnst.FireComputers.Name.A}
                   cb={(Selected) => {
                     SelectFC(Selected)
                   }}
@@ -53,12 +53,12 @@ export default class FireComputer extends React.Component {
 
               <div className="cell large-2">
                 <Button
-                  Caption="B"
+                  Caption={Cnst.FireComputers.Name.B}
                   Width={50}
                   TextColor="yellow"
                   Color="slategrey"
                   Title=""
-                  SetPressed={SelectedFC === 'B'}
+                  SetPressed={SelectedFC === Cnst.FireComputers.Name.B}
                   cb={(Selected) => {
                     SelectFC(Selected)
                   }}

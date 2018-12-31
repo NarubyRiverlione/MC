@@ -14,7 +14,7 @@ const Armory = ({
     <div className="grid-x">
       {/* Select ordnance */}
       <div className="medium-7 grid-y">
-        <div className="cell small-2"><p>Select Cnst.Ordnance</p></div>
+        <div className="cell small-2"><p>Select ordnance</p></div>
         <div className="cell small-2">
           <Button
             Caption={Cnst.Ordnance.AA}
@@ -94,11 +94,11 @@ const Armory = ({
         <div className="cell small-4">
           <Button
             Caption={Cnst.Armory.Actions.load}
-            Width={100}
+            Width={120}
             Color="slategrey"
             TextColor="yellow"
             SetPressed={Loading}
-            cb={Load()}
+            cb={Load}
           />
         </div>
       </div>
@@ -108,7 +108,7 @@ const Armory = ({
 
 Armory.propTypes = {
   Selected: PropTypes.string.isRequired,
-  Amount: PropTypes.number.isRequired,
+  Amount: PropTypes.object.isRequired,
   Loading: PropTypes.bool.isRequired,
 
   SetSelected: PropTypes.func.isRequired,
