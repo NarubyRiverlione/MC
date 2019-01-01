@@ -42,7 +42,7 @@ const Cnst = {
   },
   FireComputers: {
     Name: { A: 'A', B: 'B' },
-    Actions: { read: 'Read msg into FC ', send: 'Send mission to Launch Station' },
+    Actions: { read: 'into selected FC ', send: 'to Launch Station' },
     Results: { read: 'Received: ', empty: 'Waiting for mission' },
     Time: {
       read: 5000, selectFC: 1000, send: 4000, error: 5000,
@@ -95,7 +95,7 @@ const Cnst = {
     },
   },
   Armory: {
-    Actions: { load: 'L O A D', loading: 'Loading into Launch Station' },
+    Actions: { load: 'LOAD', loading: 'Loading into Launch Station' },
     Errors: {
       WrongLaunchStation: 'ERR: Wrong Launch Station selected',
       NoOrdnanceSelected: 'ERR: No ordnance selected',

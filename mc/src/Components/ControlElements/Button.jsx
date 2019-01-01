@@ -43,8 +43,8 @@ export default class Button extends React.Component {
           <rect
             x="5"
             y="5"
-            rx="20"
-            ry="20"
+            rx="10"
+            ry="10"
             width={Width}
             height="50"
             style={{ fill: Background, stroke: BorderColor, strokeWidth: 5 }}
@@ -66,7 +66,7 @@ Button.propTypes = {
   cb: PropTypes.func,
 }
 Button.defaultProps = {
-  Width: 140,
+  Width: 150,
   SetPressed: false,
   cb: undefined,
 }

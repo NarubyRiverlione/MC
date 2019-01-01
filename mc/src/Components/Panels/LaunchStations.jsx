@@ -29,8 +29,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.one].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.one}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.one}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.one)
@@ -45,8 +45,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.two].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.two}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.two}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.two)
@@ -68,8 +68,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.A].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.A}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.A}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.A)
@@ -84,8 +84,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.B].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.B}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.B}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.B)
@@ -107,8 +107,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanOn].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.romanOn}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanOn}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.romanOn)
@@ -123,8 +123,8 @@ const LaunchStations = ({
                 LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanTwo].handleStatus}
                 ButtonCaption={Cnst.LaunchStations.Numbers.romanTwo}
                 ButtonWidth={50}
-                ButtonColor="slategrey"
-                ButtonTextColor="yellow"
+                ButtonColor="grey"
+                ButtonTextColor="darkblue"
                 ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanTwo}
                 ButtonCB={() => {
                   Select(Cnst.LaunchStations.Numbers.romanTwo)
@@ -142,14 +142,14 @@ const LaunchStations = ({
           <p>Status</p>
           <Display Title="" Text={SelectedStatus} Width={300} />
         </div>
-        <div className="grid-y medium-6">
+        <div className="grid-y medium-4">
           <div className="grid-x">
             <div className="cell small-6">
               <Button
                 Caption={Cnst.LaunchStations.Actions.prepare}
                 Width={100}
-                Color="slategrey"
-                TextColor="yellow"
+                Color="grey"
+                TextColor="darkblue"
                 SetPressed={Prepairing}
                 cb={Prepare}
               />
@@ -158,29 +158,21 @@ const LaunchStations = ({
               <Button
                 Caption={Cnst.LaunchStations.Actions.remove}
                 Width={100}
-                Color="slategrey"
-                TextColor="yellow"
+                Color="grey"
+                TextColor="darkblue"
                 SetPressed={Removing}
                 cb={Remove}
               />
             </div>
           </div>
-          <div className="cell small-6">
-            <Button
-              Caption={Cnst.LaunchStations.Actions.repair}
-              Width={100}
-              Color="slategrey"
-              TextColor="yellow"
-              SetPressed={Repairing}
-              cb={Repair}
-            />
-          </div>
+
         </div>
-        <div className="cell medium-2">
+        <div className="cell medium-4">
           <Button
             Caption={Cnst.LaunchStations.Actions.fire}
-            Color="Red"
-            TextColor="yellow"
+            Width={200}
+            Color="red"
+            TextColor="black"
             SetPressed={Firing}
             cb={Fire.binNumbers}
           />

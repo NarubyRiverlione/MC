@@ -10,7 +10,7 @@ const ButtonWithLed = ({
   ButtonCaption, ButtonWidth, ButtonColor, ButtonTextColor, ButtonStatus, ButtonCB,
 }) => (
   <div className="grid-x">
-    <div className="cell small-4">
+    <div className="cell small-4" style={{ padding: '10px 0px' }}>
       <MultiColorLed
         On={LedOn}
         Colors={LedColors}

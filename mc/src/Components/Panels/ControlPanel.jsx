@@ -26,14 +26,18 @@ const RenderStation = (Name) => {
 
 const ControlPanel = ({ Name, StatusStatus }) => (
   <div className="card CardStyle">
-    <div className="card-divider grid-x">
-      <div className="cell medium-5">{Name}</div>
-      <div className="cell medium-7">
-        <Display Width={300} Text={StatusStatus} />
-      </div>
+
+    <div className="card-divider grid-y">
+      <div className="cell medium" style={{ padding: '5px 0px' }}>{Name}</div>
     </div>
+
     <div className="card-section">
+      <div className="cell medium">
+        <Display Width={480} Text={StatusStatus} />
+      </div>
+
       {RenderStation(Name)}
+
     </div>
   </div>
 )
