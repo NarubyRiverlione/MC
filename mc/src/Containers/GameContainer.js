@@ -14,6 +14,9 @@ const mapStateToProps = state => ({
   FireComputersStatus: state.FireComputer.Status,
   LaunchStationsStatus: state.LaunchStations.Status,
   ArmoryStatus: state.Armory.Status,
+  ReceivedMissions: state.Game.ReceivedMissions,
+  ExecutedMissions: state.Game.ExecutedMissions,
+  Rank: state.Game.Rank,
 
   RadioError: state.Radio.ErrorStatus,
   FCError: state.FireComputer.ErrorStatus,

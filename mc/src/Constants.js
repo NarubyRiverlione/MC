@@ -10,6 +10,7 @@ const Cnst = {
     AA: 'Anti Aircraft', G: ' Cruise missile', AS: 'Anti Ship missile', T: 'Torpedo', D: 'Defence',
   },
   Game: {
+    Name: 'Missile Command',
     Time: {
       FirstMsg: 2000,
       NewMessageTimeOut: 10000,
@@ -116,6 +117,7 @@ const ActionCnst = {
     StartTimerNewMessage: 'START_NEW_MSG_TIMER_GAME',
     StoreMsgTimeOutTimer: 'STORE_MSG_TIMEOUT_TIMER_GAME',
     // StopMsgTimeOutTimer: 'STOP_MSG_TIMEOUT_TIMER_GAME',
+    IncExecutedMissions: 'INC_EXECUTED_MISSION_GAME',
     ClearMsgTimeOutTimer: 'CLEAR_MSG_TIMEOUT_TIMER_GAME',
     NewMessageTimedOut: 'NEW_MSG_TIMEDOUT_GAME',
 

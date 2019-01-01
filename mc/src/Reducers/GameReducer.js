@@ -6,45 +6,54 @@ const InitState = {
   Missions: [],
   lastMissionID: 0,
   Rank: 5,
+  ReceivedMissions: 0,
+  ExecutedMissions: 0,
   MsgTimeoutTimer: 0,
 }
 
-const GameReducer = (state = InitState, actie) => {
-  switch (actie.type) {
+const GameReducer = (state = InitState, action) => {
+  switch (action.type) {
     case GameActie.StatusUpdate:
       return {
         ...state,
-        Status: actie.StatusText,
+        Status: action.StatusText,
       }
     // adjust the Rank
     case GameActie.UpdateRank:
       return {
         ...state,
-        Rank: actie.NewRank,
+        Rank: action.NewRank,
       }
-    // adjust missionID
+    // add missionID, inc Received Missions
     case GameActie.UpdateMissionID:
       return {
         ...state,
-        lastMissionID: actie.NewLastMissionID,
+        lastMissionID: action.NewLastMissionID,
+        ReceivedMissions: action.NewReceivedMissions,
       }
     // adjust missions
     case GameActie.UpdateMissions:
       return {
         ...state,
-        Missions: actie.UpdatedMissions,
+        Missions: action.UpdatedMissions,
       }
     // store Msg time-out timer (to stop it later)
     case GameActie.StoreMsgTimeOutTimer:
       return {
         ...state,
-        MsgTimeoutTimer: actie.MsgTimeoutTimer,
+        MsgTimeoutTimer: action.MsgTimeoutTimer,
       }
     // clear the Msg time-out timer
     case GameActie.ClearMsgTimeOutTimer:
       return {
         ...state,
         MsgTimeoutTimer: 0,
+      }
+    // inc succesfull missions
+    case GameActie.IncExecutedMissions:
+      return {
+        ...state,
+        ExecutedMissions: action.NewIncExecutedMissions,
       }
     default:
       return state

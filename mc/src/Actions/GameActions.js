@@ -47,12 +47,14 @@ const ReduceRank = () => (
 // create a mission inside the msg
 const CreateNewMission = () => (
   (dispatch, getState) => {
-    const { Game: { lastMissionID, Missions } } = getState()
-    // increment mission ID
+    const { Game: { lastMissionID, Missions, ReceivedMissions } } = getState()
+    // increment mission ID  & received missions
     const NewLastMissionID = lastMissionID + 1
+    const NewReceivedMissions = ReceivedMissions + 1
     dispatch({
       type: ActionCnst.Game.UpdateMissionID,
       NewLastMissionID,
+      NewReceivedMissions,
     })
 
     // add new mission
@@ -91,8 +93,6 @@ const StartNewMessageTimer = fixedTimer => (
     console.log(`Game: New msg in ${(nextIncoming / 1000).toString()} sec`)
 
     setTimeout(() => {
-      // create and show new msg
-      console.log('Game: New msg created')
       // Create new Mission
       dispatch(CreateNewMission())
       // show new message warning in Radio
