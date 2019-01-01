@@ -21,7 +21,7 @@ const ShowErrorStatus = err => (
     dispatch(StatusUpdate(err, true))
 
     setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle, false))
+      dispatch({ type: ActionCnst.Radio.SetIdle })
     }, Cnst.Radio.Time.error)
   })
 
@@ -34,9 +34,7 @@ export const UpdateButton = (ButtonName, Status) => (
   (dispatch, getState) => {
     const { Radio: { Buttons } } = getState()
 
-    const UpdatedButton = { [ButtonName]: Status }
-    const NewButtons = [...Buttons, UpdatedButton]
-
+    const NewButtons = { ...Buttons, [ButtonName]: Status }
     dispatch({
       type: ActionCnst.Radio.UpdateButton,
       NewButtons,
@@ -47,12 +45,19 @@ export const UpdateButton = (ButtonName, Status) => (
 export const ExecuteCmd = cmd => (
   (dispatch, getState) => {
     const {
-      Radio: { Slots, SelectedSlot, MessageIncoming },
+      Radio: {
+        Slots, SelectedSlot, MessageIncoming, Busy,
+      },
       Game: { lastMissionID },
     } = getState()
 
     const WorkingSlot = Slots.find(sl => sl.slotNR === SelectedSlot)
 
+    /* Radio already busy ? */
+    if (Busy) {
+      dispatch(ShowErrorStatus(CnstRadio.Errors.AlreadyBusy))
+      return
+    }
     /* trying to start decoding ? */
     if (cmd === CnstRadio.Actions.decode) {
       // there must be a message stored
@@ -74,23 +79,21 @@ export const ExecuteCmd = cmd => (
         return
       }
     }
-    // /* trying to erase  a slot ? */
-    // else if (cmd === CnstRadio.Actions.erase) {
-    //   // TODO radio erase slot action
-    //   console.warn('TODO erase action')
-    //   return
-    // }
 
-    /* start cmd, update Radio Status display */
-    // console.log('Start Radio action ' + cmd + ' on slot ' + this.Selected)
+    /* start cmd */
+    // set radio busy
+    dispatch({ type: ActionCnst.Radio.SetBusy })
+    // update Radio Status display
     const CmdStatusMsg = Cnst.Radio.Busy[cmd.toLowerCase()] + Cnst.Radio.Busy.onSlot + SelectedSlot
     dispatch(StatusUpdate(CmdStatusMsg))
-
-    /* start timer for cmd execution */
+    // hold button down
+    dispatch(UpdateButton(cmd, true))
+    // start timer for cmd execution
     setTimeout(() => {
-      // cmd done ==>  update Radio Status display
-      dispatch(StatusUpdate(Cnst.Status.Idle))
-
+      // cmd done, release button
+      dispatch(UpdateButton(cmd, false))
+      // cmd done ==>  update Radio status & display
+      dispatch({ type: ActionCnst.Radio.SetIdle })
       // set new status and missionID in selected slot
       const NewSlotStatus = {
         slotNR: SelectedSlot,
@@ -103,7 +106,6 @@ export const ExecuteCmd = cmd => (
         if (temp.slotNR === SelectedSlot) temp = NewSlotStatus
         return temp
       })
-      // update slots
       dispatch({ type: ActionCnst.Radio.UpdateSlots, UpdatedSlots })
 
       // msg is stored..
@@ -113,16 +115,11 @@ export const ExecuteCmd = cmd => (
         // ... clear new msg flag
         dispatch({ type: ActionCnst.Radio.ClearNewMessageReceived })
       }
-
-      // cmd done, release all buttons
-      dispatch(UpdateButton(Cnst.Radio.Actions.store, false))
-      dispatch(UpdateButton(Cnst.Radio.Actions.decode, false))
-      dispatch(UpdateButton(Cnst.Radio.Actions.erase, false))
     }, Cnst.Radio.Time[cmd.toLowerCase()])
   }
 )
 // msg timed out, turn timer led out, show error in radio panel
-// after Cnst.Radio.Time.ShowError set Status Idle to remove the error
+// after Cnst.Radio.Time.ShowError set  Idle status to remove the error
 export const NewMessageTimedOut = () => (
   (dispatch) => {
     dispatch({
@@ -134,6 +131,6 @@ export const NewMessageTimedOut = () => (
 
     setTimeout(() => {
       //  clear error status, start timer new msg
-      dispatch(StatusUpdate(Cnst.Status.Idle, false))
+      dispatch({ type: ActionCnst.Radio.SetIdle })
     }, Cnst.Radio.Time.ShowError)
   })

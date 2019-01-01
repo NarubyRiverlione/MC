@@ -1,3 +1,4 @@
+import { Cmd } from 'coa'
 import { ActionCnst, Cnst } from '../Constants'
 
 const { Radio: RadioActie } = ActionCnst
@@ -13,11 +14,12 @@ const InitState = {
     { slotNR: 3, status: CnstRadio.Results.erase, missionID: -1 },
   ],
   SelectedSlot: 1,
-  Buttons: [
-    { [CnstRadio.Actions.store]: false },
-    { [CnstRadio.Actions.decode]: false },
-    { [CnstRadio.Actions.erase]: false },
-  ],
+  Buttons: {
+    [CnstRadio.Actions.store]: false,
+    [CnstRadio.Actions.decode]: false,
+    [CnstRadio.Actions.erase]: false,
+  },
+  Busy: false,
 }
 
 const RadioReducer = (state = InitState, action) => {
@@ -67,7 +69,12 @@ const RadioReducer = (state = InitState, action) => {
         MessageIncoming: action.NewMessage,
         ErrorStatus: action.ErrorStatus,
       }
-
+    // set radio busy
+    case RadioActie.SetBusy:
+      return { ...state, Busy: true }
+    // set radio idle
+    case RadioActie.SetIdle:
+      return { ...state, Busy: false, Status: Cnst.Game.Idle }
     default:
       return state
   }

@@ -125,7 +125,7 @@ export default class Radio extends React.Component {
 Radio.propTypes = {
   MessageIncoming: PropTypes.bool.isRequired,
   StatusSlots: PropTypes.array.isRequired,
-  Buttons: PropTypes.array.isRequired,
+  Buttons: PropTypes.object.isRequired,
   SelectedSlot: PropTypes.number.isRequired,
 
   SelectSlot: PropTypes.func.isRequired,

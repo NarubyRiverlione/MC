@@ -34,10 +34,11 @@ const Cnst = {
       store: 2000, decode: 5000, erase: 1000, error: 5000,
     },
     Errors: {
-      SlotNotEmpty: 'ERR slot is not empty',
-      NoDecodeNothingStored: 'ERR no msg stored to decode',
-      NoStoreNoNewMsg: 'ERR no msg to store',
-      NewMessageTimedOut: 'ALERT! New orders where not followed',
+      AlreadyBusy: 'ERROR: Radio is already busy',
+      SlotNotEmpty: 'ERROR: slot is not empty',
+      NoDecodeNothingStored: 'ERROR: no msg stored to decode',
+      NoStoreNoNewMsg: 'ERROR: no msg to store',
+      NewMessageTimedOut: 'ALERT !! New orders where not followed',
     },
   },
   FireComputers: {
@@ -137,6 +138,9 @@ const ActionCnst = {
 
     UpdateButton: 'UPDATE_STATUS_BUTTON_RADIO',
     UpdateSlots: 'UPDATE_SLOTS_RADIO',
+
+    SetBusy: 'SET_BUSY_RADIO',
+    SetIdle: 'SET_IDLE_RADIO',
   },
   FireComputers: {
     SelectSlot: 'FIRECOMPUTERS_SELECT_SLOT',
