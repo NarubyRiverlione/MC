@@ -18,24 +18,29 @@
 }
 .ShowCell{
   background: lightgray;    
-  margin:0px;
 }
 
 .ShowCellY{
   background: lightgray;
+  padding:0px;
 }
 
 .smallBorder{
-  border: 1px solid white; 
+  border: 1px solid CornflowerBlue; 
+  border-radius:5px;
 }
-.grid-margin-x{
-  margin:0px 5px;
+.grid-padding-y>.cell {
+  padding:0px
+}
+.grid-margin-x>.cell {
+  margin:0px
 }
 .CardStyle{
 height:95%;
 background: lightgray;
-border: 2px solid white;  
+border: 2px solid darkgray;  
 border-radius:25px;
+box-shadow: 5px 10px;
 margin: 10px
 }
 
