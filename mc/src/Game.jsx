@@ -13,6 +13,7 @@ export default class Game extends React.Component {
   render() {
     const {
       RadioStatus, FireComputersStatus, LaunchStationsStatus, ArmoryStatus,
+      RadioError, FCError, ArmoryError, LSError,
     } = this.props
 
     return (
@@ -27,6 +28,7 @@ export default class Game extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.Radio}
                     StatusStatus={RadioStatus}
+                    ErrorMsg={RadioError}
                   />
                 </div>
 
@@ -34,6 +36,7 @@ export default class Game extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.FireComputers}
                     StatusStatus={FireComputersStatus}
+                    ErrorMsg={FCError}
                   />
                 </div>
 
@@ -48,6 +51,7 @@ export default class Game extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.Armory}
                     StatusStatus={ArmoryStatus}
+                    ErrorMsg={ArmoryError}
                   />
                 </div>
 
@@ -55,6 +59,7 @@ export default class Game extends React.Component {
                   <ControlPanel
                     Name={Cnst.Stations.LaunchStations}
                     StatusStatus={LaunchStationsStatus}
+                    ErrorMsg={LSError}
                   />
                 </div>
 
@@ -75,5 +80,17 @@ Game.propTypes = {
   LaunchStationsStatus: PropTypes.string.isRequired,
   ArmoryStatus: PropTypes.string.isRequired,
 
+  RadioError: PropTypes.bool,
+  FCError: PropTypes.bool,
+  ArmoryError: PropTypes.bool,
+  LSError: PropTypes.bool,
+
   StartNewMessageTimer: PropTypes.func.isRequired,
+}
+
+Game.defaultProps = {
+  RadioError: false,
+  FCError: false,
+  ArmoryError: false,
+  LSError: false,
 }

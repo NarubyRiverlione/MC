@@ -1,8 +1,10 @@
 import { ActionCnst, Cnst } from '../Constants'
 
 const { Armory: ArmoryActie } = ActionCnst
+
 const InitState = {
   Status: Cnst.Status.Idle,
+  ErrorStatus: false,
   Selected: '',
   Amount: {
     [Cnst.Ordnance.AA]: 1, // 9
@@ -21,6 +23,7 @@ const ArmoryReducer = (state = InitState, action) => {
       return {
         ...state,
         Status: action.StatusText,
+        ErrorStatus: action.ErrorStatus,
       }
     // set Selected
     case ArmoryActie.Select:

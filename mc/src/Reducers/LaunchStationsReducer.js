@@ -1,8 +1,10 @@
 import { ActionCnst, Cnst } from '../Constants'
 
 const { LaunchStations: LaunchStationActie } = ActionCnst
+
 const InitState = {
   Status: Cnst.Status.Idle,
+  ErrorStatus: false,
   Stations:
   {
     [Cnst.LaunchStations.Numbers.one]: {
@@ -51,6 +53,7 @@ const LaunchStationsReducer = (state = InitState, action) => {
       return {
         ...state,
         Status: action.StatusText,
+        ErrorStatus: action.ErrorStatus,
       }
     // selected a weapon
     case LaunchStationActie.Select:

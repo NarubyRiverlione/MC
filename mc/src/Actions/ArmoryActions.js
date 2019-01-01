@@ -1,26 +1,24 @@
-
 import { ActionCnst, Cnst } from '../Constants'
-
 import { ShowErrorStatus as LSshowErr, HandelingLaunchStation } from './LaunchStationsActions'
 
 const { Armory: ArmoryActions } = ActionCnst
 
 
-export const StatusUpdate = StatusText => ({
+export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
   type: ArmoryActions.StatusUpdate,
   StatusText,
+  ErrorStatus,
 })
 
 // show error in status of set time, then set idle status
 const ShowErrorStatus = err => (
   (dispatch) => {
-    dispatch(StatusUpdate(err))
+    dispatch(StatusUpdate(err, true))
 
     setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle))
+      dispatch(StatusUpdate(Cnst.Status.Idle, false))
     }, Cnst.Armory.Time.error)
   })
-
 
 const StartLoading = () => (
   (dispatch, getState) => {
@@ -49,7 +47,6 @@ const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
     dispatch(LSshowErr(LSerr))
   }
 )
-
 
 const ShowMsgWrongStationSelected = () => (
   (dispatch, getState) => {
@@ -130,7 +127,6 @@ const CheckSelectedLaunchStation = () => (
   }
 )
 
-
 export const AddOneToArmory = ordnance => (
   (dispatch, getState) => {
     const { Armory: { Amount } } = getState()
@@ -142,14 +138,12 @@ export const AddOneToArmory = ordnance => (
   }
 )
 
-
 export const SetSelected = Selected => (
   dispatch => dispatch({
     type: ActionCnst.Armory.Select,
     Selected,
   })
 )
-
 
 export const Load = () => (
   (dispatch, getState) => {

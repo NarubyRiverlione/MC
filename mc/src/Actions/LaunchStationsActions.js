@@ -1,9 +1,8 @@
-
 import { ActionCnst, Cnst } from '../Constants'
-
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
 
 const { LaunchStations: LSActie } = ActionCnst
+
 
 const ShowSelectedStatus = () => (
   (dispatch, getState) => {
@@ -27,27 +26,25 @@ const ShowSelectedStatus = () => (
   }
 )
 
-
-export const StatusUpdate = StatusText => ({
+export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
   type: LSActie.StatusUpdate,
   StatusText,
+  ErrorStatus,
 })
-
 
 // show error in status of set time, then set idle status
 export const ShowErrorStatus = err => (
   (dispatch) => {
-    dispatch(StatusUpdate(err))
+    dispatch(StatusUpdate(err, true))
 
     setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle))
+      dispatch(StatusUpdate(Cnst.Status.Idle, false))
     }, Cnst.LaunchStations.Time.error)
   })
 
 const DeselectAll = () => ({
   type: LSActie.DeselectStations,
 })
-
 
 export const Select = stationName => (
   (dispatch) => {
@@ -62,7 +59,6 @@ export const Select = stationName => (
     dispatch(ShowSelectedStatus())
   }
 )
-
 
 export const HandelingLaunchStation = (ordnance, loading = true) => (
   (dispatch, getState) => {

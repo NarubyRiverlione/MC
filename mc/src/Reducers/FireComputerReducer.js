@@ -1,8 +1,10 @@
 import { ActionCnst, Cnst } from '../Constants'
 
 const { FireComputers: FCActie } = ActionCnst
+
 const InitState = {
   Status: Cnst.Status.Idle,
+  ErrorStatus: false,
   SelectedFC: '',
   SelectedMsgSlot: 3,
   Sending: false,
@@ -29,6 +31,7 @@ const FireComputerReducer = (state = InitState, action) => {
       return {
         ...state,
         Status: action.StatusText,
+        ErrorStatus: action.ErrorStatus,
       }
     // select a msg slot
     case FCActie.SelectSlot:

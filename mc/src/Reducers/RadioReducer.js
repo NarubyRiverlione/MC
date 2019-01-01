@@ -5,6 +5,7 @@ const { Radio: CnstRadio } = Cnst
 
 const InitState = {
   Status: Cnst.Status.Idle,
+  ErrorStatus: false,
   MessageIncoming: false,
   Slots: [
     { slotNR: 1, status: CnstRadio.Results.erase, missionID: -1 },
@@ -19,26 +20,26 @@ const InitState = {
   ],
 }
 
-const RadioReducer = (state = InitState, actie) => {
-  switch (actie.type) {
+const RadioReducer = (state = InitState, action) => {
+  switch (action.type) {
     // update status tekst in top display
     case RadioActie.StatusUpdate:
       return {
         ...state,
-        Status: actie.StatusText,
-
+        Status: action.StatusText,
+        ErrorStatus: action.ErrorStatus,
       }
     // select a storage slot
     case RadioActie.SelectSlot:
       return {
         ...state,
-        SelectedSlot: actie.Selected,
+        SelectedSlot: action.Selected,
       }
     // update button status
     case RadioActie.UpdateButton:
       return {
         ...state,
-        Buttons: actie.NewButtons,
+        Buttons: action.NewButtons,
       }
     //  set received new message flag
     case RadioActie.NewMessageReceived:
@@ -56,14 +57,15 @@ const RadioReducer = (state = InitState, actie) => {
     case RadioActie.UpdateSlots:
       return {
         ...state,
-        Slots: actie.UpdatedSlots,
+        Slots: action.UpdatedSlots,
       }
     // new message timed-out, show error in Status
     case RadioActie.NewMessageTimedOut:
       return {
         ...state,
-        Status: actie.Status,
-        MessageIncoming: actie.NewMessage,
+        Status: action.Status,
+        MessageIncoming: action.NewMessage,
+        ErrorStatus: action.ErrorStatus,
       }
 
     default:

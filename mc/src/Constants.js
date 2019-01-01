@@ -27,11 +27,11 @@ const Cnst = {
   Radio: {
     Actions: { store: 'STORE', decode: 'DECODE', erase: 'ERASE' },
     Busy: {
-      store: 'storing', decode: 'decoding', erase: 'erasing', onSlot: ' on slot ',
+      store: 'storing', decode: 'decoding', erase: 'erasing', onSlot: ' slot ',
     },
-    Results: { store: 'Stored', decode: 'Decrypted', erase: 'Empty' },
+    Results: { store: 'Stored', decode: 'Decoded', erase: 'Empty' },
     Time: {
-      store: 2000, decode: 5000, erase: 1000, ShowError: 5000,
+      store: 2000, decode: 5000, erase: 1000, error: 5000,
     },
     Errors: {
       SlotNotEmpty: 'ERR slot is not empty',
@@ -43,20 +43,20 @@ const Cnst = {
   FireComputers: {
     Name: { A: 'A', B: 'B' },
     Actions: { read: 'into selected FC ', send: 'to Launch Station' },
-    Results: { read: 'Received: ', empty: 'Waiting for mission' },
+    Results: { read: 'Mission ', empty: 'Waiting for mission' },
     Time: {
       read: 5000, selectFC: 1000, send: 4000, error: 5000,
     },
     Errors: {
-      NoMsg: 'ERROR: no msg available',
-      MsgNotDecoded: 'ERROR: msg not decoded',
-      NoFCselected: 'ERROR: no FC is selected',
+      NoMsg: 'ERROR: no message in selected radio slot',
+      MsgNotDecoded: 'ERROR: message not decoded',
+      NoFCselected: 'ERROR: no Fire Computer is selected',
       NoMissionInSelectedFC: 'ERROR: no mission in selected FC',
       CannotSend: 'ERROR: cannot sent mission to Launch Station',
     },
   },
   LaunchStations: {
-    Name: { rails: 'Rails', VLT: 'Vertical Launch Tube', tubes: 'Tubes' },
+    Name: { rails: 'Rails', VLT: 'Vertical Launch Tube', tubes: 'Torpedo Tubes' },
     Numbers: {
       A: 'A', B: 'B', one: '1', two: '2', romanOn: 'I', romanTwo: 'II',
     },
@@ -79,16 +79,16 @@ const Cnst = {
     },
     Errors: {
       WrongLaunchStation: {
-        AA: 'ERR: Anti Air missile needs a rail selected',
-        AS: 'ERR: Anti Ship missile needs a rail selected',
-        G: 'ERR: Ground Missile needs a VLT selected',
-        T: 'ERR: Torpedo needs a tube selected',
+        AA: 'ERROR: Anti Air missile needs a rail selected',
+        AS: 'ERROR: Anti Ship missile needs a rail selected',
+        G: 'ERROR: Ground Missile needs a VLT selected',
+        T: 'ERROR: Torpedo needs a tube selected',
       },
-      SelectedLSnotEmpty: 'ERR: selected Launch Station not empty',
-      NoLSselected: 'ERR: no Launch Station selected',
-      NoRemoveOfEmpty: 'ERR: Launch Station is already empty',
-      WrongLSforMission: 'ERR: wrong Launch Station selected for this mission',
-      LSisEmpty: 'ERR: Launch Station is not loaded',
+      SelectedLSnotEmpty: 'ERROR: selected Launch Station not empty',
+      NoLSselected: 'ERROR: no Launch Station selected',
+      NoRemoveOfEmpty: 'ERROR: Launch Station is already empty',
+      WrongLSforMission: 'ERROR: wrong Launch Station selected for this mission',
+      LSisEmpty: 'ERROR: Launch Station is not loaded',
     },
     Time: {
       error: 4000, removing: 7000, loading: 5000, preparing: 4000,

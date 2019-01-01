@@ -70,6 +70,14 @@ p, .text{
 
 .display {
   font-family: Display;
+  fill:green;
+  font-size: 1.25rem;
+  text-shadow: 0 0;
+  text-align:'center';
+}
+
+.displayError {
+  font-family: Display;
   fill:red;
   font-size: 1.25rem;
   text-shadow: 0 0;

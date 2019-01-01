@@ -1,26 +1,34 @@
 import { ActionCnst, Cnst } from '../Constants'
-
-import { StatusUpdate as LSshowErr, ReceivedMission as SendToLaunchStation } from './LaunchStationsActions'
+import { ShowErrorStatus as LSshowErr, ReceivedMission as SendToLaunchStation } from './LaunchStationsActions'
 
 const { FireComputers: FCActie } = ActionCnst
 
 
-export const StatusUpdate = StatusText => ({
+export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
   type: FCActie.StatusUpdate,
   StatusText,
+  ErrorStatus,
 })
+
+// show error in status of set time, then set idle status
+const ShowErrorStatus = err => (
+  (dispatch) => {
+    dispatch(StatusUpdate(err, true))
+
+    setTimeout(() => {
+      dispatch(StatusUpdate(Cnst.Status.Idle, false))
+    }, Cnst.FireComputers.Time.error)
+  })
 
 export const SelectFC = SelectedFC => ({
   type: FCActie.SelectFireComputer,
   SelectedFC,
 })
 
-
 export const SelectSlot = SelectedMsgSlot => ({
   type: FCActie.SelectSlot,
   SelectedMsgSlot,
 })
-
 
 // when message is loaded into FC
 const DoneLoading = (workingFC, missionID) => (
@@ -54,16 +62,6 @@ const DoneLoading = (workingFC, missionID) => (
     })
   })
 
-// show error in status of set time, then set idle status
-const ShowErrorStatus = err => (
-  (dispatch) => {
-    dispatch(StatusUpdate(err))
-
-    setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle))
-    }, Cnst.FireComputers.Time.error)
-  })
-
 // start read msg from selected slot into selected FC
 export const ReadMsg = () => (
   (dispatch, getState) => {
@@ -78,30 +76,30 @@ export const ReadMsg = () => (
 
     const WorkingFC = FCS.filter(fc => fc.name === SelectedFC)
 
-    console.log(`FC: SelectedFC: ${SelectedFC} Selected MsgSlot ${SelectedMsgSlot} MsgStatus: ${SlotStatus}`)
+    // console.log(`FC: SelectedFC: ${SelectedFC} Selected MsgSlot ${SelectedMsgSlot} MsgStatus: ${SlotStatus}`)
 
     // check if a FC is selected
     if (SelectedFC === '') {
-      console.log('FC: no fc selected to read msg')
-      dispatch(StatusUpdate(Cnst.FireComputers.Errors.NoFCselected))
+      // console.log('FC: no fc selected to read msg')
+      dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.NoFCselected))
       return
     }
     // check if selected slot contains a msg
     if (SlotStatus === Cnst.Radio.Results.erase) {
-      console.log(`FC: Selected msg slot ${SelectedMsgSlot} is empty`)
-      dispatch(StatusUpdate(Cnst.FireComputers.Errors.NoMsg))
+      // console.log(`FC: Selected msg slot ${SelectedMsgSlot} is empty`)
+      dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.NoMsg))
       return
     }
     // check if msg is decrypted
     if (SlotStatus === Cnst.Radio.Results.store) {
-      console.log(`FC: Selected msg ${SelectedMsgSlot} is not decrypted`)
-      dispatch(StatusUpdate(Cnst.FireComputers.Errors.MsgNotDecoded))
+      // console.log(`FC: Selected msg ${SelectedMsgSlot} is not decrypted`)
+      dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.MsgNotDecoded))
       return
     }
 
     // must be a decoded msg...
     // ..show reading status
-    console.log(`FC: Start reading msg ${SelectedMsgSlot} into FC ${SelectedFC}`)
+    // console.log(`FC: Start reading msg ${SelectedMsgSlot} into FC ${SelectedFC}`)
     dispatch(StatusUpdate(Cnst.FireComputers.Actions.read + SelectedFC))
 
     // hold read button down
@@ -111,20 +109,6 @@ export const ReadMsg = () => (
       dispatch(DoneLoading(WorkingFC[0], missionID))
     }, Cnst.FireComputers.Time.read)
   })
-
-
-// export const SendMission = () => (
-//   (dispatch, getState) => {
-//     const { FireComputer: { SelectedFC, FCS } } = getState()
-//     const { missionID } = FCS.find(fc => fc.name === SelectedFC)
-
-//     dispatch(SendToLaunchStation(missionID))
-
-//     dispatch({
-//       type: FCActie.SendMission,
-//     })
-//   })
-
 
 export const ReadMsgDone = () => ({
   type: FCActie.ReadMsgDone,

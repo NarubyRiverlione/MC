@@ -24,7 +24,7 @@ const RenderStation = (Name) => {
   }
 }
 
-const ControlPanel = ({ Name, StatusStatus }) => (
+const ControlPanel = ({ Name, StatusStatus, ErrorMsg }) => (
   <div className="card CardStyle">
 
     <div className="card-divider grid-y">
@@ -33,7 +33,7 @@ const ControlPanel = ({ Name, StatusStatus }) => (
 
     <div className="card-section">
       <div className="cell medium">
-        <Display Width={480} Text={StatusStatus} />
+        <Display Width={480} Text={StatusStatus} ErrorMsg={ErrorMsg} />
       </div>
 
       {RenderStation(Name)}
@@ -46,6 +46,11 @@ const ControlPanel = ({ Name, StatusStatus }) => (
 ControlPanel.propTypes = {
   Name: PropTypes.string.isRequired,
   StatusStatus: PropTypes.string.isRequired,
+  ErrorMsg: PropTypes.bool,
+}
+
+ControlPanel.defaultProps = {
+  ErrorMsg: false,
 }
 
 export default ControlPanel

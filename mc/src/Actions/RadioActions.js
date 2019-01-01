@@ -3,15 +3,28 @@ import { StopMsgTimeoutTimer } from './GameActions'
 
 const { Radio: CnstRadio } = Cnst
 
+
 export const SelectSlot = Selected => ({
   type: ActionCnst.Radio.SelectSlot,
   Selected,
 })
 
-export const StatusUpdate = StatusText => ({
+export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
   type: ActionCnst.Radio.StatusUpdate,
   StatusText,
+  ErrorStatus,
 })
+
+// show error in status of set time, then set idle status
+const ShowErrorStatus = err => (
+  (dispatch) => {
+    dispatch(StatusUpdate(err, true))
+
+    setTimeout(() => {
+      dispatch(StatusUpdate(Cnst.Status.Idle, false))
+    }, Cnst.Radio.Time.error)
+  })
+
 // Game Action will send a new message to the radio
 export const SendNewMessage = () => ({
   type: ActionCnst.Radio.NewMessageReceived,
@@ -44,7 +57,7 @@ export const ExecuteCmd = cmd => (
     if (cmd === CnstRadio.Actions.decode) {
       // there must be a message stored
       if (WorkingSlot.status !== CnstRadio.Results.store) {
-        dispatch(StatusUpdate(CnstRadio.Errors.NoDecodeNothingStored))
+        dispatch(ShowErrorStatus(CnstRadio.Errors.NoDecodeNothingStored))
         return
       }
     }
@@ -52,12 +65,12 @@ export const ExecuteCmd = cmd => (
     else if (cmd === CnstRadio.Actions.store) {
       // there must be a new message waiting
       if (!MessageIncoming) {
-        dispatch(StatusUpdate(CnstRadio.Errors.NoStoreNoNewMsg))
+        dispatch(ShowErrorStatus(CnstRadio.Errors.NoStoreNoNewMsg))
         return
       }
       // selected slot must be empty
       if (WorkingSlot.status !== CnstRadio.Results.erase) {
-        dispatch(StatusUpdate(CnstRadio.Errors.SlotNotEmpty))
+        dispatch(ShowErrorStatus(CnstRadio.Errors.SlotNotEmpty))
         return
       }
     }
@@ -115,11 +128,12 @@ export const NewMessageTimedOut = () => (
     dispatch({
       type: ActionCnst.Radio.NewMessageTimedOut,
       Status: CnstRadio.Errors.NewMessageTimedOut,
+      ErrorStatus: true,
       NewMessage: false,
     })
 
     setTimeout(() => {
       //  clear error status, start timer new msg
-      dispatch(StatusUpdate(Cnst.Status.Idle))
+      dispatch(StatusUpdate(Cnst.Status.Idle, false))
     }, Cnst.Radio.Time.ShowError)
   })
