@@ -65,9 +65,8 @@ const DoneLoading = (workingFC, missionID) => (
       UpdatedFCS,
     })
   })
-
-// start read msg from selected slot into selected FC
-export const ReadMsg = () => (
+// start loading msg from selected radio slot into selected FC
+export const LoadMsgIntoFC = () => (
   (dispatch, getState) => {
     const {
       Radio: { Slots },
@@ -79,8 +78,6 @@ export const ReadMsg = () => (
     const { status: SlotStatus, missionID } = SelectedRadioSlot
 
     const WorkingFC = FCS.filter(fc => fc.name === SelectedFC)
-
-    // console.log(`FC: SelectedFC: ${SelectedFC} Selected MsgSlot ${SelectedMsgSlot} MsgStatus: ${SlotStatus}`)
 
     // check if a FC is selected
     if (SelectedFC === '') {
@@ -102,9 +99,8 @@ export const ReadMsg = () => (
     }
 
     // must be a decoded msg...
-    // ..show reading status
-    // console.log(`FC: Start reading msg ${SelectedMsgSlot} into FC ${SelectedFC}`)
-    dispatch(StatusUpdate(Cnst.FireComputers.Actions.read + SelectedFC))
+    // ..show loading status
+    dispatch(StatusUpdate(Cnst.FireComputers.Actions.load + SelectedFC))
 
     // hold read button down
     dispatch({ type: FCActie.ReadMsg })
@@ -113,10 +109,6 @@ export const ReadMsg = () => (
       dispatch(DoneLoading(WorkingFC[0], missionID))
     }, Cnst.FireComputers.Time.read)
   })
-
-export const ReadMsgDone = () => ({
-  type: FCActie.ReadMsgDone,
-})
 
 
 const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
@@ -143,7 +135,31 @@ const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
   return IsCorrect
 }
 
-export const SendMission = () => (
+const DoneSendToLS = (WorkingFC, missionID, FCS) => (
+  (dispatch) => {
+    // show FC status idle
+    dispatch(StatusUpdate(Cnst.Status.Idle))
+    // release send button
+    dispatch({ type: FCActie.SendMissionDone })
+    // clear  selected FC
+    const UpdatedFC = {
+      ...WorkingFC,
+      status: Cnst.FireComputers.Results.empty,
+      display: Cnst.FireComputers.Results.empty,
+      missionID: -1,
+    }
+    const UpdatedFCS = FCS.map((sl) => {
+      let temp = Object.assign({}, sl)
+      if (temp.name === WorkingFC.name) temp = UpdatedFC
+      return temp
+    })
+    dispatch({ type: ActionCnst.FireComputers.UpdateFCs, UpdatedFCS })
+
+    // send fire mission to launch station
+    dispatch(SendToLaunchStation(missionID))
+  })
+// send mission to selected Launch Station
+export const SendMissionToLS = () => (
   (dispatch, getState) => {
     const {
       Game: { Missions },
@@ -203,26 +219,10 @@ export const SendMission = () => (
     dispatch({ type: FCActie.SendMission })
 
     setTimeout(() => {
-      // show FC status idle
-      dispatch(StatusUpdate(Cnst.Status.Idle))
-      // release send button
-      dispatch({ type: FCActie.SendMissionDone })
-      // clear  selected FC
-      const UpdatedFC = {
-        ...WorkingFC,
-        status: Cnst.FireComputers.Results.empty,
-        display: Cnst.FireComputers.Results.empty,
-        missionID: -1,
-      }
-      const UpdatedFCS = FCS.map((sl) => {
-        let temp = Object.assign({}, sl)
-        if (temp.name === WorkingFC.name) temp = UpdatedFC
-        return temp
-      })
-      dispatch({ type: ActionCnst.FireComputers.UpdateFCs, UpdatedFCS })
-
-      // send fire mission to launch station
-      dispatch(SendToLaunchStation(missionID))
+      dispatch(DoneSendToLS(WorkingFC, missionID, FCS))
     }, Cnst.FireComputers.Time.send)
-  }
-)
+  })
+
+// export const ReadMsgDone = () => ({
+//   type: FCActie.ReadMsgDone,
+// })

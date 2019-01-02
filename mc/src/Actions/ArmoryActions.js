@@ -9,7 +9,6 @@ export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
   StatusText,
   ErrorStatus,
 })
-
 // show error in status of set time, then set idle status
 const ShowErrorStatus = err => (
   (dispatch) => {
@@ -18,6 +17,12 @@ const ShowErrorStatus = err => (
     setTimeout(() => {
       dispatch(StatusUpdate(Cnst.Status.Idle, false))
     }, Cnst.Armory.Time.error)
+  })
+// show general error on Armory display and specific error on Launch Station display
+const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
+  (dispatch) => {
+    dispatch(ShowErrorStatus(armoryErr))
+    dispatch(LSshowErr(LSerr))
   })
 
 const StartLoading = () => (
@@ -40,13 +45,6 @@ export const LoadingDone = () => ({
   Selected: '',
 })
 
-// show general error on Armory display and specific error on Launch Station display
-const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
-  (dispatch) => {
-    dispatch(ShowErrorStatus(armoryErr))
-    dispatch(LSshowErr(LSerr))
-  }
-)
 
 const ShowMsgWrongStationSelected = () => (
   (dispatch, getState) => {
@@ -65,8 +63,7 @@ const ShowMsgWrongStationSelected = () => (
         break
     }
     dispatch(ShowErrorInArmoryAndLS(Cnst.Armory.Errors.WrongLaunchStation, errorMsg))
-  }
-)
+  })
 
 // check if correct Launch Station is Selected
 // TODO: check is selected LS isn't already loaded of loading
@@ -124,8 +121,7 @@ const CheckSelectedLaunchStation = () => (
         dispatch(ShowMsgWrongStationSelected())
       }
     }
-  }
-)
+  })
 
 export const AddOneToArmory = ordnance => (
   (dispatch, getState) => {
@@ -135,15 +131,13 @@ export const AddOneToArmory = ordnance => (
     // eslint-disable-next-line no-plusplus
     UpdatedAmount[ordnance]++
     dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
-  }
-)
+  })
 
 export const SetSelected = Selected => (
   dispatch => dispatch({
     type: ActionCnst.Armory.Select,
     Selected,
-  })
-)
+  }))
 
 export const Load = () => (
   (dispatch, getState) => {
@@ -162,5 +156,4 @@ export const Load = () => (
 
     // check if correct LaunchStation is selected
     dispatch(CheckSelectedLaunchStation())
-  }
-)
+  })

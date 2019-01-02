@@ -1,4 +1,3 @@
-import { Cmd } from 'coa'
 import { ActionCnst, Cnst } from '../Constants'
 
 const { Radio: RadioActie } = ActionCnst

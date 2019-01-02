@@ -44,8 +44,8 @@ const Cnst = {
   },
   FireComputers: {
     Name: { A: 'A', B: 'B' },
-    Actions: { read: 'into selected FC ', send: 'to Launch Station' },
-    Results: { read: 'Mission ', empty: 'Waiting for mission' },
+    Actions: { load: 'Loading message into Fire Computer', send: 'Send mission to Launch Station' },
+    Results: { read: 'Mission: ', empty: 'Waiting for mission' },
     Time: {
       read: 3000, selectFC: 1000, send: 4000, error: 5000,
     },

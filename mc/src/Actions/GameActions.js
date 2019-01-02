@@ -20,8 +20,7 @@ export const StopMsgTimeoutTimer = () => (
     dispatch({
       type: ActionCnst.Game.ClearMsgTimeOutTimer,
     })
-  }
-)
+  })
 
 // new msg timed out, deal with fail
 const ReduceRank = () => (
@@ -38,8 +37,7 @@ const ReduceRank = () => (
     if (ReducedRank < 0) {
       console.warn('END GAME, rank < 0')
     }
-  }
-)
+  })
 // incr executed missions
 export const IncExcecuted = () => (
   (dispatch, getState) => {
@@ -50,8 +48,8 @@ export const IncExcecuted = () => (
       type: ActionCnst.Game.IncExecutedMissions,
       NewIncExecutedMissions: IncExecuted,
     })
-  }
-)
+  })
+
 // create a mission inside the msg
 const CreateNewMission = () => (
   (dispatch, getState) => {
@@ -86,8 +84,7 @@ const CreateNewMission = () => (
       type: ActionCnst.Game.StoreMsgTimeOutTimer,
       MsgTimeoutTimer,
     })
-  }
-)
+  })
 
 // wait for new msg  use fixed time if provided,
 // else random between NewIncomingMessageMin and NewIncomingMessageMax
@@ -110,7 +107,6 @@ const StartNewMessageTimer = fixedTimer => (
       /* */
       // dispatch(StartNewMessageTimer())
     }, nextIncoming)
-  }
-)
+  })
 
 export default StartNewMessageTimer

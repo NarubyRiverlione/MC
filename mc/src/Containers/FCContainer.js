@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import FireComputer from '../Components/Panels/FireComputer'
 
 import {
-  SelectFC, SelectSlot, ReadMsg, SendMission,
+  SelectFC, SelectSlot, LoadMsgIntoFC, SendMissionToLS,
 } from '../Actions/FireComputersActions'
 
 const mapDispatchToProps = dispatch => ({
@@ -13,10 +13,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(SelectFC(SelectedFC))
   },
   ReadMsg: () => {
-    dispatch(ReadMsg())
+    dispatch(LoadMsgIntoFC())
   },
   SendMission: () => {
-    dispatch(SendMission())
+    dispatch(SendMissionToLS())
   },
 })
 

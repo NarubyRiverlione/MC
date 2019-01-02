@@ -2,7 +2,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ControlPanel from './Components/Panels/ControlPanel'
-import Display from './Components/ControlElements/Display'
 
 import { Cnst } from './Constants'
 

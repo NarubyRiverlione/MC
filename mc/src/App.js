@@ -9,17 +9,15 @@ import { createLogger } from 'redux-logger'
 
 // gecombineerde root reducer (combineReducers)
 // import Sentry from 'sentry-expo'
+import Sentry from '@sentry/browser'
 import RootReducer from './Reducers'
 
 // presentatie container rond app laadscherm
 import GameContainer from './Containers/GameContainer'
 
 // crash log reporter
-// import Sentry from 'sentry-expo'
-// // Sentry.enableInExpoDevelopment = true
-// Sentry.config('https://22d6a0a3278d41b8a617663ad2a584b6@sentry.io/1253436', {
-//   release: '0e4fdef81448dcfa0e16ecc4433ff3997aa53572',
-// }).install()
+// Sentry.enableInExpoDevelopment = true
+Sentry.config('https://e8a6b969bee045ada485d4781c91589b@sentry.io/1363121').install()
 
 // logger middleware enkel in dev
 const loggerMiddleWare = createLogger(

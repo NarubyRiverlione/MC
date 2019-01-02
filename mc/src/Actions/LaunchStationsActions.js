@@ -1,12 +1,15 @@
 import { IncExcecuted } from './GameActions'
-
 import { ActionCnst, Cnst } from '../Constants'
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
 
 
 const { LaunchStations: LSActie } = ActionCnst
 
-
+export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
+  type: LSActie.StatusUpdate,
+  StatusText,
+  ErrorStatus,
+})
 const ShowSelectedStatus = () => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
@@ -26,14 +29,8 @@ const ShowSelectedStatus = () => (
 
       dispatch({ type: LSActie.UpdateSelectedStatus, SelectedStatus: selStatusTxt })
     }
-  }
-)
+  })
 
-export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
-  type: LSActie.StatusUpdate,
-  StatusText,
-  ErrorStatus,
-})
 
 // show error in status of set time, then set idle status
 export const ShowErrorStatus = err => (
@@ -53,16 +50,34 @@ export const Select = stationName => (
   (dispatch) => {
     dispatch(DeselectAll())
 
-    dispatch({
-      type: LSActie.Select,
-      Selected: stationName,
-    })
+    dispatch({ type: LSActie.Select, Selected: stationName })
 
     // show status of selected LS
     dispatch(ShowSelectedStatus())
-  }
-)
+  })
 
+const DoneHandeling = (LS, loading, Stations, Selected) => (
+  (dispatch) => {
+    const WorkingLS = { ...LS }
+    // signal loading done by led color
+    WorkingLS.handleStatus = loading
+      ? Cnst.LaunchStations.StatusColor.loaded
+      : Cnst.LaunchStations.StatusColor.empty
+    // reset missionID when removing
+    if (!loading) WorkingLS.missionID = -1
+
+    const DoneStations = { ...Stations }
+    DoneStations[Selected] = { ...WorkingLS }
+    dispatch({
+      type: LSActie.UpdatedStations,
+      UpdatedStations: DoneStations,
+    })
+    if (loading) dispatch(ArmoryLoadingDone())
+    else dispatch(AddOneToArmory(WorkingLS.ordnance))
+
+    // show selected LS status
+    dispatch(ShowSelectedStatus())
+  })
 export const HandelingLaunchStation = (ordnance, loading = true) => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
@@ -78,37 +93,16 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
 
     const UpdatedStations = { ...Stations }
     UpdatedStations[Selected] = { ...LS }
-    dispatch({
-      type: LSActie.UpdatedStations,
-      UpdatedStations,
-    })
+    dispatch({ type: LSActie.UpdatedStations, UpdatedStations })
 
     // show selected LS status
     dispatch(ShowSelectedStatus())
 
     // wait for loading time
     setTimeout(() => {
-      // signal loading done by led color
-      LS.handleStatus = loading
-        ? Cnst.LaunchStations.StatusColor.loaded
-        : Cnst.LaunchStations.StatusColor.empty
-      // reset missionID when removing
-      if (!loading) LS.missionID = -1
-
-      const DoneStations = { ...Stations }
-      DoneStations[Selected] = { ...LS }
-      dispatch({
-        type: LSActie.UpdatedStations,
-        UpdatedStations: DoneStations,
-      })
-      if (loading) dispatch(ArmoryLoadingDone())
-      else dispatch(AddOneToArmory(LS.ordnance))
-
-      // show selected LS status
-      dispatch(ShowSelectedStatus())
+      dispatch(DoneHandeling(LS, loading, Stations, Selected))
     }, Cnst.LaunchStations.Time.loading)
-  }
-)
+  })
 
 export const ReceivedMission = missionID => (
   (dispatch, getState) => {
@@ -124,19 +118,26 @@ export const ReceivedMission = missionID => (
     })
     // show mission received on status display
     dispatch(StatusUpdate(Cnst.LaunchStations.Results.received))
-  }
-)
-
-export const Prepare = () => (
-  (dispatch) => {
-    dispatch({ type: LSActie.Prepare })
   })
 
-export const Repair = () => (
+const DoneFiring = (Stations, FiringLS) => (
   (dispatch) => {
-    dispatch({ type: LSActie.Repair })
-  })
+    // done firing
+    dispatch({ type: LSActie.Fired })
 
+    // clear selected LS
+    const EmptyLS = {
+      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      missionID: -1,
+      ordnance: '',
+    }
+    const UpdatedStations = { ...Stations }
+    UpdatedStations[FiringLS] = { ...EmptyLS }
+    dispatch({ type: LSActie.UpdatedStations, UpdatedStations })
+
+    // inc succesfull missions
+    dispatch(IncExcecuted())
+  })
 export const Fire = () => (
   (dispatch, getState) => {
     const { LaunchStations: { Stations, Selected } } = getState()
@@ -145,20 +146,11 @@ export const Fire = () => (
     dispatch({ type: LSActie.Firing })
 
     setTimeout(() => {
-      // done firing
-      dispatch({ type: LSActie.Fired })
-
-      // clear selected LS
-      const EmptyLS = {
-        handleStatus: Cnst.LaunchStations.StatusColor.empty,
-        missionID: -1,
-        ordnance: '',
-      }
-      const UpdatedStations = { ...Stations }
-      UpdatedStations[FiringLS] = { ...EmptyLS }
-      dispatch({ type: LSActie.UpdatedStations, UpdatedStations })
-
-      // inc succesfull missions
-      dispatch(IncExcecuted())
+      dispatch(DoneFiring(Stations, FiringLS))
     }, Cnst.LaunchStations.Time.firing)
   })
+
+
+//   export const Prepare = () => ({ type: LSActie.Prepare })
+
+// export const Repair = () => ({ type: LSActie.Repair })

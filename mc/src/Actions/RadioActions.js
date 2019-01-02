@@ -39,8 +39,38 @@ export const UpdateButton = (ButtonName, Status) => (
       type: ActionCnst.Radio.UpdateButton,
       NewButtons,
     })
-  }
-)
+  })
+
+const DoCmd = (cmd, SelectedSlot) => (
+  (dispatch, getState) => {
+    const { Radio: { Slots }, Game: { lastMissionID } } = getState()
+
+    // cmd done, release button
+    dispatch(UpdateButton(cmd, false))
+    // cmd done ==>  update Radio status & display
+    dispatch({ type: ActionCnst.Radio.SetIdle })
+    // set new status and missionID in selected slot
+    const NewSlotStatus = {
+      slotNR: SelectedSlot,
+      status: Cnst.Radio.Results[cmd.toLowerCase()],
+      missionID: lastMissionID,
+    }
+    // update slot
+    const UpdatedSlots = Slots.map((sl) => {
+      let temp = Object.assign({}, sl)
+      if (temp.slotNR === SelectedSlot) temp = NewSlotStatus
+      return temp
+    })
+    dispatch({ type: ActionCnst.Radio.UpdateSlots, UpdatedSlots })
+
+    // msg is stored..
+    if (cmd === Cnst.Radio.Actions.store) {
+      // ... clear new msg time-out timer
+      dispatch(StopMsgTimeoutTimer())
+      // ... clear new msg flag
+      dispatch({ type: ActionCnst.Radio.ClearNewMessageReceived })
+    }
+  })
 
 export const ExecuteCmd = cmd => (
   (dispatch, getState) => {
@@ -48,7 +78,6 @@ export const ExecuteCmd = cmd => (
       Radio: {
         Slots, SelectedSlot, MessageIncoming, Busy,
       },
-      Game: { lastMissionID },
     } = getState()
 
     const WorkingSlot = Slots.find(sl => sl.slotNR === SelectedSlot)
@@ -90,34 +119,10 @@ export const ExecuteCmd = cmd => (
     dispatch(UpdateButton(cmd, true))
     // start timer for cmd execution
     setTimeout(() => {
-      // cmd done, release button
-      dispatch(UpdateButton(cmd, false))
-      // cmd done ==>  update Radio status & display
-      dispatch({ type: ActionCnst.Radio.SetIdle })
-      // set new status and missionID in selected slot
-      const NewSlotStatus = {
-        slotNR: SelectedSlot,
-        status: Cnst.Radio.Results[cmd.toLowerCase()],
-        missionID: lastMissionID,
-      }
-      // update slot
-      const UpdatedSlots = Slots.map((sl) => {
-        let temp = Object.assign({}, sl)
-        if (temp.slotNR === SelectedSlot) temp = NewSlotStatus
-        return temp
-      })
-      dispatch({ type: ActionCnst.Radio.UpdateSlots, UpdatedSlots })
-
-      // msg is stored..
-      if (cmd === Cnst.Radio.Actions.store) {
-        // ... clear new msg time-out timer
-        dispatch(StopMsgTimeoutTimer())
-        // ... clear new msg flag
-        dispatch({ type: ActionCnst.Radio.ClearNewMessageReceived })
-      }
+      // done waiting, do command
+      dispatch(DoCmd(cmd, SelectedSlot))
     }, Cnst.Radio.Time[cmd.toLowerCase()])
-  }
-)
+  })
 // msg timed out, turn timer led out, show error in radio panel
 // after Cnst.Radio.Time.ShowError set  Idle status to remove the error
 export const NewMessageTimedOut = () => (

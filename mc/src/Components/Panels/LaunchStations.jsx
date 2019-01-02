@@ -10,7 +10,7 @@ import ButtonWithLed from '../ControlElements/ButtonWithLed'
 
 const LaunchStations = ({
   Stations, Selected, SelectedStatus, Prepairing, Firing, Removing,
-  Select, Prepare, Remove, Fire,
+  Select, Remove, Fire,
 }) => (
   <div className="grid-container" id="LaunchStationsPanel">
     <div className="grid-x">
@@ -146,28 +146,15 @@ const LaunchStations = ({
         <div className="grid-y medium-4 smallBorder">
           <div className="cell small-3" />
           <div className="grid-x small-9">
-            <div className="cell medium-6">
-              <Button
-                Caption={Cnst.LaunchStations.Actions.prepare}
-                Width={100}
-                Color="grey"
-                TextColor="darkblue"
-                SetPressed={Prepairing}
-                cb={Prepare}
-              />
-            </div>
-            <div className="cell medium-6">
-              <Button
-                Caption={Cnst.LaunchStations.Actions.remove}
-                Width={100}
-                Color="grey"
-                TextColor="darkblue"
-                SetPressed={Removing}
-                cb={Remove}
-              />
-            </div>
+            <Button
+              Caption={Cnst.LaunchStations.Actions.remove}
+              Width={100}
+              Color="grey"
+              TextColor="darkblue"
+              SetPressed={Removing}
+              cb={Remove}
+            />
           </div>
-
         </div>
 
         <div className="grid-y medium-4 smallBorder">
@@ -192,13 +179,13 @@ LaunchStations.propTypes = {
   Stations: PropTypes.object.isRequired,
   Selected: PropTypes.string.isRequired,
   SelectedStatus: PropTypes.string.isRequired,
-  Prepairing: PropTypes.bool.isRequired,
+  // Prepairing: PropTypes.bool.isRequired,
   // Repairing: PropTypes.bool.isRequired,
   Firing: PropTypes.bool.isRequired,
   Removing: PropTypes.bool.isRequired,
 
   Select: PropTypes.func.isRequired,
-  Prepare: PropTypes.func.isRequired,
+  //  Prepare: PropTypes.func.isRequired,
   Remove: PropTypes.func.isRequired,
   //  Repair: PropTypes.func.isRequired,
   Fire: PropTypes.func.isRequired,
