@@ -73,7 +73,8 @@ const LaunchStationsReducer = (state = InitState, action) => {
         ...state,
         SelectedStatus: action.SelectedStatus,
       }
-    // update Stations
+    // update Stations for
+    // received Mission and firings
     case LaunchStationActie.UpdatedStations:
     case LaunchStationActie.ReceivedMission:
       return {
@@ -92,11 +93,17 @@ const LaunchStationsReducer = (state = InitState, action) => {
         ...state,
         Repairing: true,
       }
-    // Firing
+    // start firing
     case LaunchStationActie.Firing:
       return {
         ...state,
         Firing: true,
+      }
+    // done firing
+    case LaunchStationActie.Fired:
+      return {
+        ...state,
+        Firing: false,
       }
 
     default:

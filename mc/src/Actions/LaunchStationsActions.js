@@ -1,5 +1,8 @@
+import { IncExcecuted } from './GameActions'
+
 import { ActionCnst, Cnst } from '../Constants'
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
+
 
 const { LaunchStations: LSActie } = ActionCnst
 
@@ -135,6 +138,27 @@ export const Repair = () => (
   })
 
 export const Fire = () => (
-  (dispatch) => {
-    dispatch({ type: LSActie.Fire })
+  (dispatch, getState) => {
+    const { LaunchStations: { Stations, Selected } } = getState()
+    const FiringLS = Selected
+    // start firing
+    dispatch({ type: LSActie.Firing })
+
+    setTimeout(() => {
+      // done firing
+      dispatch({ type: LSActie.Fired })
+
+      // clear selected LS
+      const EmptyLS = {
+        handleStatus: Cnst.LaunchStations.StatusColor.empty,
+        missionID: -1,
+        ordnance: '',
+      }
+      const UpdatedStations = { ...Stations }
+      UpdatedStations[FiringLS] = { ...EmptyLS }
+      dispatch({ type: LSActie.UpdatedStations, UpdatedStations })
+
+      // inc succesfull missions
+      dispatch(IncExcecuted())
+    }, Cnst.LaunchStations.Time.firing)
   })

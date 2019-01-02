@@ -29,7 +29,7 @@ const mapStateToProps = state => ({
   Selected: state.LaunchStations.Selected,
   SelectedStatus: state.LaunchStations.SelectedStatus,
   Prepairing: state.LaunchStations.Prepairing,
-  Repairing: state.LaunchStations.Repairing,
+  // Repairing: state.LaunchStations.Repairing,
   Firing: state.LaunchStations.Firing,
   Removing: state.LaunchStations.Removing,
 })

@@ -34,16 +34,24 @@ const ReduceRank = () => (
       NewRank: ReducedRank,
     })
 
-    // TODO: show rank
-    console.log(`Rank reduced to ${ReducedRank}`)
-
     // TODO: end game
     if (ReducedRank < 0) {
       console.warn('END GAME, rank < 0')
     }
   }
 )
-
+// incr executed missions
+export const IncExcecuted = () => (
+  (dispatch, getState) => {
+    const { Game: { ExecutedMissions } } = getState()
+    const IncExecuted = ExecutedMissions + 1
+    // reduce Rank
+    dispatch({
+      type: ActionCnst.Game.IncExecutedMissions,
+      NewIncExecutedMissions: IncExecuted,
+    })
+  }
+)
 // create a mission inside the msg
 const CreateNewMission = () => (
   (dispatch, getState) => {

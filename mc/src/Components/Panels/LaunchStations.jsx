@@ -9,8 +9,8 @@ import ButtonWithLed from '../ControlElements/ButtonWithLed'
 
 
 const LaunchStations = ({
-  Stations, Selected, SelectedStatus, Prepairing, Repairing, Firing, Removing,
-  Select, Prepare, Remove, Repair, Fire,
+  Stations, Selected, SelectedStatus, Prepairing, Firing, Removing,
+  Select, Prepare, Remove, Fire,
 }) => (
   <div className="grid-container" id="LaunchStationsPanel">
     <div className="grid-x">
@@ -179,7 +179,7 @@ const LaunchStations = ({
               Color="red"
               TextColor="black"
               SetPressed={Firing}
-              cb={Fire.binNumbers}
+              cb={Fire}
             />
           </div>
         </div>
@@ -193,14 +193,14 @@ LaunchStations.propTypes = {
   Selected: PropTypes.string.isRequired,
   SelectedStatus: PropTypes.string.isRequired,
   Prepairing: PropTypes.bool.isRequired,
-  Repairing: PropTypes.bool.isRequired,
+  // Repairing: PropTypes.bool.isRequired,
   Firing: PropTypes.bool.isRequired,
   Removing: PropTypes.bool.isRequired,
 
   Select: PropTypes.func.isRequired,
   Prepare: PropTypes.func.isRequired,
   Remove: PropTypes.func.isRequired,
-  Repair: PropTypes.func.isRequired,
+  //  Repair: PropTypes.func.isRequired,
   Fire: PropTypes.func.isRequired,
 }
 

@@ -47,7 +47,7 @@ const Cnst = {
     Actions: { read: 'into selected FC ', send: 'to Launch Station' },
     Results: { read: 'Mission ', empty: 'Waiting for mission' },
     Time: {
-      read: 5000, selectFC: 1000, send: 4000, error: 5000,
+      read: 3000, selectFC: 1000, send: 4000, error: 5000,
     },
     Errors: {
       NoMsg: 'ERROR: no message in selected radio slot',
@@ -93,7 +93,7 @@ const Cnst = {
       LSisEmpty: 'ERROR: Launch Station is not loaded',
     },
     Time: {
-      error: 4000, removing: 7000, loading: 5000, preparing: 4000,
+      error: 4000, removing: 7000, loading: 5000, preparing: 4000, firing: 2000,
     },
   },
   Armory: {
@@ -164,6 +164,8 @@ const ActionCnst = {
     Select: 'LAUNCHSTATION_SELECT',
     ShowErrorStatus: 'LAUNCHSTATION_SHOW_ERR',
     StatusUpdate: 'LAUNCHSTATION_STATUS_UPDATE',
+    Firing: 'FIRING_LAUNCHSTATION',
+    Fired: 'DONE_FIRE_LAUNCHSTATION',
   },
   Armory: {
     Select: 'ARMORY_SELECT',

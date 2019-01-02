@@ -1,5 +1,9 @@
 import { ActionCnst, Cnst } from '../Constants'
-import { ShowErrorStatus as LSshowErr, ReceivedMission as SendToLaunchStation } from './LaunchStationsActions'
+import {
+  ShowErrorStatus as LSshowErr,
+  StatusUpdate as LSstatusUpdate,
+  ReceivedMission as SendToLaunchStation,
+} from './LaunchStationsActions'
 
 const { FireComputers: FCActie } = ActionCnst
 
@@ -119,19 +123,23 @@ const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
   let IsCorrect = false
   // AA -> Rails
   if (MissionType === Cnst.Game.Missions.Type[0]
-    && (SelectedLS === Cnst.LaunchStations.Numbers.one || SelectedLS === Cnst.LaunchStations.Numbers.two)) IsCorrect = true
+    && (SelectedLS === Cnst.LaunchStations.Numbers.one
+      || SelectedLS === Cnst.LaunchStations.Numbers.two)) IsCorrect = true
 
   // AS -> Rails
   if (MissionType === Cnst.Game.Missions.Type[2]
-    && (SelectedLS === Cnst.LaunchStations.Numbers.one || SelectedLS === Cnst.LaunchStations.Numbers.two)) IsCorrect = true
+    && (SelectedLS === Cnst.LaunchStations.Numbers.one
+      || SelectedLS === Cnst.LaunchStations.Numbers.two)) IsCorrect = true
 
   // G -> VLT
   if (MissionType === Cnst.Game.Missions.Type[1]
-    && (SelectedLS === Cnst.LaunchStations.Numbers.A || SelectedLS === Cnst.LaunchStations.Numbers.B)) IsCorrect = true
+    && (SelectedLS === Cnst.LaunchStations.Numbers.A
+      || SelectedLS === Cnst.LaunchStations.Numbers.B)) IsCorrect = true
 
   // T -> Tubes
   if (MissionType === Cnst.Game.Missions.Type[3]
-    && (SelectedLS === Cnst.LaunchStations.Numbers.romanOn || SelectedLS === Cnst.LaunchStations.Numbers.romanTwo)) IsCorrect = true
+    && (SelectedLS === Cnst.LaunchStations.Numbers.romanOn
+      || SelectedLS === Cnst.LaunchStations.Numbers.romanTwo)) IsCorrect = true
   return IsCorrect
 }
 
@@ -147,13 +155,13 @@ export const SendMission = () => (
 
     // check if a FC is selected
     if (!WorkingFC) {
-      console.log('FC: no fc selected send mission')
+      // console.log('FC: no fc selected send mission')
       dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.NoFCselected))
       return
     }
     // check if selected FC has mission
     if (WorkingFC.status !== Cnst.FireComputers.Results.read) {
-      console.log(`FC: selected fc ${WorkingFC.name} has no mission`)
+      // console.log(`FC: selected fc ${WorkingFC.name} has no mission`)
       dispatch(ShowErrorStatus(Cnst.FireComputers.Errors.NoMissionInSelectedFC))
       return
     }
@@ -187,9 +195,9 @@ export const SendMission = () => (
     }
 
     // start sending Fire Mission to selected Launch Station
-    console.log(`Start sending mission from FC ${WorkingFC.name} to Launch Station ${SelectedLS}`)
+    // console.log(`Start sending mission from FC ${WorkingFC.name} to Launch Station ${SelectedLS}`)
     dispatch(StatusUpdate(Cnst.FireComputers.Actions.send))
-    dispatch(LSshowErr(Cnst.LaunchStations.Actions.receiving))
+    dispatch(LSstatusUpdate(Cnst.LaunchStations.Actions.receiving))
 
     // hold read button down
     dispatch({ type: FCActie.SendMission })
