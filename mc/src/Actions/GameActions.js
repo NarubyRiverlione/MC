@@ -3,10 +3,10 @@ import {
   SendNewMessage,
   NewMessageTimedOut as RadioTimedOut,
 } from './RadioActions'
+import { SetLoadout } from './ArmoryActions'
+import { ActionCnst, CstArmory, CstGame } from '../Constants'
 
-import { ActionCnst, Cnst } from '../Constants'
-
-const { Game: CnstGame } = Cnst
+const { Game: ActionsGame } = ActionCnst
 
 // stop msg time-out time
 export const StopMsgTimeoutTimer = () => (
@@ -18,7 +18,7 @@ export const StopMsgTimeoutTimer = () => (
     }
     // clear timer from Store
     dispatch({
-      type: ActionCnst.Game.ClearMsgTimeOutTimer,
+      type: ActionsGame.ClearMsgTimeOutTimer,
     })
   })
 
@@ -29,7 +29,7 @@ const ReduceRank = () => (
     const ReducedRank = Rank - 1
     // reduce Rank
     dispatch({
-      type: ActionCnst.Game.UpdateRank,
+      type: ActionsGame.UpdateRank,
       NewRank: ReducedRank,
     })
 
@@ -39,14 +39,14 @@ const ReduceRank = () => (
     }
   })
 // incr executed missions
-export const IncExcecuted = () => (
+export const IncExecuted = () => (
   (dispatch, getState) => {
     const { Game: { ExecutedMissions } } = getState()
-    const IncExecuted = ExecutedMissions + 1
+    const NewIncExecutedMissions = ExecutedMissions + 1
     // reduce Rank
     dispatch({
-      type: ActionCnst.Game.IncExecutedMissions,
-      NewIncExecutedMissions: IncExecuted,
+      type: ActionsGame.IncExecutedMissions,
+      NewIncExecutedMissions,
     })
   })
 
@@ -58,7 +58,7 @@ const CreateNewMission = () => (
     const NewLastMissionID = lastMissionID + 1
     const NewReceivedMissions = ReceivedMissions + 1
     dispatch({
-      type: ActionCnst.Game.UpdateMissionID,
+      type: ActionsGame.UpdateMissionID,
       NewLastMissionID,
       NewReceivedMissions,
     })
@@ -67,7 +67,7 @@ const CreateNewMission = () => (
     const NewMission = new Mission(NewLastMissionID)
     const UpdatedMissions = Missions.concat(NewMission)
     dispatch({
-      type: ActionCnst.Game.UpdateMissions,
+      type: ActionsGame.UpdateMissions,
       UpdatedMissions,
     })
 
@@ -77,11 +77,11 @@ const CreateNewMission = () => (
       dispatch(ReduceRank())
       // signal via Radio status the time out
       dispatch(RadioTimedOut())
-    }, CnstGame.Time.NewMessageTimeOut)
+    }, CstGame.Time.NewMessageTimeOut)
 
     // store time-out time so it can be stop later
     dispatch({
-      type: ActionCnst.Game.StoreMsgTimeOutTimer,
+      type: ActionsGame.StoreMsgTimeOutTimer,
       MsgTimeoutTimer,
     })
   })
@@ -90,12 +90,12 @@ const CreateNewMission = () => (
 // else random between NewIncomingMessageMin and NewIncomingMessageMax
 const StartNewMessageTimer = fixedTimer => (
   (dispatch) => {
-    const nextRandomIncoming = Math.floor(Math.random() * CnstGame.Time.NewIncomingMessageMax)
-      + CnstGame.Time.NewIncomingMessageMin
+    const nextRandomIncoming = Math.floor(Math.random() * CstGame.Time.NewIncomingMessageMax)
+      + CstGame.Time.NewIncomingMessageMin
 
     const nextIncoming = fixedTimer || nextRandomIncoming
 
-    console.log(`Game: New msg in ${(nextIncoming / 1000).toString()} sec`)
+    // console.log(`Game: New msg in ${(nextIncoming / 1000).toString()} sec`)
 
     setTimeout(() => {
       // Create new Mission
@@ -104,9 +104,21 @@ const StartNewMessageTimer = fixedTimer => (
       dispatch(SendNewMessage())
 
       // restart timer new msg
-      /* */
-      // dispatch(StartNewMessageTimer())
+      dispatch(StartNewMessageTimer())
     }, nextIncoming)
   })
 
-export default StartNewMessageTimer
+
+const SetupGame = () => (
+  (dispatch) => {
+    // set armory loadout
+    // TODO: set random ?
+    const { StartLoadout } = CstArmory
+    dispatch(SetLoadout(StartLoadout))
+
+    // get first mission in FirstMsg time sec
+    dispatch(StartNewMessageTimer(CstGame.FirstMsg))
+  }
+)
+
+export default SetupGame

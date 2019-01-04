@@ -1,4 +1,4 @@
-import { ActionCnst, Cnst } from '../Constants'
+import { ActionCnst, CstLaunchStations, Cnst } from '../Constants'
 
 const { LaunchStations: LaunchStationActie } = ActionCnst
 
@@ -7,34 +7,34 @@ const InitState = {
   ErrorStatus: false,
   Stations:
   {
-    [Cnst.LaunchStations.Numbers.one]: {
+    [CstLaunchStations.Numbers.one]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
-    [Cnst.LaunchStations.Numbers.two]: {
+    [CstLaunchStations.Numbers.two]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
-    [Cnst.LaunchStations.Numbers.A]: {
+    [CstLaunchStations.Numbers.A]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
-    [Cnst.LaunchStations.Numbers.B]: {
+    [CstLaunchStations.Numbers.B]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
-    [Cnst.LaunchStations.Numbers.romanOn]: {
+    [CstLaunchStations.Numbers.romanOn]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
-    [Cnst.LaunchStations.Numbers.romanTwo]: {
+    [CstLaunchStations.Numbers.romanTwo]: {
       missionID: -1,
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       ordnance: '',
     },
   },

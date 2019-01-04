@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Cnst } from '../../Constants'
+import { CstFireComputers } from '../../Constants'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import Selector from '../ControlElements/Selector'
@@ -12,9 +12,9 @@ export default class FireComputer extends React.Component {
   ShowStatusSelectedFC() {
     const { SelectedFC, FCStates } = this.props
     switch (SelectedFC) {
-      case Cnst.FireComputers.Name.A:
+      case CstFireComputers.Name.A:
         return FCStates[0]
-      case Cnst.FireComputers.Name.B:
+      case CstFireComputers.Name.B:
         return FCStates[1]
       default:
         return ''
@@ -39,11 +39,11 @@ export default class FireComputer extends React.Component {
 
             <div className="cell large-2">
               <Button
-                Caption={Cnst.FireComputers.Name.A}
+                Caption={CstFireComputers.Name.A}
                 Width={50}
                 TextColor="darkblue"
                 Color="grey"
-                SetPressed={SelectedFC === Cnst.FireComputers.Name.A}
+                SetPressed={SelectedFC === CstFireComputers.Name.A}
                 cb={(Selected) => {
                   SelectFC(Selected)
                 }}
@@ -52,12 +52,12 @@ export default class FireComputer extends React.Component {
 
             <div className="cell large-2">
               <Button
-                Caption={Cnst.FireComputers.Name.B}
+                Caption={CstFireComputers.Name.B}
                 Width={50}
                 TextColor="darkblue"
                 Color="grey"
                 Title=""
-                SetPressed={SelectedFC === Cnst.FireComputers.Name.B}
+                SetPressed={SelectedFC === CstFireComputers.Name.B}
                 cb={(Selected) => {
                   SelectFC(Selected)
                 }}
@@ -118,13 +118,13 @@ export default class FireComputer extends React.Component {
                   />
                 </div>
                 <div className="cell small-6 LedText" style={{ margin: 0 }}>
-                  {Cnst.FireComputers.Actions.read}
+                  {CstFireComputers.Actions.load}
                 </div>
               </div>
 
               <div className="cell small-1" />
 
-              <div className="cell small-5 smallBorder">
+              <div className="cell small-5 ">
                 <div className="cell small-6">
                   <Button
                     Caption="SEND mission"
@@ -136,7 +136,7 @@ export default class FireComputer extends React.Component {
                   />
                 </div>
                 <div className="cell small-6 LedText" style={{ margin: 0 }}>
-                  {Cnst.FireComputers.Actions.send}
+                  {CstFireComputers.Actions.send}
                 </div>
               </div>
             </div>

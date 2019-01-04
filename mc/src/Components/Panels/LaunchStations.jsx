@@ -1,15 +1,14 @@
-/* eslint-disable no-console */
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Cnst } from '../../Constants'
+import { CstLaunchStations, Cnst } from '../../Constants'
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
 import ButtonWithLed from '../ControlElements/ButtonWithLed'
 
 
 const LaunchStations = ({
-  Stations, Selected, SelectedStatus, Prepairing, Firing, Removing,
+  Stations, Selected, SelectedStatus, Firing, Removing,
   Select, Remove, Fire,
 }) => (
   <div className="grid-container" id="LaunchStationsPanel">
@@ -19,21 +18,21 @@ const LaunchStations = ({
 
         {/* Rails */}
         <div className="cell medium-4 smallBorder">
-          <p>{Cnst.LaunchStations.Name.rails}</p>
+          <p>{CstLaunchStations.Name.rails}</p>
           <div className="grid-x">
             <div className="cell medium-6">
               <ButtonWithLed
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.one].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.one}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.one].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.one}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.one}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.one}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.one)
+                  Select(CstLaunchStations.Numbers.one)
                 }}
               />
             </div>
@@ -42,14 +41,14 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.two].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.two}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.two].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.two}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.two}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.two}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.two)
+                  Select(CstLaunchStations.Numbers.two)
                 }}
               />
             </div>
@@ -58,21 +57,21 @@ const LaunchStations = ({
 
         {/* VLT */}
         <div className="cell medium-4 smallBorder">
-          <p>{Cnst.LaunchStations.Name.VLT}</p>
+          <p>{CstLaunchStations.Name.VLT}</p>
           <div className="grid-x">
             <div className="cell medium-6">
               <ButtonWithLed
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.A].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.A}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.A].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.A}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.A}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.A}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.A)
+                  Select(CstLaunchStations.Numbers.A)
                 }}
               />
             </div>
@@ -81,14 +80,14 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.B].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.B}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.B].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.B}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.B}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.B}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.B)
+                  Select(CstLaunchStations.Numbers.B)
                 }}
               />
             </div>
@@ -97,21 +96,21 @@ const LaunchStations = ({
 
         {/* Tubes */}
         <div className="cell medium-4 smallBorder">
-          <p>{Cnst.LaunchStations.Name.tubes}</p>
+          <p>{CstLaunchStations.Name.tubes}</p>
           <div className="grid-x">
             <div className="cell medium-6">
               <ButtonWithLed
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanOn].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.romanOn}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.romanOn].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.romanOn}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanOn}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.romanOn}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.romanOn)
+                  Select(CstLaunchStations.Numbers.romanOn)
                 }}
               />
             </div>
@@ -120,14 +119,14 @@ const LaunchStations = ({
                 LedOn
                 LedColors={Cnst.LedColors}
                 LedBackgroundColor={Cnst.LedBackgroundColor}
-                LedCurrentColor={Stations[Cnst.LaunchStations.Numbers.romanTwo].handleStatus}
-                ButtonCaption={Cnst.LaunchStations.Numbers.romanTwo}
+                LedCurrentColor={Stations[CstLaunchStations.Numbers.romanTwo].handleStatus}
+                ButtonCaption={CstLaunchStations.Numbers.romanTwo}
                 ButtonWidth={50}
                 ButtonColor="grey"
                 ButtonTextColor="darkblue"
-                ButtonStatus={Selected === Cnst.LaunchStations.Numbers.romanTwo}
+                ButtonStatus={Selected === CstLaunchStations.Numbers.romanTwo}
                 ButtonCB={() => {
-                  Select(Cnst.LaunchStations.Numbers.romanTwo)
+                  Select(CstLaunchStations.Numbers.romanTwo)
                 }}
               />
             </div>
@@ -147,7 +146,7 @@ const LaunchStations = ({
           <div className="cell small-3" />
           <div className="grid-x small-9">
             <Button
-              Caption={Cnst.LaunchStations.Actions.remove}
+              Caption={CstLaunchStations.Actions.remove}
               Width={100}
               Color="grey"
               TextColor="darkblue"
@@ -161,9 +160,9 @@ const LaunchStations = ({
           <div className="cell small-3" />
           <div className="cell small-9">
             <Button
-              Caption={Cnst.LaunchStations.Actions.fire}
+              Caption={CstLaunchStations.Actions.fire}
               Width={230}
-              Color="red"
+              Color="green"
               TextColor="black"
               SetPressed={Firing}
               cb={Fire}

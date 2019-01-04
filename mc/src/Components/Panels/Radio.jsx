@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Cnst } from '../../Constants'
+import { CstRadio, Cnst, CstGame } from '../../Constants'
 
 import TimerLed from '../ControlElements/TimerLed'
 import Button from '../ControlElements/Button'
@@ -34,7 +34,7 @@ export default class Radio extends React.Component {
               Colors={Cnst.LedColors}
               BackgroundColor={Cnst.LedBackgroundColor}
               RunTimer={MessageIncoming}
-              Time={Cnst.Game.Time.NewMessageTimeOut}
+              Time={CstGame.Time.NewMessageTimeOut}
             />
           </div>
           {/* ACTION BUTTONS */}
@@ -44,36 +44,36 @@ export default class Radio extends React.Component {
               <div className="cell medium-4">
                 <Button
                   Color="grey"
-                  Caption={Cnst.Radio.Actions.store}
+                  Caption={CstRadio.Actions.store}
                   TextColor="darkblue"
                   cb={() => {
-                    this.ExecuteAction(Cnst.Radio.Actions.store)
+                    this.ExecuteAction(CstRadio.Actions.store)
                   }}
-                  SetPressed={Buttons[Cnst.Radio.Actions.store]}
+                  SetPressed={Buttons[CstRadio.Actions.store]}
                 />
               </div>
 
               <div className="cell medium-4">
                 <Button
                   Color="grey"
-                  Caption={Cnst.Radio.Actions.decode}
+                  Caption={CstRadio.Actions.decode}
                   TextColor="darkblue"
                   cb={() => {
-                    this.ExecuteAction(Cnst.Radio.Actions.decode)
+                    this.ExecuteAction(CstRadio.Actions.decode)
                   }}
-                  SetPressed={Buttons[Cnst.Radio.Actions.decode]}
+                  SetPressed={Buttons[CstRadio.Actions.decode]}
                 />
               </div>
 
               <div className="cell medium-4">
                 <Button
                   Color="grey"
-                  Caption={Cnst.Radio.Actions.erase}
+                  Caption={CstRadio.Actions.erase}
                   TextColor="red"
                   cb={() => {
-                    this.ExecuteAction(Cnst.Radio.Actions.erase)
+                    this.ExecuteAction(CstRadio.Actions.erase)
                   }}
-                  SetPressed={Buttons[Cnst.Radio.Actions.erase]}
+                  SetPressed={Buttons[CstRadio.Actions.erase]}
                 />
               </div>
 

@@ -1,22 +1,22 @@
-import { ActionCnst, Cnst } from '../Constants'
+import { ActionCnst, Cnst, CstRadio } from '../Constants'
 
 const { Radio: RadioActie } = ActionCnst
-const { Radio: CnstRadio } = Cnst
+
 
 const InitState = {
   Status: Cnst.Status.Idle,
   ErrorStatus: false,
   MessageIncoming: false,
   Slots: [
-    { slotNR: 1, status: CnstRadio.Results.erase, missionID: -1 },
-    { slotNR: 2, status: CnstRadio.Results.erase, missionID: -1 },
-    { slotNR: 3, status: CnstRadio.Results.erase, missionID: -1 },
+    { slotNR: 1, status: CstRadio.Results.erase, missionID: -1 },
+    { slotNR: 2, status: CstRadio.Results.erase, missionID: -1 },
+    { slotNR: 3, status: CstRadio.Results.erase, missionID: -1 },
   ],
   SelectedSlot: 1,
   Buttons: {
-    [CnstRadio.Actions.store]: false,
-    [CnstRadio.Actions.decode]: false,
-    [CnstRadio.Actions.erase]: false,
+    [CstRadio.Actions.store]: false,
+    [CstRadio.Actions.decode]: false,
+    [CstRadio.Actions.erase]: false,
   },
   Busy: false,
 }
@@ -73,7 +73,7 @@ const RadioReducer = (state = InitState, action) => {
       return { ...state, Busy: true }
     // set radio idle
     case RadioActie.SetIdle:
-      return { ...state, Busy: false, Status: Cnst.Game.Idle }
+      return { ...state, Busy: false, Status: Cnst.Status.Idle }
     default:
       return state
   }

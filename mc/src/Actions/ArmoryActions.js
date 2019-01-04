@@ -1,5 +1,7 @@
-import { ActionCnst, Cnst } from '../Constants'
 import { ShowErrorStatus as LSshowErr, HandelingLaunchStation } from './LaunchStationsActions'
+import {
+  ActionCnst, Cnst, CstOrdnance, CstLaunchStations, CstArmory,
+} from '../Constants'
 
 const { Armory: ArmoryActions } = ActionCnst
 
@@ -16,7 +18,7 @@ const ShowErrorStatus = err => (
 
     setTimeout(() => {
       dispatch(StatusUpdate(Cnst.Status.Idle, false))
-    }, Cnst.Armory.Time.error)
+    }, CstArmory.Time.error)
   })
 // show general error on Armory display and specific error on Launch Station display
 const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
@@ -51,18 +53,18 @@ const ShowMsgWrongStationSelected = () => (
     const { Armory: { Selected } } = getState()
     let errorMsg
     switch (Selected) {
-      case Cnst.Ordnance.AA:
-        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AA; break
-      case Cnst.Ordnance.AS:
-        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.AS; break
-      case Cnst.Ordnance.G:
-        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.G; break
-      case Cnst.Ordnance.T:
-        errorMsg = Cnst.LaunchStations.Errors.WrongLaunchStation.T; break
+      case CstOrdnance.AA:
+        errorMsg = CstLaunchStations.Errors.WrongLaunchStation.AA; break
+      case CstOrdnance.AS:
+        errorMsg = CstLaunchStations.Errors.WrongLaunchStation.AS; break
+      case CstOrdnance.G:
+        errorMsg = CstLaunchStations.Errors.WrongLaunchStation.G; break
+      case CstOrdnance.T:
+        errorMsg = CstLaunchStations.Errors.WrongLaunchStation.T; break
       default:
         break
     }
-    dispatch(ShowErrorInArmoryAndLS(Cnst.Armory.Errors.WrongLaunchStation, errorMsg))
+    dispatch(ShowErrorInArmoryAndLS(CstArmory.Errors.WrongLaunchStation, errorMsg))
   })
 
 // check if correct Launch Station is Selected
@@ -75,26 +77,29 @@ const CheckSelectedLaunchStation = () => (
     } = getState()
     // check if LS is selected
     if (LSselected === '') {
-      dispatch(ShowErrorInArmoryAndLS(Cnst.Armory.Errors.NoLSselected, Cnst.LaunchStations.Errors.NoLSselected))
+      dispatch(ShowErrorInArmoryAndLS(
+        CstArmory.Errors.NoLaunchStationSelected,
+        CstLaunchStations.Errors.NoLaunchStationSelected,
+      ))
       return
     }
 
     // check is selected LS is empty
     const handleStatusSelectedLS = LSstations[LSselected].handleStatus
-    if (handleStatusSelectedLS !== Cnst.LaunchStations.StatusColor.empty) {
+    if (handleStatusSelectedLS !== CstLaunchStations.StatusColor.empty) {
       // show error
       dispatch(ShowErrorInArmoryAndLS(
-        Cnst.Armory.Errors.SelectedLSnotEmpty,
-        Cnst.LaunchStations.Errors.SelectedLSnotEmpty,
+        CstArmory.Errors.SelectedLSnotEmpty,
+        CstLaunchStations.Errors.SelectedLSnotEmpty,
       ))
       return
     }
 
     /* check correct type of LS is selected for selected ordnance */
     // AA
-    if (ArmorySelected === Cnst.Ordnance.AA || ArmorySelected === Cnst.Ordnance.AS) {
-      if (LSselected === Cnst.LaunchStations.Numbers.one
-        || LSselected === Cnst.LaunchStations.Numbers.two) {
+    if (ArmorySelected === CstOrdnance.AA || ArmorySelected === CstOrdnance.AS) {
+      if (LSselected === CstLaunchStations.Numbers.one
+        || LSselected === CstLaunchStations.Numbers.two) {
         dispatch(StartLoading())
       }
       else {
@@ -102,9 +107,9 @@ const CheckSelectedLaunchStation = () => (
       }
     }
     // G
-    if (ArmorySelected === Cnst.Ordnance.G) {
-      if (LSselected === Cnst.LaunchStations.Numbers.A
-        || LSselected === Cnst.LaunchStations.Numbers.B) {
+    if (ArmorySelected === CstOrdnance.G) {
+      if (LSselected === CstLaunchStations.Numbers.A
+        || LSselected === CstLaunchStations.Numbers.B) {
         dispatch(StartLoading())
       }
       else {
@@ -112,9 +117,9 @@ const CheckSelectedLaunchStation = () => (
       }
     }
     // T
-    if (ArmorySelected === Cnst.Ordnance.T) {
-      if (LSselected === Cnst.LaunchStations.Numbers.romanOn
-        || LSselected === Cnst.LaunchStations.Numbers.romanTwo) {
+    if (ArmorySelected === CstOrdnance.T) {
+      if (LSselected === CstLaunchStations.Numbers.romanOn
+        || LSselected === CstLaunchStations.Numbers.romanTwo) {
         dispatch(StartLoading())
       }
       else {
@@ -135,7 +140,7 @@ export const AddOneToArmory = ordnance => (
 
 export const SetSelected = Selected => (
   dispatch => dispatch({
-    type: ActionCnst.Armory.Select,
+    type: ArmoryActions.Select,
     Selected,
   }))
 
@@ -145,15 +150,20 @@ export const Load = () => (
 
     // check if ordnance is selected
     if (Selected === '') {
-      dispatch(ShowErrorStatus(Cnst.Armory.Errors.NoOrdnanceSelected))
+      dispatch(ShowErrorStatus(CstArmory.Errors.NoOrdnanceSelected))
       return
     }
     // check if ordnance is still in store
     if (Amount[Selected] < 1) {
-      dispatch(ShowErrorStatus(Cnst.Armory.Errors.OrdnanceOutOfStock))
+      dispatch(ShowErrorStatus(CstArmory.Errors.OrdnanceOutOfStock))
       return
     }
 
     // check if correct LaunchStation is selected
     dispatch(CheckSelectedLaunchStation())
   })
+
+export const SetLoadout = LoadoutAmount => ({
+  type: ArmoryActions.SetLoadout,
+  LoadoutAmount,
+})

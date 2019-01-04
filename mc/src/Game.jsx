@@ -3,12 +3,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ControlPanel from './Components/Panels/ControlPanel'
 
-import { Cnst } from './Constants'
+import {
+  CstRadio, CstFireComputers, CstArmory, CstLaunchStations, CstGame,
+} from './Constants'
 
 export default class Game extends React.Component {
   componentDidMount() {
-    const { StartNewMessageTimer } = this.props
-    StartNewMessageTimer()
+    const { SetupGame } = this.props
+    SetupGame()
   }
 
   render() {
@@ -24,7 +26,7 @@ export default class Game extends React.Component {
           <div className="card CardStyle">
 
             <div className="card-divider">
-              <div className="cell medium" style={{ padding: '5px 0px' }}>{Cnst.Game.Name}</div>
+              <div className="cell medium" style={{ padding: '5px 0px' }}>{CstGame.Name}</div>
             </div>
             <div className="card-section grid-y">
               <div className="grid-x medium-1">
@@ -55,7 +57,7 @@ export default class Game extends React.Component {
 
                     <div className="cell medium-6 ShowCell">
                       <ControlPanel
-                        Name={Cnst.Stations.Radio}
+                        Name={CstRadio.Title}
                         StatusStatus={RadioStatus}
                         ErrorMsg={RadioError}
                       />
@@ -63,7 +65,7 @@ export default class Game extends React.Component {
 
                     <div className="cell medium-6  ShowCell">
                       <ControlPanel
-                        Name={Cnst.Stations.FireComputers}
+                        Name={CstFireComputers.Title}
                         StatusStatus={FireComputersStatus}
                         ErrorMsg={FCError}
                       />
@@ -78,7 +80,7 @@ export default class Game extends React.Component {
 
                     <div className="cell medium-6 ShowCell">
                       <ControlPanel
-                        Name={Cnst.Stations.Armory}
+                        Name={CstArmory.Title}
                         StatusStatus={ArmoryStatus}
                         ErrorMsg={ArmoryError}
                       />
@@ -86,7 +88,7 @@ export default class Game extends React.Component {
 
                     <div className="cell medium-6 ShowCell">
                       <ControlPanel
-                        Name={Cnst.Stations.LaunchStations}
+                        Name={CstLaunchStations.Title}
                         StatusStatus={LaunchStationsStatus}
                         ErrorMsg={LSError}
                       />
@@ -109,7 +111,7 @@ Game.propTypes = {
   FireComputersStatus: PropTypes.string.isRequired,
   LaunchStationsStatus: PropTypes.string.isRequired,
   ArmoryStatus: PropTypes.string.isRequired,
-  GameStatus: PropTypes.string.isRequired,
+  // GameStatus: PropTypes.string.isRequired,
   ReceivedMissions: PropTypes.number.isRequired,
   ExecutedMissions: PropTypes.number.isRequired,
   Rank: PropTypes.number.isRequired,
@@ -118,9 +120,9 @@ Game.propTypes = {
   FCError: PropTypes.bool,
   ArmoryError: PropTypes.bool,
   LSError: PropTypes.bool,
-  GameErrorMsg: PropTypes.bool,
+  // GameErrorMsg: PropTypes.bool,
 
-  StartNewMessageTimer: PropTypes.func.isRequired,
+  SetupGame: PropTypes.func.isRequired,
 }
 
 Game.defaultProps = {
@@ -128,5 +130,5 @@ Game.defaultProps = {
   FCError: false,
   ArmoryError: false,
   LSError: false,
-  GameErrorMsg: false,
+  // GameErrorMsg: false,
 }

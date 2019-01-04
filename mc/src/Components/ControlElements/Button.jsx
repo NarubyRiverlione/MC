@@ -62,11 +62,11 @@ Button.propTypes = {
   Caption: PropTypes.string.isRequired,
   Color: PropTypes.string.isRequired,
   TextColor: PropTypes.string.isRequired,
-  SetPressed: PropTypes.bool,
+  SetPressed: PropTypes.bool.isRequired,
   cb: PropTypes.func,
 }
 Button.defaultProps = {
   Width: 150,
-  SetPressed: false,
+  // SetPressed: false,
   cb: undefined,
 }

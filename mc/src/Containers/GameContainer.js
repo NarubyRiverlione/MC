@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import Game from '../Game'
 
-import StartNewMessageTimer from '../Actions/GameActions'
+import SetupGame from '../Actions/GameActions'
 
 const mapDispatchToProps = dispatch => ({
-  StartNewMessageTimer: () => {
-    dispatch(StartNewMessageTimer(1))
+  SetupGame: () => {
+    dispatch(SetupGame())
   },
 })
 

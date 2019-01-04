@@ -1,4 +1,4 @@
-import { ActionCnst, Cnst } from '../Constants'
+import { ActionCnst, Cnst, CstOrdnance } from '../Constants'
 
 const { Armory: ArmoryActie } = ActionCnst
 
@@ -7,17 +7,23 @@ const InitState = {
   ErrorStatus: false,
   Selected: '',
   Amount: {
-    [Cnst.Ordnance.AA]: 1, // 9
-    [Cnst.Ordnance.G]: 5,
-    [Cnst.Ordnance.AS]: 2,
-    [Cnst.Ordnance.T]: 2,
-    [Cnst.Ordnance.D]: 20,
+    [CstOrdnance.AA]: 0,
+    [CstOrdnance.G]: 0,
+    [CstOrdnance.AS]: 0,
+    [CstOrdnance.T]: 0,
+    [CstOrdnance.D]: 0,
   },
   Loading: false,
 }
 
 const ArmoryReducer = (state = InitState, action) => {
   switch (action.type) {
+    // set Loadout a begin of game
+    case ArmoryActie.SetLoadout:
+      return {
+        ...state,
+        Amount: action.LoadoutAmount,
+      }
     // set Status
     case ArmoryActie.StatusUpdate:
       return {

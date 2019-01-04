@@ -1,4 +1,4 @@
-import { ActionCnst, Cnst } from '../Constants'
+import { ActionCnst, CstFireComputers, Cnst } from '../Constants'
 
 const { FireComputers: FCActie } = ActionCnst
 
@@ -10,15 +10,15 @@ const InitState = {
   Sending: false,
   Reading: false,
   FCS: [{
-    name: Cnst.FireComputers.Name.A,
-    status: Cnst.FireComputers.Results.empty,
-    display: Cnst.FireComputers.Results.empty,
+    name: CstFireComputers.Name.A,
+    status: CstFireComputers.Results.empty,
+    display: CstFireComputers.Results.empty,
     missionID: -1,
   },
   {
-    name: Cnst.FireComputers.Name.B,
-    status: Cnst.FireComputers.Results.empty,
-    display: Cnst.FireComputers.Results.empty,
+    name: CstFireComputers.Name.B,
+    status: CstFireComputers.Results.empty,
+    display: CstFireComputers.Results.empty,
     missionID: -1,
   },
   ],

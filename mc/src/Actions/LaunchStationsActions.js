@@ -1,5 +1,5 @@
-import { IncExcecuted } from './GameActions'
-import { ActionCnst, Cnst } from '../Constants'
+import { IncExecuted } from './GameActions'
+import { ActionCnst, Cnst, CstLaunchStations } from '../Constants'
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
 
 
@@ -21,8 +21,8 @@ const ShowSelectedStatus = () => (
     else {
       const { handleStatus } = Stations[Selected]
       // find key (= description) for statusColor
-      let selStatusTxt = Object.keys(Cnst.LaunchStations.StatusColor)
-        .find(key => Cnst.LaunchStations.StatusColor[key] === handleStatus)
+      let selStatusTxt = Object.keys(CstLaunchStations.StatusColor)
+        .find(key => CstLaunchStations.StatusColor[key] === handleStatus)
 
       // add ordnance type when LS is not empty
       if (handleStatus !== 2) selStatusTxt += `: ${Stations[Selected].ordnance}`
@@ -39,7 +39,7 @@ export const ShowErrorStatus = err => (
 
     setTimeout(() => {
       dispatch(StatusUpdate(Cnst.Status.Idle, false))
-    }, Cnst.LaunchStations.Time.error)
+    }, CstLaunchStations.Time.error)
   })
 
 const DeselectAll = () => ({
@@ -61,8 +61,8 @@ const DoneHandeling = (LS, loading, Stations, Selected) => (
     const WorkingLS = { ...LS }
     // signal loading done by led color
     WorkingLS.handleStatus = loading
-      ? Cnst.LaunchStations.StatusColor.loaded
-      : Cnst.LaunchStations.StatusColor.empty
+      ? CstLaunchStations.StatusColor.loaded
+      : CstLaunchStations.StatusColor.empty
     // reset missionID when removing
     if (!loading) WorkingLS.missionID = -1
 
@@ -88,8 +88,8 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
 
     // signal handeling in progress by setting led color
     LS.handleStatus = loading
-      ? Cnst.LaunchStations.StatusColor.loading
-      : Cnst.LaunchStations.StatusColor.removing
+      ? CstLaunchStations.StatusColor.loading
+      : CstLaunchStations.StatusColor.removing
 
     const UpdatedStations = { ...Stations }
     UpdatedStations[Selected] = { ...LS }
@@ -101,7 +101,7 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
     // wait for loading time
     setTimeout(() => {
       dispatch(DoneHandeling(LS, loading, Stations, Selected))
-    }, Cnst.LaunchStations.Time.loading)
+    }, CstLaunchStations.Time.loading)
   })
 
 export const ReceivedMission = missionID => (
@@ -117,37 +117,60 @@ export const ReceivedMission = missionID => (
       UpdatedStations,
     })
     // show mission received on status display
-    dispatch(StatusUpdate(Cnst.LaunchStations.Results.received))
+    dispatch(StatusUpdate(CstLaunchStations.Results.received))
   })
 
 const DoneFiring = (Stations, FiringLS) => (
   (dispatch) => {
     // done firing
     dispatch({ type: LSActie.Fired })
+    dispatch(StatusUpdate(Cnst.Status.Idle))
 
     // clear selected LS
     const EmptyLS = {
-      handleStatus: Cnst.LaunchStations.StatusColor.empty,
+      handleStatus: CstLaunchStations.StatusColor.empty,
       missionID: -1,
       ordnance: '',
     }
     const UpdatedStations = { ...Stations }
     UpdatedStations[FiringLS] = { ...EmptyLS }
     dispatch({ type: LSActie.UpdatedStations, UpdatedStations })
+    // show empty station
+    dispatch(ShowSelectedStatus())
 
     // inc succesfull missions
-    dispatch(IncExcecuted())
+    dispatch(IncExecuted())
   })
 export const Fire = () => (
   (dispatch, getState) => {
     const { LaunchStations: { Stations, Selected } } = getState()
     const FiringLS = Selected
+
+    // no LS selected ?
+    if (!Selected) {
+      dispatch(ShowErrorStatus(CstLaunchStations.Errors.NoLaunchStationSelected))
+      return
+    }
+    const LS = Stations[Selected]
+    // is LS loaded ?
+    if (!LS.ordnance) {
+      dispatch(ShowErrorStatus(CstLaunchStations.Errors.LSisEmpty))
+      return
+    }
+    // no mission loaded ?
+    if (LS.missionID === -1) {
+      dispatch(ShowErrorStatus(CstLaunchStations.Errors.NoMissionLoaded))
+      return
+    }
+
     // start firing
     dispatch({ type: LSActie.Firing })
+    // status fired
+    dispatch(StatusUpdate(CstLaunchStations.Results.fire))
 
     setTimeout(() => {
       dispatch(DoneFiring(Stations, FiringLS))
-    }, Cnst.LaunchStations.Time.firing)
+    }, CstLaunchStations.Time.firing)
   })
 
 

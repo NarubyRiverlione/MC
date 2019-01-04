@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import Button from '../ControlElements/Button'
 import Display from '../ControlElements/Display'
-import { Cnst } from '../../Constants'
+import { CstArmory, CstOrdnance } from '../../Constants'
 
 
 const Armory = ({
@@ -20,72 +20,72 @@ const Armory = ({
         <div className="grid-x small-3">
           <div className="cell medium-9">
             <Button
-              Caption={Cnst.Ordnance.AA}
+              Caption={CstOrdnance.AA}
               Width={230}
               Color="grey"
               TextColor="darkblue"
-              SetPressed={Selected === Cnst.Ordnance.AA}
+              SetPressed={Selected === CstOrdnance.AA}
               cb={() => {
-                SetSelected(Cnst.Ordnance.AA)
+                SetSelected(CstOrdnance.AA)
               }}
             />
           </div>
           <div className="cell small-3">
-            <Display Text={Amount[Cnst.Ordnance.AA].toString().padStart(2, '0')} Width={50} />
+            <Display Text={Amount[CstOrdnance.AA].toString().padStart(2, '0')} Width={50} />
           </div>
         </div>
 
         <div className="grid-x small-3">
           <div className="cell medium-9">
             <Button
-              Caption={Cnst.Ordnance.G}
+              Caption={CstOrdnance.G}
               Width={230}
               Color="grey"
               TextColor="darkblue"
-              SetPressed={Selected === Cnst.Ordnance.G}
+              SetPressed={Selected === CstOrdnance.G}
               cb={() => {
-                SetSelected(Cnst.Ordnance.G)
+                SetSelected(CstOrdnance.G)
               }}
             />
           </div>
           <div className="cell small-3">
-            <Display Text={Amount[Cnst.Ordnance.G].toString().padStart(2, '0')} Width={50} />
+            <Display Text={Amount[CstOrdnance.G].toString().padStart(2, '0')} Width={50} />
           </div>
         </div>
 
         <div className="grid-x small-3">
           <div className="cell medium-9">
             <Button
-              Caption={Cnst.Ordnance.AS}
+              Caption={CstOrdnance.AS}
               Width={230}
               Color="grey"
               TextColor="darkblue"
-              SetPressed={Selected === Cnst.Ordnance.AS}
+              SetPressed={Selected === CstOrdnance.AS}
               cb={() => {
-                SetSelected(Cnst.Ordnance.AS)
+                SetSelected(CstOrdnance.AS)
               }}
             />
           </div>
           <div className="cell small-3">
-            <Display Text={Amount[Cnst.Ordnance.AS].toString().padStart(2, '0')} Width={50} />
+            <Display Text={Amount[CstOrdnance.AS].toString().padStart(2, '0')} Width={50} />
           </div>
         </div>
 
         <div className="grid-x small-3">
           <div className="cell medium-9">
             <Button
-              Caption={Cnst.Ordnance.T}
+              Caption={CstOrdnance.T}
               Width={230}
               Color="grey"
               TextColor="darkblue"
-              SetPressed={Selected === Cnst.Ordnance.T}
+              SetPressed={Selected === CstOrdnance.T}
               cb={() => {
-                SetSelected(Cnst.Ordnance.T)
+                SetSelected(CstOrdnance.T)
               }}
             />
           </div>
           <div className="cell small-3">
-            <Display Text={Amount[Cnst.Ordnance.T].toString().padStart(2, '0')} Width={50} />
+            <Display Text={Amount[CstOrdnance.T].toString().padStart(2, '0')} Width={50} />
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@ const Armory = ({
         <div className="cell small-4" />
         <div className="cell small-4">
           <Button
-            Caption={Cnst.Armory.Actions.load}
+            Caption={CstArmory.Actions.load}
             Width={110}
             Color="grey"
             TextColor="darkblue"
