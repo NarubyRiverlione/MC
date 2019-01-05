@@ -1,7 +1,6 @@
-import { IncExecuted } from './GameActions'
+import { MissionDone } from './GameActions'
 import { ActionCnst, Cnst, CstLaunchStations } from '../Constants'
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
-
 
 const { LaunchStations: LSActie } = ActionCnst
 
@@ -122,6 +121,7 @@ export const ReceivedMission = missionID => (
 
 const DoneFiring = (Stations, FiringLS) => (
   (dispatch) => {
+    const { missionID } = Stations[FiringLS]
     // done firing
     dispatch({ type: LSActie.Fired })
     dispatch(StatusUpdate(Cnst.Status.Idle))
@@ -139,11 +139,11 @@ const DoneFiring = (Stations, FiringLS) => (
     dispatch(ShowSelectedStatus())
 
     // inc succesfull missions
-    dispatch(IncExecuted())
+    dispatch(MissionDone(missionID))
   })
 export const Fire = () => (
   (dispatch, getState) => {
-    const { LaunchStations: { Stations, Selected } } = getState()
+    const { LaunchStations: { Stations, Selected }, Game: { Missions } } = getState()
     const FiringLS = Selected
 
     // no LS selected ?
@@ -162,7 +162,12 @@ export const Fire = () => (
       dispatch(ShowErrorStatus(CstLaunchStations.Errors.NoMissionLoaded))
       return
     }
-
+    // mission already done ?
+    const { Done } = Missions[LS.missionID]
+    if (Done) {
+      dispatch(ShowErrorStatus(CstLaunchStations.Errors.MissionAlreadyDone))
+      return
+    }
     // start firing
     dispatch({ type: LSActie.Firing })
     // status fired
@@ -172,8 +177,3 @@ export const Fire = () => (
       dispatch(DoneFiring(Stations, FiringLS))
     }, CstLaunchStations.Time.firing)
   })
-
-
-//   export const Prepare = () => ({ type: LSActie.Prepare })
-
-// export const Repair = () => ({ type: LSActie.Repair })

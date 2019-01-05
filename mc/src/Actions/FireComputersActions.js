@@ -1,5 +1,5 @@
 import {
-  ActionCnst, Cnst, CstRadio, CstFireComputers, CstLaunchStations, CstGame,
+  ActionCnst, Cnst, CstRadio, CstFireComputers, CstLaunchStations, CstMissions,
 } from '../Constants'
 
 import {
@@ -7,6 +7,7 @@ import {
   StatusUpdate as LSstatusUpdate,
   ReceivedMission as SendToLaunchStation,
 } from './LaunchStationsActions'
+
 
 const { FireComputers: FCActie } = ActionCnst
 
@@ -117,22 +118,22 @@ export const LoadMsgIntoFC = () => (
 const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
   let IsCorrect = false
   // AA -> Rails
-  if (MissionType === CstGame.Missions.Type[0]
+  if (MissionType === CstMissions.Type[0]
     && (SelectedLS === CstLaunchStations.Numbers.one
       || SelectedLS === CstLaunchStations.Numbers.two)) IsCorrect = true
 
   // AS -> Rails
-  if (MissionType === CstGame.Missions.Type[2]
+  if (MissionType === CstMissions.Type[2]
     && (SelectedLS === CstLaunchStations.Numbers.one
       || SelectedLS === CstLaunchStations.Numbers.two)) IsCorrect = true
 
   // G -> VLT
-  if (MissionType === CstGame.Missions.Type[1]
+  if (MissionType === CstMissions.Type[1]
     && (SelectedLS === CstLaunchStations.Numbers.A
       || SelectedLS === CstLaunchStations.Numbers.B)) IsCorrect = true
 
   // T -> Tubes
-  if (MissionType === CstGame.Missions.Type[3]
+  if (MissionType === CstMissions.Type[3]
     && (SelectedLS === CstLaunchStations.Numbers.romanOn
       || SelectedLS === CstLaunchStations.Numbers.romanTwo)) IsCorrect = true
   return IsCorrect

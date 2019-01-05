@@ -1,4 +1,4 @@
-import { CstGame } from './Constants'
+import { CstMissions } from './Constants'
 
 export default class Mission {
   ID = 0
@@ -11,13 +11,17 @@ export default class Mission {
 
   NeededOrdnance = ''
 
-  constructor(newID) {
-    const TargetID = Math.floor(Math.random() * CstGame.Missions.IDMax) + CstGame.Missions.IDMin
-    this.Target = CstGame.Missions.Targets[TargetID]
+  Done = false
 
-    const MissionType = Math.floor(Math.random() * 5)
-    this.Type = CstGame.Missions.Type[MissionType]
-    this.NeededOrdnance = CstGame.Missions.NeededOrdnance[MissionType]
+  constructor(newID) {
+    const TargetID = Math.floor(Math.random() * CstMissions.IDTargetMax) + CstMissions.IDTargetMin
+    this.Target = CstMissions.Targets[TargetID]
+
+    const MissionType = Math.floor(Math.random() * 4)
+    this.Type = CstMissions.Type[MissionType]
+    this.NeededOrdnance = CstMissions.NeededOrdnance[MissionType]
+    if (!this.Type) console.error('Unknown Mission type !!')
     this.ID = newID
+    console.log(`${MissionType} = ${this.Type} = ${this.NeededOrdnance}`)
   }
 }

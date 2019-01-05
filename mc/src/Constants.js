@@ -77,6 +77,7 @@ export const CstLaunchStations = {
     WrongLaunchStationForMission: 'ERROR: wrong Launch Station selected for this mission',
     LSisEmpty: 'ERROR: Launch Station is not loaded',
     NoMissionLoaded: 'ERROR: no missions loaded into weapon',
+    MissionAlreadyDone: 'ERROR: mission already executed',
   },
   Time: {
     error: 4000, removing: 7000, loading: 5000, preparing: 4000, firing: 2000,
@@ -107,16 +108,16 @@ export const CstArmory = {
 export const CstGame = {
   Name: 'Missile Boat - Weapons Control Panel',
   Time: {
-    FirstMsg: 2000,
+    FirstMsg: 1500,
     NewMessageTimeOut: 10000,
-    NewIncomingMessageMax: 30000,
+    NewIncomingMessageMax: 25000,
     NewIncomingMessageMin: 15000,
   },
 }
 
 export const CstMissions = {
-  IDMax: 10,
-  IDMin: 0,
+  IDTargetMax: 10,
+  IDTargetMin: 0,
   Targets: [' A', ' B', ' C', ' D', ' E', ' F', ' G', ' H', ' I', ' J', ' K', ' L', ' M', ' N', ' O', ' P', ' Q', ' R', ' T', ' S', ' V', ' W'],
   Type: ['Aircraft Attack', 'Ground Attack', 'Ship Attack', 'Submarine Attack'],
   NeededOrdnance: ['AA', 'G', 'AS', 'T'],
@@ -131,24 +132,25 @@ export const Cnst = {
 
 export const ActionCnst = {
   Game: {
-    StartTimerNewMessage: 'START_NEW_MSG_TIMER_GAME',
+    // StartTimerNewMessage: 'START_NEW_MSG_TIMER_GAME',
     StoreMsgTimeOutTimer: 'STORE_MSG_TIMEOUT_TIMER_GAME',
     // StopMsgTimeOutTimer: 'STOP_MSG_TIMEOUT_TIMER_GAME',
     IncExecutedMissions: 'INC_EXECUTED_MISSION_GAME',
     ClearMsgTimeOutTimer: 'CLEAR_MSG_TIMEOUT_TIMER_GAME',
     NewMessageTimedOut: 'NEW_MSG_TIMEDOUT_GAME',
 
-    SetMissionPanelLocation: 'SET_MISSION_PANEL_LOCATION_GAME',
+    // SetMissionPanelLocation: 'SET_MISSION_PANEL_LOCATION_GAME',
 
     UpdateRank: 'UPDATE_RANK_GAME',
     UpdateMissionID: 'UPDATE_MISSION_ID_GAME',
-    UpdateMissions: 'UPDATE_MISSIONS_GAME',
+    AddNewMission: 'ADD_MISSION_GAME',
+    DoneMission: 'SET_MISION_DONE_GAME',
   },
   Radio: {
-    EraseSlot: 'ERASE_SLOT_RADIO',
+    // EraseSlot: 'ERASE_SLOT_RADIO',
 
     SelectSlot: 'SELECT_SLOT_RADIO',
-    ExecuteCmd: 'EXEC_CMD_RADIO',
+    // ExecuteCmd: 'EXEC_CMD_RADIO',
     NewMessageReceived: 'NEW_MSG_RADIO',
 
     ClearNewMessageReceived: 'CLEAR_NEW_MSG_RADIO',
@@ -175,11 +177,11 @@ export const ActionCnst = {
     DeselectStations: 'LAUNCHSTATION_DESELECT_ALL',
     UpdateSelectedStatus: 'LAUNCHSTATION_UPDATE_SELECTED_STATUS',
     UpdatedStations: 'LAUNCHSTATION_UPDATE_STATIONS',
-    ReceivedMission: 'LAUNCHSTATION_RECEIVED_MISSION',
-    Prepare: 'LAUNCHSTATION_PREPARE',
-    Repair: 'LAUNCHSTATION_REPAIR',
+    // ReceivedMission: 'LAUNCHSTATION_RECEIVED_MISSION',
+    // Prepare: 'LAUNCHSTATION_PREPARE',
+    // Repair: 'LAUNCHSTATION_REPAIR',
     Select: 'LAUNCHSTATION_SELECT',
-    ShowErrorStatus: 'LAUNCHSTATION_SHOW_ERR',
+    // ShowErrorStatus: 'LAUNCHSTATION_SHOW_ERR',
     StatusUpdate: 'LAUNCHSTATION_STATUS_UPDATE',
     Firing: 'FIRING_LAUNCHSTATION',
     Fired: 'DONE_FIRE_LAUNCHSTATION',
@@ -189,9 +191,9 @@ export const ActionCnst = {
     Select: 'ARMORY_SELECT',
     Loading: 'ARMORY_START_LOAD',
     LoadingDone: 'ARMORY_LOADING_DONE',
-    AddOneToArmory: 'ARMORY_ADD_ONE_ORDNANCE',
+    // AddOneToArmory: 'ARMORY_ADD_ONE_ORDNANCE',
     UpdateAmount: 'ARMORY_UPDATE_AMOUNT',
-    ShowErrorStatus: 'ARMORY_SHOW_ERR',
+    // ShowErrorStatus: 'ARMORY_SHOW_ERR',
     StatusUpdate: 'ARMORY_STATUS_UPDATE',
   },
 }

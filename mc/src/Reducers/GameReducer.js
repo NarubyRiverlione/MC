@@ -32,7 +32,8 @@ const GameReducer = (state = InitState, action) => {
         ReceivedMissions: action.NewReceivedMissions,
       }
     // adjust missions
-    case GameActie.UpdateMissions:
+    case GameActie.AddNewMission:
+    case GameActie.DoneMission:
       return {
         ...state,
         Missions: action.UpdatedMissions,

@@ -76,7 +76,7 @@ const LaunchStationsReducer = (state = InitState, action) => {
     // update Stations for
     // received Mission and firings
     case LaunchStationActie.UpdatedStations:
-    case LaunchStationActie.ReceivedMission:
+      // case LaunchStationActie.ReceivedMission:
       return {
         ...state,
         Stations: action.UpdatedStations,

@@ -39,7 +39,7 @@ const ReduceRank = () => (
     }
   })
 // incr executed missions
-export const IncExecuted = () => (
+const IncExecuted = () => (
   (dispatch, getState) => {
     const { Game: { ExecutedMissions } } = getState()
     const NewIncExecutedMissions = ExecutedMissions + 1
@@ -50,6 +50,19 @@ export const IncExecuted = () => (
     })
   })
 
+// set mission done, inc done counter
+export const MissionDone = missionID => (
+  (dispatch, getState) => {
+    const { Game: { Missions } } = getState()
+    const UpdatedMissions = Missions.map((m) => {
+      const update = { ...m }
+      if (update.ID === missionID) update.Done = true
+      return update
+    })
+    dispatch({ type: ActionsGame.DoneMission, UpdatedMissions })
+    dispatch(IncExecuted())
+  }
+)
 // create a mission inside the msg
 const CreateNewMission = () => (
   (dispatch, getState) => {
@@ -67,7 +80,7 @@ const CreateNewMission = () => (
     const NewMission = new Mission(NewLastMissionID)
     const UpdatedMissions = Missions.concat(NewMission)
     dispatch({
-      type: ActionsGame.UpdateMissions,
+      type: ActionsGame.AddNewMission,
       UpdatedMissions,
     })
 
@@ -117,7 +130,7 @@ const SetupGame = () => (
     dispatch(SetLoadout(StartLoadout))
 
     // get first mission in FirstMsg time sec
-    dispatch(StartNewMessageTimer(CstGame.FirstMsg))
+    dispatch(StartNewMessageTimer(CstGame.Time.FirstMsg))
   }
 )
 
