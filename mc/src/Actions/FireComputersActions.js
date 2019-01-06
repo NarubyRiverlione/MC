@@ -28,11 +28,13 @@ const ShowErrorStatus = err => (
     }, CstFireComputers.Time.error)
   })
 
+// select Fire Computer A or B to load msg into
 export const SelectFC = SelectedFC => ({
   type: FCActie.SelectFireComputer,
   SelectedFC,
 })
 
+// select radio slot to load decoded msg from
 export const SelectSlot = SelectedMsgSlot => ({
   type: FCActie.SelectSlot,
   SelectedMsgSlot,
@@ -114,7 +116,7 @@ export const LoadMsgIntoFC = () => (
     }, CstFireComputers.Time.read)
   })
 
-
+// check if correct Launch Station is selected to send fire mision to
 const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
   let IsCorrect = false
   // AA -> Rails
@@ -138,7 +140,7 @@ const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
       || SelectedLS === CstLaunchStations.Numbers.romanTwo)) IsCorrect = true
   return IsCorrect
 }
-
+// send to Launch Station is done, clear Fire Computer
 const DoneSendToLS = (WorkingFC, missionID, FCS) => (
   (dispatch) => {
     // show FC status idle
@@ -226,7 +228,3 @@ export const SendMissionToLS = () => (
       dispatch(DoneSendToLS(WorkingFC, missionID, FCS))
     }, CstFireComputers.Time.send)
   })
-
-// export const ReadMsgDone = () => ({
-//   type: FCActie.ReadMsgDone,
-// })

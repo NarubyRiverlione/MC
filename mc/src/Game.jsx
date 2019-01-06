@@ -1,7 +1,13 @@
 /* eslint-disable no-console */
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import ControlPanel from './Components/Panels/ControlPanel'
+import RadioContainer from './Containers/RadioContainer'
+import FCContainer from './Containers/FCContainer'
+import ArmoryContainer from './Containers/ArmoryContainer'
+import LSContainer from './Containers/LSContainer'
+
 
 import {
   CstRadio, CstFireComputers, CstArmory, CstLaunchStations, CstGame,
@@ -31,19 +37,19 @@ export default class Game extends React.Component {
             <div className="card-section grid-y">
               <div className="grid-x medium-1">
                 <div className="cell medium-3">
-                  <p>Received missions</p>
+                  <p>{CstGame.Titles.ReceivedMissions}</p>
                 </div>
                 <div className="cell medium-1">
                   <p>{ReceivedMissions}</p>
                 </div>
                 <div className="cell medium-3">
-                  <p>Executed missions</p>
+                  <p>{CstGame.Titles.ExecutedMissions}</p>
                 </div>
                 <div className="cell medium-1">
                   <p>{ExecutedMissions}</p>
                 </div>
                 <div className="cell medium-3">
-                  <p>Rank</p>
+                  <p>{CstGame.Titles.Rank}</p>
                 </div>
                 <div className="cell medium-1">
                   <p>{Rank}</p>
@@ -60,7 +66,9 @@ export default class Game extends React.Component {
                         Name={CstRadio.Title}
                         StatusStatus={RadioStatus}
                         ErrorMsg={RadioError}
-                      />
+                      >
+                        <RadioContainer />
+                      </ControlPanel>
                     </div>
 
                     <div className="cell medium-6  ShowCell">
@@ -68,7 +76,9 @@ export default class Game extends React.Component {
                         Name={CstFireComputers.Title}
                         StatusStatus={FireComputersStatus}
                         ErrorMsg={FCError}
-                      />
+                      >
+                        <FCContainer />
+                      </ControlPanel>
                     </div>
 
                   </div>
@@ -83,7 +93,9 @@ export default class Game extends React.Component {
                         Name={CstArmory.Title}
                         StatusStatus={ArmoryStatus}
                         ErrorMsg={ArmoryError}
-                      />
+                      >
+                        <ArmoryContainer />
+                      </ControlPanel>
                     </div>
 
                     <div className="cell medium-6 ShowCell">
@@ -91,7 +103,9 @@ export default class Game extends React.Component {
                         Name={CstLaunchStations.Title}
                         StatusStatus={LaunchStationsStatus}
                         ErrorMsg={LSError}
-                      />
+                      >
+                        <LSContainer />
+                      </ControlPanel>
                     </div>
 
                   </div>

@@ -113,6 +113,13 @@ export const CstGame = {
     NewIncomingMessageMax: 25000,
     NewIncomingMessageMin: 15000,
   },
+  Titles: {
+    ReceivedMissions: 'Received missions',
+    ExecutedMissions: 'Executed missions',
+    Rank: 'Rank',
+
+  },
+
 }
 
 export const CstMissions = {

@@ -8,7 +8,7 @@ import { ActionCnst, CstArmory, CstGame } from '../Constants'
 
 const { Game: ActionsGame } = ActionCnst
 
-// stop msg time-out time
+// stop msg time-out time (msg is read into radio slot)
 export const StopMsgTimeoutTimer = () => (
   (dispatch, getState) => {
     const { Game: { MsgTimeoutTimer } } = getState()
@@ -21,8 +21,7 @@ export const StopMsgTimeoutTimer = () => (
       type: ActionsGame.ClearMsgTimeOutTimer,
     })
   })
-
-// new msg timed out, deal with fail
+//  reduce rank (msg timed-out)
 const ReduceRank = () => (
   (dispatch, getState) => {
     const { Game: { Rank } } = getState()
@@ -38,7 +37,7 @@ const ReduceRank = () => (
       console.warn('END GAME, rank < 0')
     }
   })
-// incr executed missions
+// increment executed missions counter
 const IncExecuted = () => (
   (dispatch, getState) => {
     const { Game: { ExecutedMissions } } = getState()
@@ -49,8 +48,7 @@ const IncExecuted = () => (
       NewIncExecutedMissions,
     })
   })
-
-// set mission done, inc done counter
+// set mission done, inc executed mission counter
 export const MissionDone = missionID => (
   (dispatch, getState) => {
     const { Game: { Missions } } = getState()
@@ -63,7 +61,7 @@ export const MissionDone = missionID => (
     dispatch(IncExecuted())
   }
 )
-// create a mission inside the msg
+// create a mission, start time-out timer
 const CreateNewMission = () => (
   (dispatch, getState) => {
     const { Game: { lastMissionID, Missions, ReceivedMissions } } = getState()
@@ -88,7 +86,7 @@ const CreateNewMission = () => (
     const MsgTimeoutTimer = setTimeout(() => {
       // reduce rank
       dispatch(ReduceRank())
-      // signal via Radio status the time out
+      // show error in the Radio status display (also clears the new msg led)
       dispatch(RadioTimedOut())
     }, CstGame.Time.NewMessageTimeOut)
 
@@ -98,7 +96,6 @@ const CreateNewMission = () => (
       MsgTimeoutTimer,
     })
   })
-
 // wait for new msg  use fixed time if provided,
 // else random between NewIncomingMessageMin and NewIncomingMessageMax
 const StartNewMessageTimer = fixedTimer => (
@@ -115,14 +112,12 @@ const StartNewMessageTimer = fixedTimer => (
       dispatch(CreateNewMission())
       // show new message warning in Radio
       dispatch(SendNewMessage())
-
       // restart timer new msg
       dispatch(StartNewMessageTimer())
     }, nextIncoming)
   })
-
-
-const SetupGame = () => (
+// setup game: load armory and start timer for first mission
+export const SetupGame = () => (
   (dispatch) => {
     // set armory loadout
     // TODO: set random ?
@@ -133,5 +128,3 @@ const SetupGame = () => (
     dispatch(StartNewMessageTimer(CstGame.Time.FirstMsg))
   }
 )
-
-export default SetupGame

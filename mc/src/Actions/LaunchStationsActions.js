@@ -40,11 +40,11 @@ export const ShowErrorStatus = err => (
       dispatch(StatusUpdate(Cnst.Status.Idle, false))
     }, CstLaunchStations.Time.error)
   })
-
+// deselect all launch stations
 const DeselectAll = () => ({
   type: LSActie.DeselectStations,
 })
-
+// select a launch station
 export const Select = stationName => (
   (dispatch) => {
     dispatch(DeselectAll())
@@ -55,6 +55,7 @@ export const Select = stationName => (
     dispatch(ShowSelectedStatus())
   })
 
+// loading or removing ordnance is done
 const DoneHandeling = (LS, loading, Stations, Selected) => (
   (dispatch) => {
     const WorkingLS = { ...LS }
@@ -77,6 +78,7 @@ const DoneHandeling = (LS, loading, Stations, Selected) => (
     // show selected LS status
     dispatch(ShowSelectedStatus())
   })
+// start loading or removing an ordnance into a launch station
 export const HandelingLaunchStation = (ordnance, loading = true) => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
@@ -103,6 +105,7 @@ export const HandelingLaunchStation = (ordnance, loading = true) => (
     }, CstLaunchStations.Time.loading)
   })
 
+// received a fire mission for a fire computer to a launch station
 export const ReceivedMission = missionID => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
@@ -119,6 +122,7 @@ export const ReceivedMission = missionID => (
     dispatch(StatusUpdate(CstLaunchStations.Results.received))
   })
 
+// firing is done
 const DoneFiring = (Stations, FiringLS) => (
   (dispatch) => {
     const { missionID } = Stations[FiringLS]
@@ -141,6 +145,7 @@ const DoneFiring = (Stations, FiringLS) => (
     // inc succesfull missions
     dispatch(MissionDone(missionID))
   })
+// start firing
 export const Fire = () => (
   (dispatch, getState) => {
     const { LaunchStations: { Stations, Selected }, Game: { Missions } } = getState()

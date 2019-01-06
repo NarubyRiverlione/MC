@@ -27,6 +27,13 @@ const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
     dispatch(LSshowErr(LSerr))
   })
 
+// Loading into Launch Station is done
+export const LoadingDone = () => ({
+  type: ArmoryActions.LoadingDone,
+  Loading: false,
+  Selected: '',
+})
+// Start loading ordnance into Launch Station
 const StartLoading = () => (
   (dispatch, getState) => {
     const { Armory: { Selected, Amount } } = getState()
@@ -41,13 +48,7 @@ const StartLoading = () => (
     dispatch(HandelingLaunchStation(Selected, true))
   })
 
-export const LoadingDone = () => ({
-  type: ArmoryActions.LoadingDone,
-  Loading: false,
-  Selected: '',
-})
-
-
+// show relevant error when wrong Launch Station is selected to load ordnance into
 const ShowMsgWrongStationSelected = () => (
   (dispatch, getState) => {
     const { Armory: { Selected } } = getState()
@@ -66,7 +67,6 @@ const ShowMsgWrongStationSelected = () => (
     }
     dispatch(ShowErrorInArmoryAndLS(CstArmory.Errors.WrongLaunchStation, errorMsg))
   })
-
 // check if correct Launch Station is Selected
 // TODO: check is selected LS isn't already loaded of loading
 const CheckSelectedLaunchStation = () => (
@@ -127,23 +127,7 @@ const CheckSelectedLaunchStation = () => (
       }
     }
   })
-
-export const AddOneToArmory = ordnance => (
-  (dispatch, getState) => {
-    const { Armory: { Amount } } = getState()
-    // increment amount of the ordnance
-    const UpdatedAmount = { ...Amount }
-    // eslint-disable-next-line no-plusplus
-    UpdatedAmount[ordnance]++
-    dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
-  })
-
-export const SetSelected = Selected => (
-  dispatch => dispatch({
-    type: ArmoryActions.Select,
-    Selected,
-  }))
-
+// load ordnance into Launch Station, check if type is correct
 export const Load = () => (
   (dispatch, getState) => {
     const { Armory: { Selected, Amount } } = getState()
@@ -163,6 +147,25 @@ export const Load = () => (
     dispatch(CheckSelectedLaunchStation())
   })
 
+// add ordnance back to armory form Launch Station (action 'remove')
+export const AddOneToArmory = ordnance => (
+  (dispatch, getState) => {
+    const { Armory: { Amount } } = getState()
+    // increment amount of the ordnance
+    const UpdatedAmount = { ...Amount }
+    // eslint-disable-next-line no-plusplus
+    UpdatedAmount[ordnance]++
+    dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
+  })
+
+// select ordnance
+export const SetSelected = Selected => (
+  dispatch => dispatch({
+    type: ArmoryActions.Select,
+    Selected,
+  }))
+
+// set start amounts of ordnance in the armory (called at game start)
 export const SetLoadout = LoadoutAmount => ({
   type: ArmoryActions.SetLoadout,
   LoadoutAmount,
