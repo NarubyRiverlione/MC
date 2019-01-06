@@ -1,5 +1,6 @@
 import { ActionCnst, CstRadio } from '../Constants'
 import { StopMsgTimeoutTimer } from './GameActions'
+import { ShowErrorStatus, StatusUpdate } from './CommonActions'
 
 const { Radio: ActionRadio } = ActionCnst
 
@@ -8,22 +9,6 @@ export const SelectSlot = Selected => ({
   type: ActionRadio.SelectSlot,
   Selected,
 })
-
-export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
-  type: ActionRadio.StatusUpdate,
-  StatusText,
-  ErrorStatus,
-})
-
-// show error in status of set time, then set idle status
-const ShowErrorStatus = err => (
-  (dispatch) => {
-    dispatch(StatusUpdate(err, true))
-
-    setTimeout(() => {
-      dispatch({ type: ActionRadio.SetIdle })
-    }, CstRadio.Time.error)
-  })
 
 // Game action will send a new message to the radio
 export const SendNewMessage = () => ({
@@ -47,7 +32,8 @@ export const NewMessageTimedOut = () => (
     // ... clear new msg flag
     dispatch({ type: ActionRadio.ClearNewMessageReceived })
     // ... show error
-    dispatch(ShowErrorStatus(CstRadio.Errors.NewMessageTimedOut))
+    dispatch(ShowErrorStatus(ActionRadio.StatusUpdate,
+      CstRadio.Errors.NewMessageTimedOut, CstRadio.Time.error))
   })
 
 // update pushed / release state of a cmd button
@@ -106,14 +92,16 @@ export const ExecuteCmd = cmd => (
 
     /* Radio already busy ? */
     if (Busy) {
-      dispatch(ShowErrorStatus(CstRadio.Errors.AlreadyBusy))
+      dispatch(ShowErrorStatus(ActionRadio.StatusUpdate,
+        CstRadio.Errors.AlreadyBusy, CstRadio.Time.error))
       return
     }
     /* trying to start decoding ? */
     if (cmd === CstRadio.Actions.decode) {
       // there must be a message stored
       if (WorkingSlot.status !== CstRadio.Results.store) {
-        dispatch(ShowErrorStatus(CstRadio.Errors.NoDecodeNothingStored))
+        dispatch(ShowErrorStatus(ActionRadio.StatusUpdate,
+          CstRadio.Errors.NoDecodeNothingStored, CstRadio.Time.error))
         return
       }
     }
@@ -121,12 +109,14 @@ export const ExecuteCmd = cmd => (
     else if (cmd === CstRadio.Actions.store) {
       // there must be a new message waiting
       if (!MessageIncoming) {
-        dispatch(ShowErrorStatus(CstRadio.Errors.NoStoreNoNewMsg))
+        dispatch(ShowErrorStatus(ActionRadio.StatusUpdate,
+          CstRadio.Errors.NoStoreNoNewMsg, CstRadio.Time.error))
         return
       }
       // selected slot must be empty
       if (WorkingSlot.status !== CstRadio.Results.erase) {
-        dispatch(ShowErrorStatus(CstRadio.Errors.SlotNotEmpty))
+        dispatch(ShowErrorStatus(ActionRadio.StatusUpdate,
+          CstRadio.Errors.SlotNotEmpty, CstRadio.Time.error))
         return
       }
     }
@@ -136,7 +126,7 @@ export const ExecuteCmd = cmd => (
     dispatch({ type: ActionRadio.SetBusy })
     // update Radio Status display
     const CmdStatusMsg = CstRadio.Busy[cmd.toLowerCase()] + CstRadio.Busy.onSlot + SelectedSlot
-    dispatch(StatusUpdate(CmdStatusMsg))
+    dispatch(StatusUpdate(ActionRadio.StatusUpdate, CmdStatusMsg))
     // hold button down
     dispatch(UpdateButton(cmd, true))
     // start timer for cmd execution

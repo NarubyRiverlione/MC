@@ -1,32 +1,13 @@
 import {
   ActionCnst, Cnst, CstRadio, CstFireComputers, CstLaunchStations, CstMissions,
 } from '../Constants'
-
+import { ShowErrorStatus, StatusUpdate } from './CommonActions'
 import {
-  ShowErrorStatus as LSshowErr,
-  StatusUpdate as LSstatusUpdate,
   ReceivedMission as SendToLaunchStation,
 } from './LaunchStationsActions'
 
 
-const { FireComputers: FCActie } = ActionCnst
-
-
-export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
-  type: FCActie.StatusUpdate,
-  StatusText,
-  ErrorStatus,
-})
-
-// show error in status of set time, then set idle status
-const ShowErrorStatus = err => (
-  (dispatch) => {
-    dispatch(StatusUpdate(err, true))
-
-    setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle, false))
-    }, CstFireComputers.Time.error)
-  })
+const { FireComputers: FCActie, LaunchStations: LSActie } = ActionCnst
 
 // select Fire Computer A or B to load msg into
 export const SelectFC = SelectedFC => ({
@@ -46,7 +27,7 @@ const DoneLoading = (workingFC, missionID) => (
     const { Game: { Missions }, FireComputer: { FCS } } = getState()
 
     // show FC status idle
-    dispatch(StatusUpdate(Cnst.Status.Idle))
+    dispatch(StatusUpdate(FCActie.StatusUpdate, Cnst.Status.Idle))
     // release read button down
     dispatch({ type: FCActie.ReadMsgDone })
 
@@ -88,25 +69,29 @@ export const LoadMsgIntoFC = () => (
     // check if a FC is selected
     if (SelectedFC === '') {
       // console.log('FC: no fc selected to read msg')
-      dispatch(ShowErrorStatus(CstFireComputers.Errors.NoFCselected))
+      dispatch(ShowErrorStatus(FCActie.StatusUpdate,
+        CstFireComputers.Errors.NoFCselected, CstFireComputers.Time.error))
       return
     }
     // check if selected slot contains a msg
     if (SlotStatus === CstRadio.Results.erase) {
       // console.log(`FC: Selected msg slot ${SelectedMsgSlot} is empty`)
-      dispatch(ShowErrorStatus(CstFireComputers.Errors.NoMsg))
+      dispatch(ShowErrorStatus(FCActie.StatusUpdate,
+        CstFireComputers.Errors.NoMsg, CstFireComputers.Time.error))
       return
     }
     // check if msg is decrypted
     if (SlotStatus === CstRadio.Results.store) {
       // console.log(`FC: Selected msg ${SelectedMsgSlot} is not decrypted`)
-      dispatch(ShowErrorStatus(CstFireComputers.Errors.MsgNotDecoded))
+      dispatch(ShowErrorStatus(FCActie.StatusUpdate,
+        CstFireComputers.Errors.MsgNotDecoded, CstFireComputers.Time.error))
       return
     }
 
     // must be a decoded msg...
     // ..show loading status
-    dispatch(StatusUpdate(CstFireComputers.Actions.load + SelectedFC))
+    dispatch(StatusUpdate(FCActie.StatusUpdate,
+      CstFireComputers.Actions.load + SelectedFC))
 
     // hold read button down
     dispatch({ type: FCActie.ReadMsg })
@@ -144,7 +129,7 @@ const CheckCorrectLSforMission = (MissionType, SelectedLS) => {
 const DoneSendToLS = (WorkingFC, missionID, FCS) => (
   (dispatch) => {
     // show FC status idle
-    dispatch(StatusUpdate(Cnst.Status.Idle))
+    dispatch(StatusUpdate(FCActie.StatusUpdate, Cnst.Status.Idle))
     // release send button
     dispatch({ type: FCActie.SendMissionDone })
     // clear  selected FC
@@ -192,7 +177,8 @@ export const SendMissionToLS = () => (
       // general error on FCS
       dispatch(ShowErrorStatus(CstFireComputers.Errors.CannotSend))
       // specific err on LS
-      dispatch(LSshowErr(CstLaunchStations.Errors.NoLSselected))
+      dispatch(StatusUpdate(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.NoLSselected, CstLaunchStations.Time.error))
       return
     }
     // check if selected LS is loaded
@@ -202,7 +188,8 @@ export const SendMissionToLS = () => (
       // general error on FCS
       dispatch(ShowErrorStatus(CstFireComputers.Errors.CannotSend))
       // specific err on LS
-      dispatch(LSshowErr(CstLaunchStations.Errors.LSisEmpty))
+      dispatch(StatusUpdate(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.LSisEmpty, CstLaunchStations.Time.error))
       return
     }
     // check if selected LS is correct for this Mission Type
@@ -212,14 +199,16 @@ export const SendMissionToLS = () => (
       // general error on FCS
       dispatch(ShowErrorStatus(CstFireComputers.Errors.CannotSend))
       // specific on LS
-      dispatch(LSshowErr(CstLaunchStations.Errors.WrongLaunchStationForMission))
+      dispatch(StatusUpdate(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.WrongLaunchStationForMission, CstLaunchStations.Time.error))
       return
     }
 
     // start sending Fire Mission to selected Launch Station
     // console.log(`Start sending mission from FC ${WorkingFC.name} to Launch Station ${SelectedLS}`)
     dispatch(StatusUpdate(CstFireComputers.Actions.send))
-    dispatch(LSstatusUpdate(CstLaunchStations.Actions.receiving))
+    dispatch(StatusUpdate(LSActie.StatusUpdate,
+      CstLaunchStations.Actions.receiving, CstLaunchStations.Time.error))
 
     // hold read button down
     dispatch({ type: FCActie.SendMission })

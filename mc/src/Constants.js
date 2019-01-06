@@ -97,7 +97,7 @@ export const CstArmory = {
     WrongLaunchStation: 'ERROR: Wrong Launch Station selected',
     NoOrdnanceSelected: 'ERROR: No ordnance selected',
     SelectedLSnotEmpty: 'ERROR: Launch Station not empty',
-    NoLSselected: 'ERROR: No Launch Station selected',
+    NoLaunchStationSelected: 'ERROR: No Launch Station selected',
     OrdnanceOutOfStock: 'ERROR: Ordnance out of stock',
   },
   Time: {

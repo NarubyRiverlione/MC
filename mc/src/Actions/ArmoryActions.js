@@ -1,38 +1,30 @@
-import { ShowErrorStatus as LSshowErr, HandelingLaunchStation } from './LaunchStationsActions'
+import { HandelingLaunchStation } from './LaunchStationsActions'
+import { ShowErrorStatus, StatusUpdate } from './CommonActions'
 import {
-  ActionCnst, Cnst, CstOrdnance, CstLaunchStations, CstArmory,
+  ActionCnst, CstOrdnance, CstLaunchStations, CstArmory, Cnst,
 } from '../Constants'
 
-const { Armory: ArmoryActions } = ActionCnst
+const { Armory: ArmoryActions, LaunchStations: LaunchStationActie } = ActionCnst
 
-
-export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
-  type: ArmoryActions.StatusUpdate,
-  StatusText,
-  ErrorStatus,
-})
-// show error in status of set time, then set idle status
-const ShowErrorStatus = err => (
-  (dispatch) => {
-    dispatch(StatusUpdate(err, true))
-
-    setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle, false))
-    }, CstArmory.Time.error)
-  })
 // show general error on Armory display and specific error on Launch Station display
-const ShowErrorInArmoryAndLS = (armoryErr, LSerr) => (
+const ShowErrorInArmoryAndLS = (ArmoryError, LaunchStationError) => (
   (dispatch) => {
-    dispatch(ShowErrorStatus(armoryErr))
-    dispatch(LSshowErr(LSerr))
+    dispatch(ShowErrorStatus(ArmoryActions.StatusUpdate,
+      ArmoryError, CstArmory.Time.error))
+    dispatch(ShowErrorStatus(LaunchStationActie.StatusUpdate,
+      LaunchStationError, CstLaunchStations.Time.error))
   })
 
 // Loading into Launch Station is done
-export const LoadingDone = () => ({
-  type: ArmoryActions.LoadingDone,
-  Loading: false,
-  Selected: '',
-})
+export const LoadingDone = () => (
+  (dispatch) => {
+    dispatch(StatusUpdate(ArmoryActions.StatusUpdate, Cnst.Status.Idle))
+    dispatch({
+      type: ArmoryActions.LoadingDone,
+      Loading: false,
+      Selected: '',
+    })
+  })
 // Start loading ordnance into Launch Station
 const StartLoading = () => (
   (dispatch, getState) => {
@@ -42,7 +34,8 @@ const StartLoading = () => (
     // eslint-disable-next-line no-plusplus
     UpdatedAmount[Selected]--
     dispatch({ type: ArmoryActions.UpdateAmount, UpdatedAmount })
-
+    // show start loading msg
+    dispatch(StatusUpdate(ArmoryActions.StatusUpdate, CstArmory.Actions.loading))
     // start Loading selected ordnance in Launch Station
     dispatch({ type: ArmoryActions.Loading })
     dispatch(HandelingLaunchStation(Selected, true))

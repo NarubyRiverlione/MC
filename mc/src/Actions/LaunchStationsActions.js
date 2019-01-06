@@ -1,14 +1,12 @@
 import { MissionDone } from './GameActions'
 import { ActionCnst, Cnst, CstLaunchStations } from '../Constants'
 import { LoadingDone as ArmoryLoadingDone, AddOneToArmory } from './ArmoryActions'
+import { ShowErrorStatus, StatusUpdate } from './CommonActions'
 
 const { LaunchStations: LSActie } = ActionCnst
 
-export const StatusUpdate = (StatusText, ErrorStatus = false) => ({
-  type: LSActie.StatusUpdate,
-  StatusText,
-  ErrorStatus,
-})
+// show status (content) of selected launch station in dedicated display
+// (not generic control panel display)
 const ShowSelectedStatus = () => (
   (dispatch, getState) => {
     const { LaunchStations: { Selected, Stations } } = getState()
@@ -30,16 +28,6 @@ const ShowSelectedStatus = () => (
     }
   })
 
-
-// show error in status of set time, then set idle status
-export const ShowErrorStatus = err => (
-  (dispatch) => {
-    dispatch(StatusUpdate(err, true))
-
-    setTimeout(() => {
-      dispatch(StatusUpdate(Cnst.Status.Idle, false))
-    }, CstLaunchStations.Time.error)
-  })
 // deselect all launch stations
 const DeselectAll = () => ({
   type: LSActie.DeselectStations,
@@ -47,10 +35,10 @@ const DeselectAll = () => ({
 // select a launch station
 export const Select = stationName => (
   (dispatch) => {
+    // release  all station buttons
     dispatch(DeselectAll())
-
+    // hold the button of the  selected
     dispatch({ type: LSActie.Select, Selected: stationName })
-
     // show status of selected LS
     dispatch(ShowSelectedStatus())
   })
@@ -119,7 +107,7 @@ export const ReceivedMission = missionID => (
       UpdatedStations,
     })
     // show mission received on status display
-    dispatch(StatusUpdate(CstLaunchStations.Results.received))
+    dispatch(StatusUpdate(LSActie.StatusUpdate, CstLaunchStations.Results.received))
   })
 
 // firing is done
@@ -128,7 +116,7 @@ const DoneFiring = (Stations, FiringLS) => (
     const { missionID } = Stations[FiringLS]
     // done firing
     dispatch({ type: LSActie.Fired })
-    dispatch(StatusUpdate(Cnst.Status.Idle))
+    dispatch(StatusUpdate(LSActie.StatusUpdate, Cnst.Status.Idle))
 
     // clear selected LS
     const EmptyLS = {
@@ -153,30 +141,34 @@ export const Fire = () => (
 
     // no LS selected ?
     if (!Selected) {
-      dispatch(ShowErrorStatus(CstLaunchStations.Errors.NoLaunchStationSelected))
+      dispatch(ShowErrorStatus(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.NoLaunchStationSelected, CstLaunchStations.Time.error))
       return
     }
     const LS = Stations[Selected]
     // is LS loaded ?
     if (!LS.ordnance) {
-      dispatch(ShowErrorStatus(CstLaunchStations.Errors.LSisEmpty))
+      dispatch(ShowErrorStatus(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.LSisEmpty, CstLaunchStations.Time.error))
       return
     }
     // no mission loaded ?
     if (LS.missionID === -1) {
-      dispatch(ShowErrorStatus(CstLaunchStations.Errors.NoMissionLoaded))
+      dispatch(ShowErrorStatus(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.NoMissionLoaded, CstLaunchStations.Time.error))
       return
     }
     // mission already done ?
     const { Done } = Missions[LS.missionID]
     if (Done) {
-      dispatch(ShowErrorStatus(CstLaunchStations.Errors.MissionAlreadyDone))
+      dispatch(ShowErrorStatus(LSActie.StatusUpdate,
+        CstLaunchStations.Errors.MissionAlreadyDone, CstLaunchStations.Time.error))
       return
     }
     // start firing
     dispatch({ type: LSActie.Firing })
     // status fired
-    dispatch(StatusUpdate(CstLaunchStations.Results.fire))
+    dispatch(StatusUpdate(LSActie.StatusUpdate, CstLaunchStations.Results.fire))
 
     setTimeout(() => {
       dispatch(DoneFiring(Stations, FiringLS))
