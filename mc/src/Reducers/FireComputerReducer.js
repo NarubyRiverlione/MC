@@ -9,18 +9,19 @@ const InitState = {
   SelectedMsgSlot: 3,
   Sending: false,
   Reading: false,
-  FCS: [{
-    name: CstFireComputers.Name.A,
-    status: CstFireComputers.Results.empty,
-    display: CstFireComputers.Results.empty,
-    missionID: -1,
-  },
-  {
-    name: CstFireComputers.Name.B,
-    status: CstFireComputers.Results.empty,
-    display: CstFireComputers.Results.empty,
-    missionID: -1,
-  },
+  FCS: [
+    {
+      name: CstFireComputers.Name.A,
+      status: CstFireComputers.Results.empty,
+      display: CstFireComputers.Results.empty,
+      missionID: -1,
+    },
+    {
+      name: CstFireComputers.Name.B,
+      status: CstFireComputers.Results.empty,
+      display: CstFireComputers.Results.empty,
+      missionID: -1,
+    },
   ],
 }
 

@@ -11,24 +11,13 @@ export const SelectSlot = Selected => ({
 })
 
 // Game action will send a new message to the radio
+// radio turns led on
 export const SendNewMessage = () => ({
   type: ActionRadio.NewMessageReceived,
 })
 // msg timed out, turn timer led out, show error in radio panel
 export const NewMessageTimedOut = () => (
   (dispatch) => {
-    // dispatch({
-    //   type: ActionRadio.NewMessageTimedOut,
-    //   Status: CstRadio.Errors.NewMessageTimedOut,
-    //   ErrorStatus: true,
-    //   NewMessage: false,
-    // })
-
-    // setTimeout(() => {
-    //   //  clear error status, start timer new msg
-    //   dispatch({ type: ActionRadio.SetIdle })
-    // }, CstRadio.Time.error)
-
     // ... clear new msg flag
     dispatch({ type: ActionRadio.ClearNewMessageReceived })
     // ... show error
@@ -38,13 +27,11 @@ export const NewMessageTimedOut = () => (
 
 // update pushed / release state of a cmd button
 export const UpdateButton = (ButtonName, Status) => (
-  (dispatch, getState) => {
-    const { Radio: { Buttons } } = getState()
-
-    const NewButtons = { ...Buttons, [ButtonName]: Status }
+  (dispatch) => {
+    const UpdatedButton = { [ButtonName]: Status }
     dispatch({
       type: ActionRadio.UpdateButton,
-      NewButtons,
+      UpdatedButton,
     })
   })
 

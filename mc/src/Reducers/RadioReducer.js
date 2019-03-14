@@ -40,7 +40,7 @@ const RadioReducer = (state = InitState, action) => {
     case RadioActie.UpdateButton:
       return {
         ...state,
-        Buttons: action.NewButtons,
+        Buttons: { ...state.Buttons, ...action.UpdatedButton },
       }
     //  set received new message flag
     case RadioActie.NewMessageReceived:
